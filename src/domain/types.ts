@@ -151,4 +151,9 @@ export const ACCOUNT_TYPE_LABEL: Record<AccountType, string> = {
   DEBT: "Dívidas",
 };
 
-export const LIQUID_BY_DEFAULT: AccountType[] = ["CHECKING", "SAVINGS", "INVESTMENT", "FIXED_INCOME"];
+export const LIQUID_BY_DEFAULT: AccountType[] = [
+  "CHECKING",
+  "SAVINGS",
+  "INVESTMENT",
+  "FIXED_INCOME",
+];

@@ -26,7 +26,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -53,13 +59,7 @@ import {
   type IncomeNature,
   type IncomeType,
 } from "@/domain/types";
-import {
-  useAccounts,
-  useBalances,
-  useCategories,
-  
-  useTransactions,
-} from "@/hooks/useFinanceData";
+import { useAccounts, useBalances, useCategories, useTransactions } from "@/hooks/useFinanceData";
 import {
   useExpensePlans,
   useIncomePlans,
@@ -67,11 +67,16 @@ import {
   usePlanningInsert,
   usePlanningUpdate,
   useScenarios,
-
 } from "@/hooks/usePlanning";
 import { useCurrency } from "@/hooks/useCurrency";
 import { formatCents, formatPercent, formatSignedCents, parseCurrencyToCents } from "@/lib/format";
-import { currentMonthKey, monthEndISO, monthLabel, monthLabelShort, monthStartISO } from "@/lib/months";
+import {
+  currentMonthKey,
+  monthEndISO,
+  monthLabel,
+  monthLabelShort,
+  monthStartISO,
+} from "@/lib/months";
 
 export const Route = createFileRoute("/planejamento")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -82,7 +87,8 @@ export const Route = createFileRoute("/planejamento")({
       { title: "Planejamento · Belchior" },
       {
         name: "description",
-        content: "Planeje receitas e despesas futuras e projete a evolução do seu patrimônio mês a mês.",
+        content:
+          "Planeje receitas e despesas futuras e projete a evolução do seu patrimônio mês a mês.",
       },
       { property: "og:title", content: "Planejamento · Belchior" },
       {
@@ -105,14 +111,17 @@ function PlanejamentoPage() {
   const month = currentMonthKey();
 
   const { data: scenarios = [], isLoading: loadingScenarios } = useScenarios();
-  const scenario = scenarios.find((s) => s.id === scenarioParam) ?? scenarios.find((s) => s.is_default) ?? scenarios[0];
+  const scenario =
+    scenarios.find((s) => s.id === scenarioParam) ??
+    scenarios.find((s) => s.is_default) ??
+    scenarios[0];
 
   const { data: incomePlans = [] } = useIncomePlans(scenario?.id);
   const { data: expensePlans = [] } = useExpensePlans(scenario?.id);
   const { data: categories = [] } = useCategories();
   const { data: accounts = [] } = useAccounts();
   const { data: balances = [] } = useBalances();
-  
+
   const { data: transactions = [] } = useTransactions({
     from: monthStartISO(month),
     to: monthEndISO(month),
@@ -124,7 +133,6 @@ function PlanejamentoPage() {
   const updateExpensePlan = usePlanningUpdate("expense_plans");
   const removeIncomePlan = usePlanningDelete("income_plans");
   const removeExpensePlan = usePlanningDelete("expense_plans");
-
 
   const startingNetWorth = netWorthForMonth(month, accounts, balances, convert).netWorth;
 
@@ -149,7 +157,12 @@ function PlanejamentoPage() {
 
   const budget = [
     budgetLine("income", "Receitas", plannedMonth?.totalIncome ?? 0, actual.income.total),
-    budgetLine("essential", "Despesas essenciais", plannedMonth?.essentialExpenses ?? 0, actual.expenses.essential),
+    budgetLine(
+      "essential",
+      "Despesas essenciais",
+      plannedMonth?.essentialExpenses ?? 0,
+      actual.expenses.essential,
+    ),
     budgetLine(
       "discretionary",
       "Despesas discricionárias",
@@ -168,7 +181,10 @@ function PlanejamentoPage() {
   if (!scenario) {
     return (
       <AppLayout>
-        <PageHeader title="Planejamento" description="Orçamento planejado e projeção de patrimônio." />
+        <PageHeader
+          title="Planejamento"
+          description="Orçamento planejado e projeção de patrimônio."
+        />
         {loadingScenarios ? null : (
           <EmptyState
             title="Crie um cenário para começar"
@@ -230,7 +246,11 @@ function PlanejamentoPage() {
         <MetricValue
           label="Meses no vermelho"
           value={String(summary.negativeMonths)}
-          hint={summary.firstNegativeMonth ? `Primeiro em ${monthLabel(summary.firstNegativeMonth)}` : "Nenhum"}
+          hint={
+            summary.firstNegativeMonth
+              ? `Primeiro em ${monthLabel(summary.firstNegativeMonth)}`
+              : "Nenhum"
+          }
           badge="PROJETADO"
           tone={summary.negativeMonths > 0 ? "negative" : "positive"}
         />
@@ -256,7 +276,10 @@ function PlanejamentoPage() {
               <YAxis tick={{ fontSize: 11 }} width={70} />
               <ChartTooltip
                 formatter={(value: number) => formatCents(Math.round(value * 100), displayCurrency)}
-                contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))" }}
+                contentStyle={{
+                  background: "hsl(var(--card))",
+                  border: "1px solid hsl(var(--border))",
+                }}
               />
               <Area
                 type="monotone"
@@ -269,9 +292,9 @@ function PlanejamentoPage() {
           </ResponsiveContainer>
         </div>
         <AssumptionNote>
-          Premissas: retorno de {formatPercent(scenario.expected_monthly_return, 2)} ao mês sobre o patrimônio,
-          reajuste anual aplicado no aniversário de cada plano e conversão cambial pela cotação vigente na data.
-          Nenhum valor projetado é misturado com dados reais.
+          Premissas: retorno de {formatPercent(scenario.expected_monthly_return, 2)} ao mês sobre o
+          patrimônio, reajuste anual aplicado no aniversário de cada plano e conversão cambial pela
+          cotação vigente na data. Nenhum valor projetado é misturado com dados reais.
         </AssumptionNote>
       </Panel>
 
@@ -379,7 +402,6 @@ function PlanejamentoPage() {
             />
           </Panel>
         </TabsContent>
-
       </Tabs>
     </AppLayout>
   );
@@ -403,7 +425,10 @@ function PlanList({
   if (plans.length === 0) {
     return (
       <div className="mt-4">
-        <EmptyState title="Nenhum plano cadastrado" description="Adicione o primeiro plano para alimentar a projeção." />
+        <EmptyState
+          title="Nenhum plano cadastrado"
+          description="Adicione o primeiro plano para alimentar a projeção."
+        />
       </div>
     );
   }
@@ -421,7 +446,11 @@ function PlanList({
             <p className="mt-0.5 text-xs text-muted-foreground">
               {describe(plan)} · {FREQUENCY_LABEL[plan.frequency]}
               {plan.annual_adjustment_percent ? ` · +${plan.annual_adjustment_percent}% a.a.` : ""}
-              {plan.enabled ? (occursInMonth(plan, month) ? " · ocorre neste mês" : "") : " · desativado"}
+              {plan.enabled
+                ? occursInMonth(plan, month)
+                  ? " · ocorre neste mês"
+                  : ""
+                : " · desativado"}
             </p>
           </div>
           <div className="flex items-center gap-1">
@@ -429,7 +458,12 @@ function PlanList({
               {formatCents(amountForMonth(plan, month), plan.currency)}
             </span>
             {renderEdit?.(plan)}
-            <Button size="sm" variant="ghost" className="text-negative" onClick={() => void onDelete(plan.id)}>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="text-negative"
+              onClick={() => void onDelete(plan.id)}
+            >
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>
@@ -526,7 +560,11 @@ function PlanDialog({
         <div className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="plan-name">Nome</Label>
-            <Input id="plan-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            <Input
+              id="plan-name"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-2">
@@ -540,7 +578,10 @@ function PlanDialog({
             </div>
             <div className="grid gap-2">
               <Label>Moeda</Label>
-              <CurrencyField value={form.currency} onChange={(c) => setForm({ ...form, currency: c })} />
+              <CurrencyField
+                value={form.currency}
+                onChange={(c) => setForm({ ...form, currency: c })}
+              />
             </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -597,7 +638,10 @@ function PlanDialog({
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="grid gap-2">
                 <Label>Tipo</Label>
-                <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v as IncomeType })}>
+                <Select
+                  value={form.type}
+                  onValueChange={(v) => setForm({ ...form, type: v as IncomeType })}
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -612,7 +656,10 @@ function PlanDialog({
               </div>
               <div className="grid gap-2">
                 <Label>Natureza</Label>
-                <Select value={form.nature} onValueChange={(v) => setForm({ ...form, nature: v as IncomeNature })}>
+                <Select
+                  value={form.nature}
+                  onValueChange={(v) => setForm({ ...form, nature: v as IncomeNature })}
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -697,4 +744,3 @@ function planToForm(kind: "income" | "expense", plan?: IncomePlan | ExpensePlan)
     enabled: plan?.enabled ?? true,
   };
 }
-

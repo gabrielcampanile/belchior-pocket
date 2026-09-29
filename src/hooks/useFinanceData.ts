@@ -36,7 +36,6 @@ function unwrap<T>(result: { data: unknown; error: { message: string } | null })
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any;
 
-
 export function useProfile() {
   return useQuery({
     queryKey: ["profile"],
@@ -95,7 +94,10 @@ export function useTransactions(range?: { from: string; to: string }) {
   return useQuery({
     queryKey: ["transactions", range?.from ?? null, range?.to ?? null],
     queryFn: async (): Promise<Transaction[]> => {
-      let query = supabase.from("transactions").select("*").order("occurred_on", { ascending: false });
+      let query = supabase
+        .from("transactions")
+        .select("*")
+        .order("occurred_on", { ascending: false });
       if (range) query = query.gte("occurred_on", range.from).lt("occurred_on", range.to);
       return unwrap(await query.limit(2000));
     },
@@ -103,7 +105,6 @@ export function useTransactions(range?: { from: string; to: string }) {
 }
 
 // Receitas deixaram de ter tabela própria: são transações do tipo INCOME.
-
 
 export function useClosures() {
   return useQuery({
@@ -141,7 +142,6 @@ type TableName =
   | "accounts"
   | "account_balances"
   | "transactions"
-  
   | "closures";
 
 const UPSERT_CHUNK = 400;
@@ -181,7 +181,6 @@ export function useUpsert(table: TableName, onConflict?: string) {
     onSuccess: invalidate,
   });
 }
-
 
 export function useUpdateRow(table: TableName) {
   const invalidate = useInvalidateFinance();

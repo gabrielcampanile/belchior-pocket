@@ -12,28 +12,34 @@ O fechamento mensal passa a ser 100% derivado das transações. Você importa ex
 ## O que vai mudar
 
 ### 1. Receita vem das transações
+
 - `incomeBreakdown` passa a somar transações do tipo Receita, agrupadas por **natureza** (recorrente / temporária / extraordinária), **tipo de renda** (Salário, VR/VA, Bônus, PLR, Freelance, Rendimentos, Outras) e **categoria**.
 - Transferências e aportes continuam fora de receita e despesa.
 - Dashboard, Fechamentos e o comparativo Planejado vs. Real usam a mesma fonte automaticamente.
 
 ### 2. Fim das receitas manuais
+
 - Migração: cada receita já lançada vira uma transação do tipo Receita no dia 1º do mês, com tipo e natureza preservados, marcada como origem manual.
 - A aba "Receitas do mês" some do Fechamento; a tabela `income_entries` é removida depois da migração.
 - Onboarding e dados de demonstração passam a criar transações de receita em vez de receitas manuais.
 
 ### 3. Categorias de receita
+
 - Novas categorias padrão de receita: Salário, VR/VA, Bônus, PLR, Freelance, Rendimentos, Aluguel recebido, Outras receitas (criadas para contas novas e para a sua conta atual).
 - O seletor de categoria em Transações e na importação passa a mostrar só categorias compatíveis com o tipo da transação (receita x despesa), evitando misturar.
 
 ### 4. Importação: extrato x fatura de cartão
+
 - Novo passo na tela de importação: escolher **Extrato bancário** (negativo = despesa, positivo = receita) ou **Fatura de cartão** (tudo despesa; negativo = estorno, tratado como redução/receita).
 - O preview passa a mostrar contagem de entradas e saídas, com o tipo e a categoria sugeridos por linha, e permite trocar tipo/categoria antes de confirmar.
 
 ### 5. Transações: separar em vez de misturar
+
 - Abas "Todas / Receitas / Despesas / Transferências e aportes" no topo da lista, com totais de cada aba.
 - Cada linha ganha edição completa (data, descrição, valor, moeda, tipo, categoria, conta) e, para receitas, tipo de renda e natureza. Mudar uma transação de Despesa para Receita move-a para a aba certa e limpa a categoria incompatível.
 
 ### 6. Fechamento com gráficos
+
 - Cards de Receita total, Despesa total, Saldo do mês e Aportes calculados só das transações.
 - **Dois gráficos donut lado a lado**: composição da receita por categoria e composição da despesa por categoria, no padrão visual dark premium do app (Recharts, tooltip com valor formatado na moeda de exibição e percentual, legenda com valores, categorias pequenas agrupadas em "Outros", clique numa fatia filtra a lista de transações do mês).
 - Quebra de receita por natureza junto da quebra de despesa essencial x discricionária.

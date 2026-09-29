@@ -43,7 +43,10 @@ export function formatApprox(cents: number, currency: CurrencyCode): string {
   return `≈ ${formatCents(cents, currency)}`;
 }
 
-export function formatSignedCents(cents: number, currency: CurrencyCode = DEFAULT_CURRENCY): string {
+export function formatSignedCents(
+  cents: number,
+  currency: CurrencyCode = DEFAULT_CURRENCY,
+): string {
   const s = formatCents(Math.abs(cents), currency);
   if (cents > 0) return `+${s}`;
   if (cents < 0) return `−${s}`;
@@ -78,7 +81,10 @@ export function parseCurrencyToCents(input: string): number | null {
   const hasDot = raw.includes(".");
   if (hasComma && hasDot) {
     // o último separador é o decimal
-    raw = raw.lastIndexOf(",") > raw.lastIndexOf(".") ? raw.replace(/\./g, "").replace(",", ".") : raw.replace(/,/g, "");
+    raw =
+      raw.lastIndexOf(",") > raw.lastIndexOf(".")
+        ? raw.replace(/\./g, "").replace(",", ".")
+        : raw.replace(/,/g, "");
   } else if (hasComma) {
     raw = raw.replace(/\./g, "").replace(",", ".");
   }

@@ -1,4 +1,4 @@
-# Belchior Financial Planning 
+# Belchior Financial Planning
 
 # Construir do zero: Personal Finance OS — Belchior
 
@@ -64,27 +64,27 @@ Os cálculos devem ser feitos pelo código.
 
 Use uma stack moderna e simples:
 
-* React
+- React
 
-* TypeScript
+- TypeScript
 
-* Vite
+- Vite
 
-* Tailwind CSS
+- Tailwind CSS
 
-* shadcn/ui
+- shadcn/ui
 
-* Supabase
+- Supabase
 
-* Recharts
+- Recharts
 
-* React Router
+- React Router
 
-* date-fns
+- date-fns
 
-* Zod para validação
+- Zod para validação
 
-* Lucide icons
+- Lucide icons
 
 Não adicionar dependências desnecessárias.
 
@@ -92,17 +92,17 @@ O código deve ser fortemente tipado.
 
 Separar claramente:
 
-* UI
+- UI
 
-* domínio financeiro
+- domínio financeiro
 
-* persistência
+- persistência
 
-* cálculos
+- cálculos
 
-* projeções
+- projeções
 
-* componentes visuais
+- componentes visuais
 
 Não colocar lógica financeira complexa diretamente dentro dos componentes React.
 
@@ -124,43 +124,43 @@ Não quero dashboard lotado.
 
 Quero algo:
 
-* clean
+- clean
 
-* sofisticado
+- sofisticado
 
-* minimalista
+- minimalista
 
-* muito espaçamento
+- muito espaçamento
 
-* tipografia excelente
+- tipografia excelente
 
-* números grandes e legíveis
+- números grandes e legíveis
 
-* poucos elementos por tela
+- poucos elementos por tela
 
-* microinterações discretas
+- microinterações discretas
 
-* gráficos limpos
+- gráficos limpos
 
-* hierarquia visual muito clara
+- hierarquia visual muito clara
 
 Preferência por:
 
-* dark mode premium como padrão
+- dark mode premium como padrão
 
-* opção de light mode
+- opção de light mode
 
-* fundo quase preto
+- fundo quase preto
 
-* surfaces levemente elevadas
+- surfaces levemente elevadas
 
-* bordas extremamente sutis
+- bordas extremamente sutis
 
-* verde para entradas/positivo
+- verde para entradas/positivo
 
-* vermelho apenas quando realmente necessário
+- vermelho apenas quando realmente necessário
 
-* uma cor de destaque sofisticada para ações e investimentos
+- uma cor de destaque sofisticada para ações e investimentos
 
 Usar Inter ou Geist.
 
@@ -256,11 +256,11 @@ Valor líquido disponível em ativos líquidos.
 
 Gráfico de linha mostrando:
 
-* patrimônio histórico
+- patrimônio histórico
 
-* patrimônio atual
+- patrimônio atual
 
-* patrimônio projetado
+- patrimônio projetado
 
 Diferenciar visualmente:
 
@@ -300,105 +300,105 @@ Categorias padrão:
 
 ### Moradia
 
-* aluguel
+- aluguel
 
-* condomínio
+- condomínio
 
-* IPTU
+- IPTU
 
-* energia
+- energia
 
-* água
+- água
 
-* gás
+- gás
 
-* internet
+- internet
 
-* manutenção
+- manutenção
 
 ### Alimentação
 
-* mercado
+- mercado
 
-* restaurante
+- restaurante
 
-* delivery
+- delivery
 
-* café
+- café
 
-* alimentação
+- alimentação
 
 ### Transporte
 
-* gasolina
+- gasolina
 
-* estacionamento
+- estacionamento
 
-* pedágio
+- pedágio
 
-* Uber
+- Uber
 
-* transporte público
+- transporte público
 
-* manutenção
+- manutenção
 
-* seguro
+- seguro
 
-* IPVA
+- IPVA
 
 ### Saúde
 
-* plano de saúde
+- plano de saúde
 
-* consulta
+- consulta
 
-* exame
+- exame
 
-* farmácia
+- farmácia
 
-* terapia
+- terapia
 
-* academia
+- academia
 
 ### Família
 
-* bebê
+- bebê
 
-* filhos
+- filhos
 
-* presentes
+- presentes
 
-* família
+- família
 
 ### Lazer
 
-* viagens
+- viagens
 
-* entretenimento
+- entretenimento
 
-* hobbies
+- hobbies
 
-* bares
+- bares
 
-* restaurantes
+- restaurantes
 
 ### Assinaturas
 
-* streaming
+- streaming
 
-* software
+- software
 
-* serviços
+- serviços
 
 ### Compras
 
-* roupas
+- roupas
 
-* eletrônicos
+- eletrônicos
 
-* casa
+- casa
 
-* outros
+- outros
 
 ### Investimentos
 
@@ -444,19 +444,19 @@ As regras devem ter prioridade configurável.
 
 Permitir registrar receitas reais:
 
-* salário
+- salário
 
-* VR/VA
+- VR/VA
 
-* bolsa
+- bolsa
 
-* PLR
+- PLR
 
-* freelance
+- freelance
 
-* rendimentos
+- rendimentos
 
-* outras
+- outras
 
 Importante:
 
@@ -484,31 +484,31 @@ Todo planejamento pertence a um cenário.
 
 Exemplos:
 
-* Cenário atual
+- Cenário atual
 
-* Indaiatuba
+- Indaiatuba
 
-* Sorocaba
+- Sorocaba
 
-* Canadá 2028
+- Canadá 2028
 
-* Promoção XP
+- Promoção XP
 
-* Conservador
+- Conservador
 
-* Otimista
+- Otimista
 
 O usuário pode:
 
-* criar cenário
+- criar cenário
 
-* duplicar cenário
+- duplicar cenário
 
-* renomear
+- renomear
 
-* excluir
+- excluir
 
-* definir como padrão
+- definir como padrão
 
 Duplicar um cenário deve criar uma cópia independente.
 
@@ -522,59 +522,59 @@ IncomePlan
 
 Campos:
 
-* id
+- id
 
-* scenario_id
+- scenario_id
 
-* name
+- name
 
-* type
+- type
 
-* amount
+- amount
 
-* frequency
+- frequency
 
-* start_date
+- start_date
 
-* end_date
+- end_date
 
-* annual_adjustment_percent
+- annual_adjustment_percent
 
-* enabled
+- enabled
 
 Tipos:
 
-* SALARY
+- SALARY
 
-* VR
+- VR
 
-* BENEFIT
+- BENEFIT
 
-* SCHOLARSHIP
+- SCHOLARSHIP
 
-* BONUS
+- BONUS
 
-* PLR
+- PLR
 
-* FREELANCE
+- FREELANCE
 
-* INVESTMENT_INCOME
+- INVESTMENT_INCOME
 
-* OTHER
+- OTHER
 
 Frequências:
 
-* MONTHLY
+- MONTHLY
 
-* BIMONTHLY
+- BIMONTHLY
 
-* QUARTERLY
+- QUARTERLY
 
-* SEMIANNUAL
+- SEMIANNUAL
 
-* YEARLY
+- YEARLY
 
-* ONCE
+- ONCE
 
 ---
 
@@ -648,29 +648,29 @@ ExpensePlan
 
 Campos:
 
-* id
+- id
 
-* scenario_id
+- scenario_id
 
-* category_id
+- category_id
 
-* name
+- name
 
-* amount
+- amount
 
-* frequency
+- frequency
 
-* start_date
+- start_date
 
-* end_date
+- end_date
 
-* annual_adjustment_percent
+- annual_adjustment_percent
 
-* enabled
+- enabled
 
-* essential
+- essential
 
-* notes
+- notes
 
 ---
 
@@ -678,9 +678,9 @@ Campos:
 
 Permitir marcar uma despesa como:
 
-* essencial
+- essencial
 
-* discricionária
+- discricionária
 
 Exemplo:
 
@@ -706,37 +706,37 @@ PlanningEvent
 
 Campos:
 
-* id
+- id
 
-* scenario_id
+- scenario_id
 
-* name
+- name
 
-* date
+- date
 
-* type
+- type
 
-* description
+- description
 
 Tipos:
 
-* BIRTH
+- BIRTH
 
-* MOVE
+- MOVE
 
-* JOB_CHANGE
+- JOB_CHANGE
 
-* PROMOTION
+- PROMOTION
 
-* SCHOLARSHIP_END
+- SCHOLARSHIP_END
 
-* IMMIGRATION
+- IMMIGRATION
 
-* PURCHASE
+- PURCHASE
 
-* SALE
+- SALE
 
-* CUSTOM
+- CUSTOM
 
 Um evento pode modificar o planejamento.
 
@@ -790,21 +790,21 @@ projectionEngine.ts
 
 Esse serviço recebe:
 
-* cenário
+- cenário
 
-* data inicial
+- data inicial
 
-* data final
+- data final
 
-* patrimônio inicial
+- patrimônio inicial
 
-* receitas planejadas
+- receitas planejadas
 
-* despesas planejadas
+- despesas planejadas
 
-* eventos
+- eventos
 
-* rentabilidade
+- rentabilidade
 
 E retorna:
 
@@ -812,29 +812,29 @@ ProjectionMonth[]
 
 Cada mês deve conter:
 
-* month
+- month
 
-* recurringIncome
+- recurringIncome
 
-* extraordinaryIncome
+- extraordinaryIncome
 
-* totalIncome
+- totalIncome
 
-* essentialExpenses
+- essentialExpenses
 
-* discretionaryExpenses
+- discretionaryExpenses
 
-* totalExpenses
+- totalExpenses
 
-* monthlyCashFlow
+- monthlyCashFlow
 
-* plannedInvestment
+- plannedInvestment
 
-* investmentReturn
+- investmentReturn
 
-* endingNetWorth
+- endingNetWorth
 
-* bridgeReserveBalance
+- bridgeReserveBalance
 
 ---
 
@@ -1158,25 +1158,25 @@ Permitir selecionar 2 a 4 cenários.
 
 Comparar:
 
-* patrimônio final
+- patrimônio final
 
-* renda total
+- renda total
 
-* despesas totais
+- despesas totais
 
-* média mensal
+- média mensal
 
-* taxa de poupança
+- taxa de poupança
 
-* meses em déficit
+- meses em déficit
 
-* reserva de emergência
+- reserva de emergência
 
-* reserva ponte
+- reserva ponte
 
-* patrimônio mínimo
+- patrimônio mínimo
 
-* patrimônio máximo
+- patrimônio máximo
 
 Mostrar gráfico comparativo.
 
@@ -1198,11 +1198,11 @@ Ao mudar:
 
 recalcular imediatamente:
 
-* fluxo mensal
+- fluxo mensal
 
-* patrimônio final
+- patrimônio final
 
-* taxa de poupança
+- taxa de poupança
 
 Não salvar automaticamente.
 
@@ -1222,29 +1222,29 @@ Goal
 
 Campos:
 
-* name
+- name
 
-* targetAmount
+- targetAmount
 
-* currentAmount
+- currentAmount
 
-* targetDate
+- targetDate
 
-* priority
+- priority
 
-* category
+- category
 
 Exemplos:
 
-* Reserva de emergência
+- Reserva de emergência
 
-* Canadá
+- Canadá
 
-* Entrada imóvel
+- Entrada imóvel
 
-* Viagem
+- Viagem
 
-* Patrimônio de R$ 500 mil
+- Patrimônio de R$ 500 mil
 
 Calcular:
 
@@ -1422,11 +1422,11 @@ Top 3 maiores categorias.
 
 Comparar com:
 
-* mês anterior
+- mês anterior
 
-* média dos últimos 3 meses
+- média dos últimos 3 meses
 
-* média dos últimos 6 meses
+- média dos últimos 6 meses
 
 ## Planejamento
 
@@ -1476,23 +1476,23 @@ Real: R$ 3.480
 
 Permitir registrar:
 
-* conta corrente
+- conta corrente
 
-* poupança
+- poupança
 
-* investimentos
+- investimentos
 
-* renda fixa
+- renda fixa
 
-* ações
+- ações
 
-* fundos
+- fundos
 
-* previdência
+- previdência
 
-* bens
+- bens
 
-* dívidas
+- dívidas
 
 Separar:
 
@@ -1534,25 +1534,25 @@ Apenas a alocação muda.
 
 Permitir:
 
-* moeda
+- moeda
 
-* primeiro dia do mês
+- primeiro dia do mês
 
-* categorias
+- categorias
 
-* regras de categorização
+- regras de categorização
 
-* rentabilidade esperada
+- rentabilidade esperada
 
-* meses de reserva
+- meses de reserva
 
-* categorias essenciais
+- categorias essenciais
 
-* metas
+- metas
 
-* tema
+- tema
 
-* preferências de dashboard
+- preferências de dashboard
 
 ---
 
@@ -1576,13 +1576,13 @@ Perguntar:
 
 Depois criar automaticamente:
 
-* cenário "Atual"
+- cenário "Atual"
 
-* orçamento inicial
+- orçamento inicial
 
-* dashboard
+- dashboard
 
-* meta de reserva de emergência
+- meta de reserva de emergência
 
 Não exigir que o usuário configure 50 campos antes de ver valor.
 
@@ -1594,15 +1594,15 @@ Dados financeiros são sensíveis.
 
 Implementar:
 
-* autenticação Supabase
+- autenticação Supabase
 
-* Row Level Security
+- Row Level Security
 
-* cada usuário só acessa seus próprios dados
+- cada usuário só acessa seus próprios dados
 
-* nenhum dado financeiro deve ser público
+- nenhum dado financeiro deve ser público
 
-* não enviar dados financeiros para APIs externas
+- não enviar dados financeiros para APIs externas
 
 Como não haverá IA nesta versão, **nenhum dado financeiro deve sair do Supabase/browser para serviços externos**.
 
@@ -1780,11 +1780,11 @@ Permitir configurar:
 
 Opções:
 
-* manter em caixa
+- manter em caixa
 
-* investir
+- investir
 
-* dividir percentual
+- dividir percentual
 
 Exemplo:
 
@@ -1858,43 +1858,43 @@ Esse texto deve vir do FinancialInsightsEngine, não de IA.
 
 O aplicativo NÃO deve:
 
-* tentar parecer uma planilha
+- tentar parecer uma planilha
 
-* mostrar dezenas de números simultaneamente
+- mostrar dezenas de números simultaneamente
 
-* usar IA para matemática
+- usar IA para matemática
 
-* inventar previsões
+- inventar previsões
 
-* tratar projeção como certeza
+- tratar projeção como certeza
 
-* misturar receita extraordinária com renda recorrente
+- misturar receita extraordinária com renda recorrente
 
-* tratar transferência entre contas como despesa
+- tratar transferência entre contas como despesa
 
-* misturar patrimônio com fluxo de caixa
+- misturar patrimônio com fluxo de caixa
 
-* esconder premissas dos cálculos
+- esconder premissas dos cálculos
 
 O aplicativo DEVE:
 
-* ser extremamente claro
+- ser extremamente claro
 
-* mostrar premissas
+- mostrar premissas
 
-* permitir edição rápida
+- permitir edição rápida
 
-* permitir simulações
+- permitir simulações
 
-* preservar histórico
+- preservar histórico
 
-* distinguir real vs planejado vs projetado
+- distinguir real vs planejado vs projetado
 
-* explicar os cálculos
+- explicar os cálculos
 
-* ser útil mesmo sem planejamento avançado
+- ser útil mesmo sem planejamento avançado
 
-* funcionar perfeitamente no mobile
+- funcionar perfeitamente no mobile
 
 ---
 
@@ -1908,83 +1908,83 @@ Implemente nesta ordem:
 
 Fundação:
 
-* autenticação
+- autenticação
 
-* banco
+- banco
 
-* layout
+- layout
 
-* dashboard
+- dashboard
 
-* categorias
+- categorias
 
-* receitas
+- receitas
 
-* despesas
+- despesas
 
-* patrimônio
+- patrimônio
 
-* transações
+- transações
 
-* fechamento mensal
+- fechamento mensal
 
-* importação CSV
+- importação CSV
 
 ## FASE 2
 
 Planejamento:
 
-* cenários
+- cenários
 
-* receitas planejadas
+- receitas planejadas
 
-* despesas planejadas
+- despesas planejadas
 
-* orçamento
+- orçamento
 
-* projection engine
+- projection engine
 
 ## FASE 3
 
 Inteligência determinística:
 
-* insights
+- insights
 
-* health score
+- health score
 
-* comparação real vs planejado
+- comparação real vs planejado
 
-* dependência de renda temporária
+- dependência de renda temporária
 
-* reserva de emergência
+- reserva de emergência
 
-* reserva ponte
+- reserva ponte
 
 ## FASE 4
 
 Planejamento avançado:
 
-* eventos
+- eventos
 
-* metas
+- metas
 
-* timeline
+- timeline
 
-* what-if
+- what-if
 
-* comparação de cenários
+- comparação de cenários
 
 ## FASE 5
 
 Relatórios:
 
-* relatório mensal
+- relatório mensal
 
-* gráficos
+- gráficos
 
-* exportação PDF
+- exportação PDF
 
-* resumo executivo
+- resumo executivo
 
 ---
 
@@ -2136,27 +2136,27 @@ Os cálculos devem ser feitos pelo código.
 
 Use uma stack moderna e simples:
 
-* React
+- React
 
-* TypeScript
+- TypeScript
 
-* Vite
+- Vite
 
-* Tailwind CSS
+- Tailwind CSS
 
-* shadcn/ui
+- shadcn/ui
 
-* Supabase
+- Supabase
 
-* Recharts
+- Recharts
 
-* React Router
+- React Router
 
-* date-fns
+- date-fns
 
-* Zod para validação
+- Zod para validação
 
-* Lucide icons
+- Lucide icons
 
 Não adicionar dependências desnecessárias.
 
@@ -2164,17 +2164,17 @@ O código deve ser fortemente tipado.
 
 Separar claramente:
 
-* UI
+- UI
 
-* domínio financeiro
+- domínio financeiro
 
-* persistência
+- persistência
 
-* cálculos
+- cálculos
 
-* projeções
+- projeções
 
-* componentes visuais
+- componentes visuais
 
 Não colocar lógica financeira complexa diretamente dentro dos componentes React.
 
@@ -2196,43 +2196,43 @@ Não quero dashboard lotado.
 
 Quero algo:
 
-* clean
+- clean
 
-* sofisticado
+- sofisticado
 
-* minimalista
+- minimalista
 
-* muito espaçamento
+- muito espaçamento
 
-* tipografia excelente
+- tipografia excelente
 
-* números grandes e legíveis
+- números grandes e legíveis
 
-* poucos elementos por tela
+- poucos elementos por tela
 
-* microinterações discretas
+- microinterações discretas
 
-* gráficos limpos
+- gráficos limpos
 
-* hierarquia visual muito clara
+- hierarquia visual muito clara
 
 Preferência por:
 
-* dark mode premium como padrão
+- dark mode premium como padrão
 
-* opção de light mode
+- opção de light mode
 
-* fundo quase preto
+- fundo quase preto
 
-* surfaces levemente elevadas
+- surfaces levemente elevadas
 
-* bordas extremamente sutis
+- bordas extremamente sutis
 
-* verde para entradas/positivo
+- verde para entradas/positivo
 
-* vermelho apenas quando realmente necessário
+- vermelho apenas quando realmente necessário
 
-* uma cor de destaque sofisticada para ações e investimentos
+- uma cor de destaque sofisticada para ações e investimentos
 
 Usar Inter ou Geist.
 
@@ -2328,11 +2328,11 @@ Valor líquido disponível em ativos líquidos.
 
 Gráfico de linha mostrando:
 
-* patrimônio histórico
+- patrimônio histórico
 
-* patrimônio atual
+- patrimônio atual
 
-* patrimônio projetado
+- patrimônio projetado
 
 Diferenciar visualmente:
 
@@ -2372,105 +2372,105 @@ Categorias padrão:
 
 ### Moradia
 
-* aluguel
+- aluguel
 
-* condomínio
+- condomínio
 
-* IPTU
+- IPTU
 
-* energia
+- energia
 
-* água
+- água
 
-* gás
+- gás
 
-* internet
+- internet
 
-* manutenção
+- manutenção
 
 ### Alimentação
 
-* mercado
+- mercado
 
-* restaurante
+- restaurante
 
-* delivery
+- delivery
 
-* café
+- café
 
-* alimentação
+- alimentação
 
 ### Transporte
 
-* gasolina
+- gasolina
 
-* estacionamento
+- estacionamento
 
-* pedágio
+- pedágio
 
-* Uber
+- Uber
 
-* transporte público
+- transporte público
 
-* manutenção
+- manutenção
 
-* seguro
+- seguro
 
-* IPVA
+- IPVA
 
 ### Saúde
 
-* plano de saúde
+- plano de saúde
 
-* consulta
+- consulta
 
-* exame
+- exame
 
-* farmácia
+- farmácia
 
-* terapia
+- terapia
 
-* academia
+- academia
 
 ### Família
 
-* bebê
+- bebê
 
-* filhos
+- filhos
 
-* presentes
+- presentes
 
-* família
+- família
 
 ### Lazer
 
-* viagens
+- viagens
 
-* entretenimento
+- entretenimento
 
-* hobbies
+- hobbies
 
-* bares
+- bares
 
-* restaurantes
+- restaurantes
 
 ### Assinaturas
 
-* streaming
+- streaming
 
-* software
+- software
 
-* serviços
+- serviços
 
 ### Compras
 
-* roupas
+- roupas
 
-* eletrônicos
+- eletrônicos
 
-* casa
+- casa
 
-* outros
+- outros
 
 ### Investimentos
 
@@ -2516,19 +2516,19 @@ As regras devem ter prioridade configurável.
 
 Permitir registrar receitas reais:
 
-* salário
+- salário
 
-* VR/VA
+- VR/VA
 
-* bolsa
+- bolsa
 
-* PLR
+- PLR
 
-* freelance
+- freelance
 
-* rendimentos
+- rendimentos
 
-* outras
+- outras
 
 Importante:
 
@@ -2556,31 +2556,31 @@ Todo planejamento pertence a um cenário.
 
 Exemplos:
 
-* Cenário atual
+- Cenário atual
 
-* Indaiatuba
+- Indaiatuba
 
-* Sorocaba
+- Sorocaba
 
-* Canadá 2028
+- Canadá 2028
 
-* Promoção XP
+- Promoção XP
 
-* Conservador
+- Conservador
 
-* Otimista
+- Otimista
 
 O usuário pode:
 
-* criar cenário
+- criar cenário
 
-* duplicar cenário
+- duplicar cenário
 
-* renomear
+- renomear
 
-* excluir
+- excluir
 
-* definir como padrão
+- definir como padrão
 
 Duplicar um cenário deve criar uma cópia independente.
 
@@ -2594,59 +2594,59 @@ IncomePlan
 
 Campos:
 
-* id
+- id
 
-* scenario_id
+- scenario_id
 
-* name
+- name
 
-* type
+- type
 
-* amount
+- amount
 
-* frequency
+- frequency
 
-* start_date
+- start_date
 
-* end_date
+- end_date
 
-* annual_adjustment_percent
+- annual_adjustment_percent
 
-* enabled
+- enabled
 
 Tipos:
 
-* SALARY
+- SALARY
 
-* VR
+- VR
 
-* BENEFIT
+- BENEFIT
 
-* SCHOLARSHIP
+- SCHOLARSHIP
 
-* BONUS
+- BONUS
 
-* PLR
+- PLR
 
-* FREELANCE
+- FREELANCE
 
-* INVESTMENT_INCOME
+- INVESTMENT_INCOME
 
-* OTHER
+- OTHER
 
 Frequências:
 
-* MONTHLY
+- MONTHLY
 
-* BIMONTHLY
+- BIMONTHLY
 
-* QUARTERLY
+- QUARTERLY
 
-* SEMIANNUAL
+- SEMIANNUAL
 
-* YEARLY
+- YEARLY
 
-* ONCE
+- ONCE
 
 ---
 
@@ -2720,29 +2720,29 @@ ExpensePlan
 
 Campos:
 
-* id
+- id
 
-* scenario_id
+- scenario_id
 
-* category_id
+- category_id
 
-* name
+- name
 
-* amount
+- amount
 
-* frequency
+- frequency
 
-* start_date
+- start_date
 
-* end_date
+- end_date
 
-* annual_adjustment_percent
+- annual_adjustment_percent
 
-* enabled
+- enabled
 
-* essential
+- essential
 
-* notes
+- notes
 
 ---
 
@@ -2750,9 +2750,9 @@ Campos:
 
 Permitir marcar uma despesa como:
 
-* essencial
+- essencial
 
-* discricionária
+- discricionária
 
 Exemplo:
 
@@ -2778,37 +2778,37 @@ PlanningEvent
 
 Campos:
 
-* id
+- id
 
-* scenario_id
+- scenario_id
 
-* name
+- name
 
-* date
+- date
 
-* type
+- type
 
-* description
+- description
 
 Tipos:
 
-* BIRTH
+- BIRTH
 
-* MOVE
+- MOVE
 
-* JOB_CHANGE
+- JOB_CHANGE
 
-* PROMOTION
+- PROMOTION
 
-* SCHOLARSHIP_END
+- SCHOLARSHIP_END
 
-* IMMIGRATION
+- IMMIGRATION
 
-* PURCHASE
+- PURCHASE
 
-* SALE
+- SALE
 
-* CUSTOM
+- CUSTOM
 
 Um evento pode modificar o planejamento.
 
@@ -2862,21 +2862,21 @@ projectionEngine.ts
 
 Esse serviço recebe:
 
-* cenário
+- cenário
 
-* data inicial
+- data inicial
 
-* data final
+- data final
 
-* patrimônio inicial
+- patrimônio inicial
 
-* receitas planejadas
+- receitas planejadas
 
-* despesas planejadas
+- despesas planejadas
 
-* eventos
+- eventos
 
-* rentabilidade
+- rentabilidade
 
 E retorna:
 
@@ -2884,29 +2884,29 @@ ProjectionMonth[]
 
 Cada mês deve conter:
 
-* month
+- month
 
-* recurringIncome
+- recurringIncome
 
-* extraordinaryIncome
+- extraordinaryIncome
 
-* totalIncome
+- totalIncome
 
-* essentialExpenses
+- essentialExpenses
 
-* discretionaryExpenses
+- discretionaryExpenses
 
-* totalExpenses
+- totalExpenses
 
-* monthlyCashFlow
+- monthlyCashFlow
 
-* plannedInvestment
+- plannedInvestment
 
-* investmentReturn
+- investmentReturn
 
-* endingNetWorth
+- endingNetWorth
 
-* bridgeReserveBalance
+- bridgeReserveBalance
 
 ---
 
@@ -3230,25 +3230,25 @@ Permitir selecionar 2 a 4 cenários.
 
 Comparar:
 
-* patrimônio final
+- patrimônio final
 
-* renda total
+- renda total
 
-* despesas totais
+- despesas totais
 
-* média mensal
+- média mensal
 
-* taxa de poupança
+- taxa de poupança
 
-* meses em déficit
+- meses em déficit
 
-* reserva de emergência
+- reserva de emergência
 
-* reserva ponte
+- reserva ponte
 
-* patrimônio mínimo
+- patrimônio mínimo
 
-* patrimônio máximo
+- patrimônio máximo
 
 Mostrar gráfico comparativo.
 
@@ -3270,11 +3270,11 @@ Ao mudar:
 
 recalcular imediatamente:
 
-* fluxo mensal
+- fluxo mensal
 
-* patrimônio final
+- patrimônio final
 
-* taxa de poupança
+- taxa de poupança
 
 Não salvar automaticamente.
 
@@ -3294,29 +3294,29 @@ Goal
 
 Campos:
 
-* name
+- name
 
-* targetAmount
+- targetAmount
 
-* currentAmount
+- currentAmount
 
-* targetDate
+- targetDate
 
-* priority
+- priority
 
-* category
+- category
 
 Exemplos:
 
-* Reserva de emergência
+- Reserva de emergência
 
-* Canadá
+- Canadá
 
-* Entrada imóvel
+- Entrada imóvel
 
-* Viagem
+- Viagem
 
-* Patrimônio de R$ 500 mil
+- Patrimônio de R$ 500 mil
 
 Calcular:
 
@@ -3494,11 +3494,11 @@ Top 3 maiores categorias.
 
 Comparar com:
 
-* mês anterior
+- mês anterior
 
-* média dos últimos 3 meses
+- média dos últimos 3 meses
 
-* média dos últimos 6 meses
+- média dos últimos 6 meses
 
 ## Planejamento
 
@@ -3548,23 +3548,23 @@ Real: R$ 3.480
 
 Permitir registrar:
 
-* conta corrente
+- conta corrente
 
-* poupança
+- poupança
 
-* investimentos
+- investimentos
 
-* renda fixa
+- renda fixa
 
-* ações
+- ações
 
-* fundos
+- fundos
 
-* previdência
+- previdência
 
-* bens
+- bens
 
-* dívidas
+- dívidas
 
 Separar:
 
@@ -3606,25 +3606,25 @@ Apenas a alocação muda.
 
 Permitir:
 
-* moeda
+- moeda
 
-* primeiro dia do mês
+- primeiro dia do mês
 
-* categorias
+- categorias
 
-* regras de categorização
+- regras de categorização
 
-* rentabilidade esperada
+- rentabilidade esperada
 
-* meses de reserva
+- meses de reserva
 
-* categorias essenciais
+- categorias essenciais
 
-* metas
+- metas
 
-* tema
+- tema
 
-* preferências de dashboard
+- preferências de dashboard
 
 ---
 
@@ -3648,13 +3648,13 @@ Perguntar:
 
 Depois criar automaticamente:
 
-* cenário "Atual"
+- cenário "Atual"
 
-* orçamento inicial
+- orçamento inicial
 
-* dashboard
+- dashboard
 
-* meta de reserva de emergência
+- meta de reserva de emergência
 
 Não exigir que o usuário configure 50 campos antes de ver valor.
 
@@ -3666,15 +3666,15 @@ Dados financeiros são sensíveis.
 
 Implementar:
 
-* autenticação Supabase
+- autenticação Supabase
 
-* Row Level Security
+- Row Level Security
 
-* cada usuário só acessa seus próprios dados
+- cada usuário só acessa seus próprios dados
 
-* nenhum dado financeiro deve ser público
+- nenhum dado financeiro deve ser público
 
-* não enviar dados financeiros para APIs externas
+- não enviar dados financeiros para APIs externas
 
 Como não haverá IA nesta versão, **nenhum dado financeiro deve sair do Supabase/browser para serviços externos**.
 
@@ -3852,11 +3852,11 @@ Permitir configurar:
 
 Opções:
 
-* manter em caixa
+- manter em caixa
 
-* investir
+- investir
 
-* dividir percentual
+- dividir percentual
 
 Exemplo:
 
@@ -3930,43 +3930,43 @@ Esse texto deve vir do FinancialInsightsEngine, não de IA.
 
 O aplicativo NÃO deve:
 
-* tentar parecer uma planilha
+- tentar parecer uma planilha
 
-* mostrar dezenas de números simultaneamente
+- mostrar dezenas de números simultaneamente
 
-* usar IA para matemática
+- usar IA para matemática
 
-* inventar previsões
+- inventar previsões
 
-* tratar projeção como certeza
+- tratar projeção como certeza
 
-* misturar receita extraordinária com renda recorrente
+- misturar receita extraordinária com renda recorrente
 
-* tratar transferência entre contas como despesa
+- tratar transferência entre contas como despesa
 
-* misturar patrimônio com fluxo de caixa
+- misturar patrimônio com fluxo de caixa
 
-* esconder premissas dos cálculos
+- esconder premissas dos cálculos
 
 O aplicativo DEVE:
 
-* ser extremamente claro
+- ser extremamente claro
 
-* mostrar premissas
+- mostrar premissas
 
-* permitir edição rápida
+- permitir edição rápida
 
-* permitir simulações
+- permitir simulações
 
-* preservar histórico
+- preservar histórico
 
-* distinguir real vs planejado vs projetado
+- distinguir real vs planejado vs projetado
 
-* explicar os cálculos
+- explicar os cálculos
 
-* ser útil mesmo sem planejamento avançado
+- ser útil mesmo sem planejamento avançado
 
-* funcionar perfeitamente no mobile
+- funcionar perfeitamente no mobile
 
 ---
 
@@ -3980,83 +3980,83 @@ Implemente nesta ordem:
 
 Fundação:
 
-* autenticação
+- autenticação
 
-* banco
+- banco
 
-* layout
+- layout
 
-* dashboard
+- dashboard
 
-* categorias
+- categorias
 
-* receitas
+- receitas
 
-* despesas
+- despesas
 
-* patrimônio
+- patrimônio
 
-* transações
+- transações
 
-* fechamento mensal
+- fechamento mensal
 
-* importação CSV
+- importação CSV
 
 ## FASE 2
 
 Planejamento:
 
-* cenários
+- cenários
 
-* receitas planejadas
+- receitas planejadas
 
-* despesas planejadas
+- despesas planejadas
 
-* orçamento
+- orçamento
 
-* projection engine
+- projection engine
 
 ## FASE 3
 
 Inteligência determinística:
 
-* insights
+- insights
 
-* health score
+- health score
 
-* comparação real vs planejado
+- comparação real vs planejado
 
-* dependência de renda temporária
+- dependência de renda temporária
 
-* reserva de emergência
+- reserva de emergência
 
-* reserva ponte
+- reserva ponte
 
 ## FASE 4
 
 Planejamento avançado:
 
-* eventos
+- eventos
 
-* metas
+- metas
 
-* timeline
+- timeline
 
-* what-if
+- what-if
 
-* comparação de cenários
+- comparação de cenários
 
 ## FASE 5
 
 Relatórios:
 
-* relatório mensal
+- relatório mensal
 
-* gráficos
+- gráficos
 
-* exportação PDF
+- exportação PDF
 
-* resumo executivo
+- resumo executivo
 
 ---
 

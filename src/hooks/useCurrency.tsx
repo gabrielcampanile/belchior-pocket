@@ -11,13 +11,17 @@ import {
   type CurrencyCode,
   type Money,
 } from "@/domain/currency";
-import { convertMoney, createConverter, type ExchangeRate, type MoneyConverter } from "@/domain/exchange";
+import {
+  convertMoney,
+  createConverter,
+  type ExchangeRate,
+  type MoneyConverter,
+} from "@/domain/exchange";
 import { fetchExchangeRates } from "@/lib/exchangeRateService";
 import { formatCents } from "@/lib/format";
 import { useProfile } from "@/hooks/useFinanceData";
 
 const RATES_SYNC_KEY = "belchior:rates-sync";
-
 
 interface CurrencyContextValue {
   displayCurrency: CurrencyCode;
@@ -63,7 +67,6 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
       .then(() => queryClient.invalidateQueries({ queryKey: ["exchange-rates"] }))
       .catch(() => window.localStorage.removeItem(RATES_SYNC_KEY));
   }, [profile, refresh, queryClient]);
-
 
   const mutation = useMutation({
     mutationFn: async (currency: CurrencyCode) => {

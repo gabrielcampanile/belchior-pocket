@@ -1,14 +1,27 @@
 import { useMemo } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { EmptyState, MetricValue, PageHeader, Panel, SectionHeader } from "@/components/finance/primitives";
+import {
+  EmptyState,
+  MetricValue,
+  PageHeader,
+  Panel,
+  SectionHeader,
+} from "@/components/finance/primitives";
 import { Button } from "@/components/ui/button";
 import {
   useAccounts,
   useBalances,
   useCategories,
-  
   useProfile,
   useSettings,
   useTransactions,
@@ -91,7 +104,10 @@ function DashboardPage() {
     currency: displayCurrency,
   });
 
-  const chartData = series.map((s) => ({ month: monthLabelShort(s.month), value: s.netWorth / 100 }));
+  const chartData = series.map((s) => ({
+    month: monthLabelShort(s.month),
+    value: s.netWorth / 100,
+  }));
 
   return (
     <AppLayout>
@@ -165,7 +181,10 @@ function DashboardPage() {
       </div>
 
       <Panel className="space-y-4">
-        <SectionHeader title="Patrimônio histórico" description="Últimos 12 meses, apenas dados reais." />
+        <SectionHeader
+          title="Patrimônio histórico"
+          description="Últimos 12 meses, apenas dados reais."
+        />
         {balances.length === 0 ? (
           <EmptyState
             title="Sem saldos registrados"
@@ -232,7 +251,10 @@ function DashboardPage() {
         ) : (
           <ul className="divide-y divide-border">
             {metrics.expenses.byCategory.slice(0, 6).map((row) => (
-              <li key={row.categoryId ?? "none"} className="flex items-center justify-between gap-4 py-3">
+              <li
+                key={row.categoryId ?? "none"}
+                className="flex items-center justify-between gap-4 py-3"
+              >
                 <span className="min-w-0 truncate text-sm text-foreground">{row.name}</span>
                 <span className="shrink-0 text-sm tabular-nums text-muted-foreground">
                   {formatCents(row.total, displayCurrency)}

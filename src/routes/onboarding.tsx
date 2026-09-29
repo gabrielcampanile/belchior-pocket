@@ -18,10 +18,14 @@ export const Route = createFileRoute("/onboarding")({
       { title: "Primeiros passos · Belchior" },
       {
         name: "description",
-        content: "Seis perguntas rápidas para configurar patrimônio, renda, reserva e sua primeira meta.",
+        content:
+          "Seis perguntas rápidas para configurar patrimônio, renda, reserva e sua primeira meta.",
       },
       { property: "og:title", content: "Primeiros passos · Belchior" },
-      { property: "og:description", content: "Configure sua base financeira em menos de dois minutos." },
+      {
+        property: "og:description",
+        content: "Configure sua base financeira em menos de dois minutos.",
+      },
     ],
   }),
   component: OnboardingPage,
@@ -29,11 +33,36 @@ export const Route = createFileRoute("/onboarding")({
 
 const STEPS = [
   { key: "name", label: "Como podemos te chamar?", placeholder: "Seu nome", type: "text" },
-  { key: "netWorth", label: "Qual seu patrimônio atual aproximado?", placeholder: "150.000,00", type: "money" },
-  { key: "income", label: "Qual sua renda mensal recorrente?", placeholder: "12.000,00", type: "money" },
-  { key: "expenses", label: "Quanto gasta por mês, em média?", placeholder: "7.500,00", type: "money" },
-  { key: "reserve", label: "Quantos meses de reserva você quer ter?", placeholder: "6", type: "number" },
-  { key: "goal", label: "Qual sua principal meta financeira?", placeholder: "Comprar um imóvel", type: "text" },
+  {
+    key: "netWorth",
+    label: "Qual seu patrimônio atual aproximado?",
+    placeholder: "150.000,00",
+    type: "money",
+  },
+  {
+    key: "income",
+    label: "Qual sua renda mensal recorrente?",
+    placeholder: "12.000,00",
+    type: "money",
+  },
+  {
+    key: "expenses",
+    label: "Quanto gasta por mês, em média?",
+    placeholder: "7.500,00",
+    type: "money",
+  },
+  {
+    key: "reserve",
+    label: "Quantos meses de reserva você quer ter?",
+    placeholder: "6",
+    type: "number",
+  },
+  {
+    key: "goal",
+    label: "Qual sua principal meta financeira?",
+    placeholder: "Comprar um imóvel",
+    type: "text",
+  },
 ] as const;
 
 function OnboardingPage() {
@@ -48,7 +77,6 @@ function OnboardingPage() {
   const upsertSettings = useUpsert("settings", "user_id");
   const upsertBalance = useUpsert("account_balances", "user_id,account_id,month");
   const upsertIncome = useUpsert("transactions", "user_id,dedupe_hash");
-
 
   const current = STEPS[step];
 
@@ -91,7 +119,6 @@ function OnboardingPage() {
           });
         }
 
-
         const income = parseCurrencyToCents(values.income ?? "");
         if (income && income > 0) {
           const occurredOn = `${currentMonthKey().slice(0, 7)}-01`;
@@ -113,7 +140,6 @@ function OnboardingPage() {
       await queryClient.refetchQueries({ queryKey: ["profile"] });
       toast.success("Tudo pronto.");
       navigate({ to: "/", replace: true });
-
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Não foi possível concluir.");
     } finally {

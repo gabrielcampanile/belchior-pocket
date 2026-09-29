@@ -1,5 +1,11 @@
 import { Coins } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { CURRENCY_LIST, type CurrencyCode } from "@/domain/currency";
 import { useCurrency } from "@/hooks/useCurrency";
 
@@ -13,7 +19,10 @@ export function CurrencySelect({ className }: { className?: string }) {
       onValueChange={(v) => setDisplayCurrency(v as CurrencyCode)}
       disabled={isUpdating}
     >
-      <SelectTrigger className={className ?? "h-9 w-[132px] text-xs"} aria-label="Moeda de visualização">
+      <SelectTrigger
+        className={className ?? "h-9 w-[132px] text-xs"}
+        aria-label="Moeda de visualização"
+      >
         <Coins className="mr-1 h-3.5 w-3.5 text-muted-foreground" />
         <SelectValue />
       </SelectTrigger>

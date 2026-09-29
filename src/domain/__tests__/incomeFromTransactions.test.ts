@@ -53,7 +53,12 @@ describe("incomeBreakdown a partir de transações", () => {
   it("soma apenas transações de receita e separa por natureza", () => {
     const result = incomeBreakdown(
       [
-        tx({ type: "INCOME", amount_cents: 100_000, income_nature: "RECURRING", category_id: "c1" }),
+        tx({
+          type: "INCOME",
+          amount_cents: 100_000,
+          income_nature: "RECURRING",
+          category_id: "c1",
+        }),
         tx({ type: "INCOME", amount_cents: 50_000, income_nature: "TEMPORARY" }),
         tx({ type: "EXPENSE", amount_cents: 30_000 }),
         tx({ type: "INVESTMENT_CONTRIBUTION", amount_cents: 20_000 }),

@@ -54,7 +54,12 @@ export function MetricValue({
         </p>
         {badge ? <DataBadge kind={badge} /> : null}
       </div>
-      <p className={cn("mt-3 text-2xl font-semibold tabular-nums tracking-tight sm:text-3xl", valueTone)}>
+      <p
+        className={cn(
+          "mt-3 text-2xl font-semibold tabular-nums tracking-tight sm:text-3xl",
+          valueTone,
+        )}
+      >
         {value}
       </p>
       {hint ? <p className="mt-1 text-xs text-muted-foreground">{hint}</p> : null}
@@ -130,6 +135,8 @@ export function AssumptionNote({ children }: { children: ReactNode }) {
 
 export function Panel({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <section className={cn("rounded-2xl border border-border bg-card p-5", className)}>{children}</section>
+    <section className={cn("rounded-2xl border border-border bg-card p-5", className)}>
+      {children}
+    </section>
   );
 }

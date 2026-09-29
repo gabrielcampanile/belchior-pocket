@@ -87,7 +87,8 @@ export function convertMoney(
 export type MoneyConverter = (value: Money, onDate?: string) => number;
 
 export function createConverter(target: CurrencyCode, rates: ExchangeRate[]): MoneyConverter {
-  return (value, onDate) => convertMoney(value, target, rates, onDate)?.amountCents ?? value.amountCents;
+  return (value, onDate) =>
+    convertMoney(value, target, rates, onDate)?.amountCents ?? value.amountCents;
 }
 
 /** Conversor neutro: mantém o valor como está (usado quando não há multimoeda em jogo). */

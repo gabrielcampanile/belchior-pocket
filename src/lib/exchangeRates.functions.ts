@@ -28,15 +28,15 @@ export const refreshExchangeRates = createServerFn({ method: "POST" })
     const payload = (await response.json()) as { rates?: Record<string, number> };
     const rates = payload.rates ?? {};
 
-    const rows = CURRENCY_CODES.filter((code) => code !== "BRL" && Number.isFinite(rates[code])).map(
-      (code) => ({
-        base_currency: "BRL" as const,
-        quote_currency: code,
-        rate: rates[code],
-        effective_on: today,
-        source: SOURCE,
-      }),
-    );
+    const rows = CURRENCY_CODES.filter(
+      (code) => code !== "BRL" && Number.isFinite(rates[code]),
+    ).map((code) => ({
+      base_currency: "BRL" as const,
+      quote_currency: code,
+      rate: rates[code],
+      effective_on: today,
+      source: SOURCE,
+    }));
     if (rows.length === 0) throw new Error("Nenhuma cotação retornada pela fonte.");
 
     const { error } = await supabaseAdmin

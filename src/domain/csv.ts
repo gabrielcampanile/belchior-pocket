@@ -59,9 +59,7 @@ export function parseCsv(text: string, delimiter: Delimiter): string[][] {
   row.push(field);
   rows.push(row);
 
-  return rows
-    .map((r) => r.map((c) => c.trim()))
-    .filter((r) => r.some((c) => c.length > 0));
+  return rows.map((r) => r.map((c) => c.trim())).filter((r) => r.some((c) => c.length > 0));
 }
 
 export type DateFormat = "DD/MM/YYYY" | "YYYY-MM-DD" | "MM/DD/YYYY";
@@ -91,9 +89,10 @@ export function parseAmountToCents(raw: string): number | null {
   const hasComma = value.includes(",");
   const hasDot = value.includes(".");
   if (hasComma && hasDot) {
-    value = value.lastIndexOf(",") > value.lastIndexOf(".")
-      ? value.replace(/\./g, "").replace(",", ".")
-      : value.replace(/,/g, "");
+    value =
+      value.lastIndexOf(",") > value.lastIndexOf(".")
+        ? value.replace(/\./g, "").replace(",", ".")
+        : value.replace(/,/g, "");
   } else if (hasComma) {
     value = value.replace(",", ".");
   }
@@ -156,7 +155,10 @@ export interface ParsedRow {
   raw: string[];
 }
 
-export function mapRows(rows: string[][], mapping: ImportMapping): {
+export function mapRows(
+  rows: string[][],
+  mapping: ImportMapping,
+): {
   parsed: ParsedRow[];
   invalid: { line: number; reason: string }[];
 } {

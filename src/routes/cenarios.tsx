@@ -36,10 +36,14 @@ export const Route = createFileRoute("/cenarios")({
       { title: "Cenários · Belchior" },
       {
         name: "description",
-        content: "Crie, duplique e compare cenários financeiros para decidir com números, não com intuição.",
+        content:
+          "Crie, duplique e compare cenários financeiros para decidir com números, não com intuição.",
       },
       { property: "og:title", content: "Cenários · Belchior" },
-      { property: "og:description", content: "Simulações what-if determinísticas do seu futuro financeiro." },
+      {
+        property: "og:description",
+        content: "Simulações what-if determinísticas do seu futuro financeiro.",
+      },
     ],
   }),
   component: CenariosPage,
@@ -160,17 +164,27 @@ function CenariosPage() {
                 </div>
                 {s.is_default ? <DataBadge kind="PLANEJADO" /> : null}
               </div>
-              {s.description ? <p className="text-sm text-muted-foreground">{s.description}</p> : null}
+              {s.description ? (
+                <p className="text-sm text-muted-foreground">{s.description}</p>
+              ) : null}
               <div className="flex flex-wrap gap-2">
                 <Button asChild size="sm" variant="secondary">
                   <Link to="/planejamento" search={{ scenario: s.id }}>
                     Abrir planejamento
                   </Link>
                 </Button>
-                <Button size="sm" variant="ghost" onClick={() => setDialog({ mode: "edit", scenario: s })}>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setDialog({ mode: "edit", scenario: s })}
+                >
                   <Pencil className="mr-1.5 h-4 w-4" /> Editar premissas
                 </Button>
-                <Button size="sm" variant="ghost" onClick={() => setDialog({ mode: "duplicate", scenario: s })}>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setDialog({ mode: "duplicate", scenario: s })}
+                >
                   <Copy className="mr-1.5 h-4 w-4" /> Duplicar
                 </Button>
                 {!s.is_default ? (
@@ -178,7 +192,9 @@ function CenariosPage() {
                     size="sm"
                     variant="ghost"
                     onClick={() => {
-                      void setDefault.mutateAsync(s.id).then(() => toast.success("Cenário padrão atualizado."));
+                      void setDefault
+                        .mutateAsync(s.id)
+                        .then(() => toast.success("Cenário padrão atualizado."));
                     }}
                   >
                     <Star className="mr-1.5 h-4 w-4" /> Tornar padrão
@@ -212,7 +228,9 @@ function CenariosPage() {
               ? emptyForm()
               : formFromScenario(
                   dialog.scenario,
-                  dialog.mode === "duplicate" ? { name: `${dialog.scenario.name} (cópia)` } : undefined,
+                  dialog.mode === "duplicate"
+                    ? { name: `${dialog.scenario.name} (cópia)` }
+                    : undefined,
                 )
           }
           busy={busy}
@@ -275,7 +293,10 @@ function ScenarioDialog({
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-2">
               <Label>Moeda base</Label>
-              <CurrencyField value={form.baseCurrency} onChange={(c) => setForm({ ...form, baseCurrency: c })} />
+              <CurrencyField
+                value={form.baseCurrency}
+                onChange={(c) => setForm({ ...form, baseCurrency: c })}
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="scenario-start">Mês inicial</Label>
@@ -320,8 +341,12 @@ function ScenarioDialog({
                 onChange={(e) => setForm({ ...form, monthlyReturn: e.target.value })}
               />
               <p className="text-xs text-muted-foreground">
-                ≈ {formatPercent(Math.pow(1 + (Number(form.monthlyReturn.replace(",", ".")) || 0) / 100, 12) - 1, 2)} ao
-                ano
+                ≈{" "}
+                {formatPercent(
+                  Math.pow(1 + (Number(form.monthlyReturn.replace(",", ".")) || 0) / 100, 12) - 1,
+                  2,
+                )}{" "}
+                ao ano
               </p>
             </div>
           </div>
@@ -331,7 +356,11 @@ function ScenarioDialog({
             Cancelar
           </Button>
           <Button onClick={() => void onSubmit(form)} disabled={busy}>
-            {mode === "edit" ? "Salvar premissas" : mode === "duplicate" ? "Duplicar cenário" : "Criar cenário"}
+            {mode === "edit"
+              ? "Salvar premissas"
+              : mode === "duplicate"
+                ? "Duplicar cenário"
+                : "Criar cenário"}
           </Button>
         </DialogFooter>
       </DialogContent>

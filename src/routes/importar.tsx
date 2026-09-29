@@ -2,12 +2,24 @@ import { useMemo, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { EmptyState, PageHeader, Panel, SectionHeader, AssumptionNote } from "@/components/finance/primitives";
+import {
+  EmptyState,
+  PageHeader,
+  Panel,
+  SectionHeader,
+  AssumptionNote,
+} from "@/components/finance/primitives";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   detectDelimiter,
   importMappingSchema,
@@ -33,10 +45,14 @@ export const Route = createFileRoute("/importar")({
       { title: "Importar extrato CSV · Belchior" },
       {
         name: "description",
-        content: "Importe extratos bancários em CSV com mapeamento de colunas, preview e deduplicação.",
+        content:
+          "Importe extratos bancários em CSV com mapeamento de colunas, preview e deduplicação.",
       },
       { property: "og:title", content: "Importar extrato CSV · Belchior" },
-      { property: "og:description", content: "Mapeie colunas, veja o preview e evite transações duplicadas." },
+      {
+        property: "og:description",
+        content: "Mapeie colunas, veja o preview e evite transações duplicadas.",
+      },
     ],
   }),
   component: ImportPage,
@@ -75,7 +91,12 @@ function ImportPage() {
       // Regras podem reclassificar (ex.: aporte de investimento), mas nunca
       // transformam uma saída de cartão em receita.
       const type = match?.type ?? flow;
-      const hash = dedupeHash(row.occurred_on, Math.abs(row.amount_cents), row.description, row.currency);
+      const hash = dedupeHash(
+        row.occurred_on,
+        Math.abs(row.amount_cents),
+        row.description,
+        row.currency,
+      );
       return {
         occurred_on: row.occurred_on,
         description: row.description,
@@ -120,7 +141,6 @@ function ImportPage() {
     }
   }
 
-
   return (
     <AppLayout>
       <PageHeader
@@ -140,7 +160,8 @@ function ImportPage() {
         />
         {rows.length > 0 ? (
           <p className="text-xs text-muted-foreground">
-            {rows.length} linhas lidas · delimitador detectado: <code>{delimiter === "\t" ? "TAB" : delimiter}</code>
+            {rows.length} linhas lidas · delimitador detectado:{" "}
+            <code>{delimiter === "\t" ? "TAB" : delimiter}</code>
           </p>
         ) : null}
       </Panel>
@@ -297,14 +318,16 @@ function ImportPage() {
                         {row.duplicate ? " · duplicada" : ""}
                       </p>
                     </div>
-                    <span className="shrink-0 text-sm tabular-nums">{formatCents(row.amount_cents, row.currency)}</span>
+                    <span className="shrink-0 text-sm tabular-nums">
+                      {formatCents(row.amount_cents, row.currency)}
+                    </span>
                   </li>
                 ))}
               </ul>
             )}
             <AssumptionNote>
-              A deduplicação usa um hash de data + valor + descrição normalizada. Linhas já existentes são
-              ignoradas automaticamente.
+              A deduplicação usa um hash de data + valor + descrição normalizada. Linhas já
+              existentes são ignoradas automaticamente.
             </AssumptionNote>
           </Panel>
         </>

@@ -62,7 +62,10 @@ export function CategoryDonut({
             stroke="none"
           >
             {data.map((slice, index) => (
-              <Cell key={slice.categoryId ?? `slice-${index}`} fill={PALETTE[index % PALETTE.length]} />
+              <Cell
+                key={slice.categoryId ?? `slice-${index}`}
+                fill={PALETTE[index % PALETTE.length]}
+              />
             ))}
           </Pie>
           <Tooltip
@@ -81,7 +84,9 @@ export function CategoryDonut({
           <Legend
             verticalAlign="bottom"
             height={36}
-            formatter={(value: string) => <span className="text-xs text-muted-foreground">{value}</span>}
+            formatter={(value: string) => (
+              <span className="text-xs text-muted-foreground">{value}</span>
+            )}
           />
         </PieChart>
       </ResponsiveContainer>

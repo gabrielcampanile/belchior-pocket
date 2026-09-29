@@ -79,13 +79,22 @@ export function AppLayout({ children }: { children: ReactNode }) {
             <NavLink key={item.to} {...item} active={pathname === item.to} />
           ))}
         </nav>
-        <Button variant="ghost" className="justify-start gap-2 text-muted-foreground" onClick={handleSignOut}>
+        <Button
+          variant="ghost"
+          className="justify-start gap-2 text-muted-foreground"
+          onClick={handleSignOut}
+        >
           <LogOut className="h-4 w-4" /> Sair
         </Button>
       </aside>
 
       <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-background/80 px-4 py-3 backdrop-blur lg:hidden">
-        <Button variant="ghost" size="icon" onClick={() => setMobileOpen((v) => !v)} aria-label="Menu">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setMobileOpen((v) => !v)}
+          aria-label="Menu"
+        >
           <Menu className="h-5 w-5" />
         </Button>
         <BrandMark compact />
@@ -100,7 +109,11 @@ export function AppLayout({ children }: { children: ReactNode }) {
             {NAV.map((item) => (
               <NavLink key={item.to} {...item} active={pathname === item.to} />
             ))}
-            <Button variant="ghost" className="justify-start gap-2 text-muted-foreground" onClick={handleSignOut}>
+            <Button
+              variant="ghost"
+              className="justify-start gap-2 text-muted-foreground"
+              onClick={handleSignOut}
+            >
               <LogOut className="h-4 w-4" /> Sair
             </Button>
           </nav>

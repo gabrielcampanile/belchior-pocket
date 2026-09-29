@@ -4,12 +4,24 @@ import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { AssumptionNote, EmptyState, PageHeader, Panel, SectionHeader } from "@/components/finance/primitives";
+import {
+  AssumptionNote,
+  EmptyState,
+  PageHeader,
+  Panel,
+  SectionHeader,
+} from "@/components/finance/primitives";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import {
   useCategories,
@@ -40,7 +52,10 @@ export const Route = createFileRoute("/configuracoes")({
         content: "Perfil, premissas financeiras, regras de categorização e dados de demonstração.",
       },
       { property: "og:title", content: "Configurações · Belchior" },
-      { property: "og:description", content: "Ajuste premissas, regras de categorização e dados demo." },
+      {
+        property: "og:description",
+        content: "Ajuste premissas, regras de categorização e dados demo.",
+      },
     ],
   }),
   component: SettingsPage,
@@ -135,7 +150,10 @@ function SettingsPage() {
         if (tx.category_id) continue;
         const match = applyRules(tx.description, rules);
         if (match?.categoryId) {
-          await updateTransaction.mutateAsync({ id: tx.id, values: { category_id: match.categoryId } });
+          await updateTransaction.mutateAsync({
+            id: tx.id,
+            values: { category_id: match.categoryId },
+          });
           changed += 1;
         }
       }
@@ -163,7 +181,9 @@ function SettingsPage() {
 
       const idByKey: Record<string, string> = {};
       for (const seed of DEMO_ACCOUNTS) {
-        const found = (accountRows as { id: string; name: string }[]).find((r) => r.name === seed.name);
+        const found = (accountRows as { id: string; name: string }[]).find(
+          (r) => r.name === seed.name,
+        );
         if (found) idByKey[seed.key] = found.id;
       }
 
@@ -178,7 +198,9 @@ function SettingsPage() {
         ["transactions", txs, "user_id,dedupe_hash"],
       ] as const) {
         if (!rows.length) continue;
-        const { error } = await db.from(table).upsert(rows, conflict ? { onConflict: conflict } : undefined);
+        const { error } = await db
+          .from(table)
+          .upsert(rows, conflict ? { onConflict: conflict } : undefined);
         if (error) throw new Error(error.message);
       }
 
@@ -212,7 +234,10 @@ function SettingsPage() {
 
   return (
     <AppLayout>
-      <PageHeader title="Configurações" description="Perfil, premissas do motor financeiro e automações." />
+      <PageHeader
+        title="Configurações"
+        description="Perfil, premissas do motor financeiro e automações."
+      />
 
       <Panel className="space-y-4">
         <SectionHeader title="Perfil" />
@@ -266,8 +291,8 @@ function SettingsPage() {
             ))}
         </ul>
         <AssumptionNote>
-          Conversões usam a cotação vigente na data do lançamento. Valores convertidos aparecem com “≈”.
-          Moeda atual: {displayCurrency}.
+          Conversões usam a cotação vigente na data do lançamento. Valores convertidos aparecem com
+          “≈”. Moeda atual: {displayCurrency}.
         </AssumptionNote>
       </Panel>
 
@@ -341,7 +366,10 @@ function SettingsPage() {
               ))}
             </SelectContent>
           </Select>
-          <Select value={rule.category_id} onValueChange={(v) => setRule({ ...rule, category_id: v })}>
+          <Select
+            value={rule.category_id}
+            onValueChange={(v) => setRule({ ...rule, category_id: v })}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Categoria" />
             </SelectTrigger>
@@ -366,11 +394,17 @@ function SettingsPage() {
         </div>
 
         {rules.length === 0 ? (
-          <EmptyState title="Nenhuma regra" description="Crie regras para categorizar importações automaticamente." />
+          <EmptyState
+            title="Nenhuma regra"
+            description="Crie regras para categorizar importações automaticamente."
+          />
         ) : (
           <ul className="divide-y divide-border">
             {rules.map((r) => (
-              <li key={r.id} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 py-3">
+              <li
+                key={r.id}
+                className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 py-3"
+              >
                 <div className="min-w-0">
                   <p className="truncate text-sm">{r.pattern}</p>
                   <p className="text-xs text-muted-foreground">
@@ -383,7 +417,12 @@ function SettingsPage() {
                     checked={r.enabled}
                     onCheckedChange={(v) => updateRule.mutate({ id: r.id, values: { enabled: v } })}
                   />
-                  <Button variant="ghost" size="icon" aria-label="Excluir" onClick={() => removeRule.mutate(r.id)}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Excluir"
+                    onClick={() => removeRule.mutate(r.id)}
+                  >
                     <Trash2 className="h-4 w-4 text-muted-foreground" />
                   </Button>
                 </div>
@@ -407,8 +446,8 @@ function SettingsPage() {
           </Button>
         </div>
         <AssumptionNote>
-          Os dados demo são linhas normais no banco marcadas com <code>is_demo</code>: nenhuma lógica do
-          produto é alterada e a remoção é completa.
+          Os dados demo são linhas normais no banco marcadas com <code>is_demo</code>: nenhuma
+          lógica do produto é alterada e a remoção é completa.
         </AssumptionNote>
       </Panel>
     </AppLayout>

@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { money } from "@/domain/currency";
-import { convertMoney, createConverter, findRate, sumMoney, type ExchangeRate } from "@/domain/exchange";
+import {
+  convertMoney,
+  createConverter,
+  findRate,
+  sumMoney,
+  type ExchangeRate,
+} from "@/domain/exchange";
 import { formatCents } from "@/lib/format";
 
 const rates: ExchangeRate[] = [
@@ -16,11 +22,15 @@ describe("câmbio determinístico", () => {
   });
 
   it("2. 100 CAD com taxa 4 vira 400 BRL", () => {
-    expect(convertMoney(money(10_000, "CAD"), "BRL", rates, "2026-03-15")).toEqual(money(40_000, "BRL"));
+    expect(convertMoney(money(10_000, "CAD"), "BRL", rates, "2026-03-15")).toEqual(
+      money(40_000, "BRL"),
+    );
   });
 
   it("3. usa a cotação vigente na data histórica, não a atual", () => {
-    expect(convertMoney(money(10_000, "CAD"), "BRL", rates, "2026-02-01")).toEqual(money(35_000, "BRL"));
+    expect(convertMoney(money(10_000, "CAD"), "BRL", rates, "2026-02-01")).toEqual(
+      money(35_000, "BRL"),
+    );
   });
 
   it("4. converte pelo par invertido quando só existe o inverso", () => {
@@ -61,6 +71,8 @@ describe("câmbio determinístico", () => {
   });
 
   it("data anterior a qualquer cotação usa a mais antiga conhecida", () => {
-    expect(convertMoney(money(10_000, "CAD"), "BRL", rates, "2025-01-01")).toEqual(money(35_000, "BRL"));
+    expect(convertMoney(money(10_000, "CAD"), "BRL", rates, "2025-01-01")).toEqual(
+      money(35_000, "BRL"),
+    );
   });
 });

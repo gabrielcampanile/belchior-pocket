@@ -15,7 +15,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   useAccounts,
   useCategories,
@@ -38,7 +44,14 @@ import { formatApprox, formatCents, parseCurrencyToCents } from "@/lib/format";
 import { useCurrency } from "@/hooks/useCurrency";
 import { CurrencyField } from "@/components/finance/CurrencySelect";
 import { DEFAULT_CURRENCY, money, toCurrencyCode, type CurrencyCode } from "@/domain/currency";
-import { currentMonthKey, formatDateBR, monthEndISO, monthLabel, monthStartISO, shiftMonth } from "@/lib/months";
+import {
+  currentMonthKey,
+  formatDateBR,
+  monthEndISO,
+  monthLabel,
+  monthStartISO,
+  shiftMonth,
+} from "@/lib/months";
 
 export const Route = createFileRoute("/transacoes")({
   head: () => ({
@@ -49,7 +62,10 @@ export const Route = createFileRoute("/transacoes")({
         content: "Filtre, categorize e edite todas as suas transações mensais em um só lugar.",
       },
       { property: "og:title", content: "Transações · Belchior" },
-      { property: "og:description", content: "Lista completa de transações com filtros e categorização." },
+      {
+        property: "og:description",
+        content: "Lista completa de transações com filtros e categorização.",
+      },
     ],
   }),
   component: TransactionsPage,
@@ -95,7 +111,8 @@ function TransactionsPage() {
       transactions.filter((t) => {
         if (tab === "INCOME" && t.type !== "INCOME") return false;
         if (tab === "EXPENSE" && t.type !== "EXPENSE") return false;
-        if (tab === "OTHER" && t.type !== "TRANSFER" && t.type !== "INVESTMENT_CONTRIBUTION") return false;
+        if (tab === "OTHER" && t.type !== "TRANSFER" && t.type !== "INVESTMENT_CONTRIBUTION")
+          return false;
         if (search && !t.description.toLowerCase().includes(search.toLowerCase())) return false;
         return true;
       }),
@@ -106,7 +123,9 @@ function TransactionsPage() {
     let income = 0;
     let expense = 0;
     for (const tx of transactions) {
-      const value = Math.abs(convert(money(tx.amount_cents, toCurrencyCode(tx.currency)), tx.occurred_on));
+      const value = Math.abs(
+        convert(money(tx.amount_cents, toCurrencyCode(tx.currency)), tx.occurred_on),
+      );
       if (tx.type === "INCOME") income += value;
       if (tx.type === "EXPENSE") expense += value;
     }
@@ -259,7 +278,9 @@ function TransactionsPage() {
                         <Label>Natureza</Label>
                         <Select
                           value={form.income_nature}
-                          onValueChange={(v) => setForm({ ...form, income_nature: v as IncomeNature })}
+                          onValueChange={(v) =>
+                            setForm({ ...form, income_nature: v as IncomeNature })
+                          }
                         >
                           <SelectTrigger>
                             <SelectValue />
@@ -328,7 +349,9 @@ function TransactionsPage() {
       <Panel className="grid gap-3 sm:grid-cols-3">
         <div>
           <p className="text-xs uppercase tracking-widest text-muted-foreground">Receitas do mês</p>
-          <p className="text-lg tabular-nums text-positive">{formatCents(totals.income, displayCurrency)}</p>
+          <p className="text-lg tabular-nums text-positive">
+            {formatCents(totals.income, displayCurrency)}
+          </p>
         </div>
         <div>
           <p className="text-xs uppercase tracking-widest text-muted-foreground">Despesas do mês</p>
@@ -336,7 +359,9 @@ function TransactionsPage() {
         </div>
         <div>
           <p className="text-xs uppercase tracking-widest text-muted-foreground">Saldo</p>
-          <p className={`text-lg tabular-nums ${totals.balance >= 0 ? "text-positive" : "text-negative"}`}>
+          <p
+            className={`text-lg tabular-nums ${totals.balance >= 0 ? "text-positive" : "text-negative"}`}
+          >
             {formatCents(totals.balance, displayCurrency)}
           </p>
         </div>
@@ -412,7 +437,9 @@ function TransactionsPage() {
                   {tx.type === "INCOME" ? (
                     <Select
                       value={tx.income_type ?? "OTHER"}
-                      onValueChange={(v) => update.mutate({ id: tx.id, values: { income_type: v } })}
+                      onValueChange={(v) =>
+                        update.mutate({ id: tx.id, values: { income_type: v } })
+                      }
                     >
                       <SelectTrigger className="h-8 w-36 text-xs">
                         <SelectValue />
@@ -453,7 +480,10 @@ function TransactionsPage() {
                     {toCurrencyCode(tx.currency) !== displayCurrency ? (
                       <span className="block text-xs text-muted-foreground">
                         {formatApprox(
-                          convert(money(tx.amount_cents, toCurrencyCode(tx.currency)), tx.occurred_on),
+                          convert(
+                            money(tx.amount_cents, toCurrencyCode(tx.currency)),
+                            tx.occurred_on,
+                          ),
                           displayCurrency,
                         )}
                       </span>

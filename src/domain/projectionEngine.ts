@@ -10,7 +10,13 @@
 
 import { money, type CurrencyCode } from "./currency";
 import { identityConverter, type MoneyConverter } from "./exchange";
-import { amountForMonth, isRecurringIncome, occursInMonth, type ExpensePlan, type IncomePlan } from "./planning";
+import {
+  amountForMonth,
+  isRecurringIncome,
+  occursInMonth,
+  type ExpensePlan,
+  type IncomePlan,
+} from "./planning";
 import { monthRange, type MonthKey } from "@/lib/months";
 
 export interface ProjectionInput {
@@ -142,8 +148,7 @@ export function summarizeProjection(months: ProjectionMonth[]): ProjectionSummar
     finalNetWorth: months[months.length - 1].netWorthEnd,
     totalCashFlow,
     averageMonthlyCashFlow: Math.round(totalCashFlow / months.length),
-    averageSavingsRate:
-      months.reduce((s, m) => s + m.savingsRate, 0) / months.length,
+    averageSavingsRate: months.reduce((s, m) => s + m.savingsRate, 0) / months.length,
     negativeMonths: negatives.length,
     firstNegativeMonth: negatives[0]?.month ?? null,
   };
@@ -158,6 +163,11 @@ export interface BudgetLine {
   diff: number;
 }
 
-export function budgetLine(key: string, label: string, planned: number, actual: number): BudgetLine {
+export function budgetLine(
+  key: string,
+  label: string,
+  planned: number,
+  actual: number,
+): BudgetLine {
   return { key, label, planned, actual, diff: actual - planned };
 }

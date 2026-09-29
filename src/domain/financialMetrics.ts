@@ -101,7 +101,8 @@ export function expenseBreakdown(
   const byCategory = [...totals.entries()]
     .map(([categoryId, value]) => ({
       categoryId: categoryId === "__none__" ? null : categoryId,
-      name: categoryId === "__none__" ? "Sem categoria" : (nameById.get(categoryId) ?? "Sem categoria"),
+      name:
+        categoryId === "__none__" ? "Sem categoria" : (nameById.get(categoryId) ?? "Sem categoria"),
       total: value,
     }))
     .sort((a, b) => b.total - a.total);
@@ -116,7 +117,10 @@ export function investmentTotal(
 ): number {
   return transactions
     .filter((t) => t.type === "INVESTMENT_CONTRIBUTION")
-    .reduce((sum, t) => sum + Math.abs(convert(money(t.amount_cents, t.currency), t.occurred_on)), 0);
+    .reduce(
+      (sum, t) => sum + Math.abs(convert(money(t.amount_cents, t.currency), t.occurred_on)),
+      0,
+    );
 }
 
 export interface CategorySlice {
@@ -165,7 +169,8 @@ export function incomeBreakdown(
   const byCategory = [...catTotals.entries()]
     .map(([categoryId, value]) => ({
       categoryId: categoryId === "__none__" ? null : categoryId,
-      name: categoryId === "__none__" ? "Sem categoria" : (nameById.get(categoryId) ?? "Sem categoria"),
+      name:
+        categoryId === "__none__" ? "Sem categoria" : (nameById.get(categoryId) ?? "Sem categoria"),
       total: value,
     }))
     .sort((a, b) => b.total - a.total);

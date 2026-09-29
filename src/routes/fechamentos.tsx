@@ -1,7 +1,13 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { EmptyState, MetricValue, PageHeader, Panel, SectionHeader } from "@/components/finance/primitives";
+import {
+  EmptyState,
+  MetricValue,
+  PageHeader,
+  Panel,
+  SectionHeader,
+} from "@/components/finance/primitives";
 import { Button } from "@/components/ui/button";
 import { CategoryDonut } from "@/components/finance/CategoryDonut";
 import { toast } from "sonner";
@@ -29,7 +35,10 @@ export const Route = createFileRoute("/fechamentos")({
         content: "Revise receitas, despesas e patrimônio do mês e congele o fechamento mensal.",
       },
       { property: "og:title", content: "Fechamentos · Belchior" },
-      { property: "og:description", content: "Fechamento mensal com totais congelados e reabertura." },
+      {
+        property: "og:description",
+        content: "Fechamento mensal com totais congelados e reabertura.",
+      },
     ],
   }),
   component: ClosuresPage,
@@ -77,7 +86,10 @@ function ClosuresPage() {
         title="Fechamento mensal"
         description="Receitas e despesas vêm 100% das transações — nada é lançado manualmente aqui."
         action={
-          <Button onClick={toggleClosure} variant={closure?.status === "CLOSED" ? "outline" : "default"}>
+          <Button
+            onClick={toggleClosure}
+            variant={closure?.status === "CLOSED" ? "outline" : "default"}
+          >
             {closure?.status === "CLOSED" ? "Reabrir mês" : "Fechar mês"}
           </Button>
         }
@@ -102,8 +114,16 @@ function ClosuresPage() {
       </Panel>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <MetricValue label="Receita total" value={formatCents(metrics.income.total, displayCurrency)} badge="REAL" />
-        <MetricValue label="Despesas" value={formatCents(metrics.expenses.total, displayCurrency)} badge="REAL" />
+        <MetricValue
+          label="Receita total"
+          value={formatCents(metrics.income.total, displayCurrency)}
+          badge="REAL"
+        />
+        <MetricValue
+          label="Despesas"
+          value={formatCents(metrics.expenses.total, displayCurrency)}
+          badge="REAL"
+        />
         <MetricValue
           label="Saldo do mês"
           value={formatCents(metrics.balance, displayCurrency)}
@@ -173,14 +193,21 @@ function ClosuresPage() {
       ) : null}
 
       <Panel className="space-y-4">
-        <SectionHeader title="Destaques do mês" description="Regras determinísticas sobre dados reais." />
+        <SectionHeader
+          title="Destaques do mês"
+          description="Regras determinísticas sobre dados reais."
+        />
         <ul className="space-y-3">
           {highlights.map((h) => (
             <li key={h.label} className="rounded-xl border border-border bg-surface/50 px-4 py-3">
               <p className="text-xs uppercase tracking-widest text-muted-foreground">{h.label}</p>
               <p
                 className={`mt-1 text-sm ${
-                  h.tone === "positive" ? "text-positive" : h.tone === "negative" ? "text-negative" : "text-foreground"
+                  h.tone === "positive"
+                    ? "text-positive"
+                    : h.tone === "negative"
+                      ? "text-negative"
+                      : "text-foreground"
                 }`}
               >
                 {h.value}
@@ -193,13 +220,18 @@ function ClosuresPage() {
       <Panel className="space-y-4">
         <SectionHeader title="Histórico de fechamentos" />
         {closures.length === 0 ? (
-          <EmptyState title="Nenhum mês fechado" description="Feche um mês para congelar os totais." />
+          <EmptyState
+            title="Nenhum mês fechado"
+            description="Feche um mês para congelar os totais."
+          />
         ) : (
           <ul className="divide-y divide-border">
             {closures.map((c) => (
               <li key={c.id} className="flex items-center justify-between gap-3 py-3">
                 <span className="text-sm capitalize">{monthLabel(c.month)}</span>
-                <span className="text-xs uppercase tracking-widest text-muted-foreground">{c.status}</span>
+                <span className="text-xs uppercase tracking-widest text-muted-foreground">
+                  {c.status}
+                </span>
               </li>
             ))}
           </ul>

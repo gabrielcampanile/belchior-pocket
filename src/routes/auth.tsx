@@ -80,7 +80,6 @@ function AuthPage() {
     void navigate({ to: "/" });
   }
 
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
       <div className="w-full max-w-sm space-y-8">
@@ -101,7 +100,12 @@ function AuthPage() {
           {mode === "signup" ? (
             <div className="space-y-2">
               <Label htmlFor="name">Nome</Label>
-              <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Seu nome" />
+              <Input
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Seu nome"
+              />
             </div>
           ) : null}
           <div className="space-y-2">

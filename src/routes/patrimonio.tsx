@@ -3,7 +3,13 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { EmptyState, MetricValue, PageHeader, Panel, SectionHeader } from "@/components/finance/primitives";
+import {
+  EmptyState,
+  MetricValue,
+  PageHeader,
+  Panel,
+  SectionHeader,
+} from "@/components/finance/primitives";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,7 +22,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useAccounts, useBalances, useDeleteRow, useUpsert } from "@/hooks/useFinanceData";
 import {
   ACCOUNT_TYPE_LABEL,
@@ -37,7 +49,8 @@ export const Route = createFileRoute("/patrimonio")({
       { title: "Patrimônio · Belchior" },
       {
         name: "description",
-        content: "Cadastre contas, ativos e dívidas e registre o saldo mensal para acompanhar seu patrimônio.",
+        content:
+          "Cadastre contas, ativos e dívidas e registre o saldo mensal para acompanhar seu patrimônio.",
       },
       { property: "og:title", content: "Patrimônio · Belchior" },
       { property: "og:description", content: "Ativos, passivos e patrimônio líquido mês a mês." },
@@ -69,7 +82,9 @@ function PatrimonioPage() {
 
   /** Saldo registrado exatamente neste mês (0 se não houver). */
   function exactBalanceOf(accountId: string) {
-    return balances.find((b) => b.account_id === accountId && b.month === month)?.balance_cents ?? 0;
+    return (
+      balances.find((b) => b.account_id === accountId && b.month === month)?.balance_cents ?? 0
+    );
   }
 
   /** Saldo vigente: último saldo conhecido até o mês — é o valor que conta no patrimônio. */
@@ -81,13 +96,15 @@ function PatrimonioPage() {
   }
 
   function isCarried(accountId: string) {
-    return !balances.some((b) => b.account_id === accountId && b.month === month) && balanceOf(accountId) !== 0;
+    return (
+      !balances.some((b) => b.account_id === accountId && b.month === month) &&
+      balanceOf(accountId) !== 0
+    );
   }
 
   function currencyOf(accountId: string): CurrencyCode {
     return toCurrencyCode(accounts.find((a) => a.id === accountId)?.currency);
   }
-
 
   async function createAccount() {
     if (!form.name.trim()) {
@@ -125,7 +142,6 @@ function PatrimonioPage() {
     }
   }
 
-
   return (
     <AppLayout>
       <PageHeader
@@ -145,7 +161,10 @@ function PatrimonioPage() {
               <div className="grid gap-4">
                 <div className="grid gap-2">
                   <Label>Nome</Label>
-                  <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                  <Input
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label>Tipo</Label>
@@ -185,7 +204,9 @@ function PatrimonioPage() {
                 <div className="flex items-center justify-between rounded-xl border border-border px-4 py-3">
                   <div>
                     <p className="text-sm">Ativo líquido</p>
-                    <p className="text-xs text-muted-foreground">Conta usada como reserva de emergência.</p>
+                    <p className="text-xs text-muted-foreground">
+                      Conta usada como reserva de emergência.
+                    </p>
                   </div>
                   <Switch
                     checked={form.liquid}
@@ -204,9 +225,24 @@ function PatrimonioPage() {
       />
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <MetricValue label="Patrimônio líquido" value={formatCents(snapshot.netWorth, displayCurrency)} badge="REAL" tone="accent" />
-        <MetricValue label="Ativos" value={formatCents(snapshot.assets, displayCurrency)} badge="REAL" tone="positive" />
-        <MetricValue label="Passivos" value={formatCents(snapshot.liabilities, displayCurrency)} badge="REAL" tone="negative" />
+        <MetricValue
+          label="Patrimônio líquido"
+          value={formatCents(snapshot.netWorth, displayCurrency)}
+          badge="REAL"
+          tone="accent"
+        />
+        <MetricValue
+          label="Ativos"
+          value={formatCents(snapshot.assets, displayCurrency)}
+          badge="REAL"
+          tone="positive"
+        />
+        <MetricValue
+          label="Passivos"
+          value={formatCents(snapshot.liabilities, displayCurrency)}
+          badge="REAL"
+          tone="negative"
+        />
       </div>
 
       <Panel className="space-y-4">
@@ -233,39 +269,53 @@ function PatrimonioPage() {
         ) : (
           <ul className="divide-y divide-border">
             {accounts.map((account) => (
-              <li key={account.id} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 py-3">
+              <li
+                key={account.id}
+                className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 py-3"
+              >
                 <div className="min-w-0">
                   <p className="truncate text-sm text-foreground">{account.name}</p>
                   <p className="text-xs text-muted-foreground">
-                    {ACCOUNT_TYPE_LABEL[account.type]} · {account.side === "ASSET" ? "Ativo" : "Passivo"}
+                    {ACCOUNT_TYPE_LABEL[account.type]} ·{" "}
+                    {account.side === "ASSET" ? "Ativo" : "Passivo"}
                     {account.liquid ? " · líquido" : ""} · {toCurrencyCode(account.currency)}
                   </p>
                   {toCurrencyCode(account.currency) !== displayCurrency ? (
                     <p className="text-xs text-muted-foreground">
                       {formatApprox(
-                        convert(money(balanceOf(account.id), toCurrencyCode(account.currency)), `${month}`),
+                        convert(
+                          money(balanceOf(account.id), toCurrencyCode(account.currency)),
+                          `${month}`,
+                        ),
                         displayCurrency,
                       )}
                     </p>
                   ) : null}
                   {isCarried(account.id) ? (
-                    <p className="text-xs text-muted-foreground">Saldo herdado do mês anterior — salve para confirmar.</p>
+                    <p className="text-xs text-muted-foreground">
+                      Saldo herdado do mês anterior — salve para confirmar.
+                    </p>
                   ) : null}
                 </div>
 
                 <div className="flex shrink-0 items-center gap-2">
-                  <span className="text-xs text-muted-foreground">{toCurrencyCode(account.currency)}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {toCurrencyCode(account.currency)}
+                  </span>
                   <BalanceInput
                     key={`${account.id}-${month}`}
                     initial={centsToInput(balanceOf(account.id))}
                     pending={upsertBalance.isPending}
                     onSave={(value) => saveBalance(account.id, value)}
                   />
-                  <Button variant="ghost" size="sm" onClick={() => removeAccount.mutate(account.id)}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removeAccount.mutate(account.id)}
+                  >
                     Excluir
                   </Button>
                 </div>
-
               </li>
             ))}
           </ul>
@@ -298,7 +348,12 @@ function BalanceInput({
           if (e.key === "Enter") void onSave(value);
         }}
       />
-      <Button size="sm" variant={dirty ? "default" : "outline"} disabled={!dirty || pending} onClick={() => void onSave(value)}>
+      <Button
+        size="sm"
+        variant={dirty ? "default" : "outline"}
+        disabled={!dirty || pending}
+        onClick={() => void onSave(value)}
+      >
         Salvar
       </Button>
     </div>
