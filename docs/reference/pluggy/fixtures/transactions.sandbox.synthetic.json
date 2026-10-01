@@ -1,0 +1,62 @@
+{
+  "description": "Synthetic Pluggy API-shaped fixtures; not captured from an Item.",
+  "results": [
+    {
+      "id": "00000000-0000-4000-8000-000000000201",
+      "accountId": "00000000-0000-4000-8000-000000000101",
+      "description": "SALARIO EMPRESA EXEMPLO",
+      "descriptionRaw": null,
+      "currencyCode": "BRL",
+      "amount": 8500,
+      "date": "2026-09-01T00:00:00.000Z",
+      "type": "CREDIT",
+      "status": "POSTED",
+      "operationType": "FOLHA_PAGAMENTO",
+      "category": "Salary",
+      "categoryId": "01010000",
+      "paymentData": null,
+      "creditCardMetadata": null,
+      "providerCode": null,
+      "providerId": null
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000202",
+      "accountId": "00000000-0000-4000-8000-000000000102",
+      "description": "COMPRA PARCELADA EXEMPLO",
+      "descriptionRaw": null,
+      "currencyCode": "BRL",
+      "amount": 55.9,
+      "date": "2026-09-01T00:00:00.000Z",
+      "purchaseDate": "2026-08-15T12:30:00.000Z",
+      "type": "DEBIT",
+      "status": "PENDING",
+      "billForecastDate": "2026-09",
+      "billPostDate": null,
+      "paymentType": "INSTALLMENT",
+      "creditCardMetadata": {
+        "installmentNumber": 2,
+        "totalInstallments": 6,
+        "billId": "00000000-0000-4000-8000-000000000301",
+        "payeeMCC": 5812
+      },
+      "providerCode": null,
+      "providerId": null
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000203",
+      "accountId": "00000000-0000-4000-8000-000000000101",
+      "description": "PAGAMENTO FATURA EXEMPLO",
+      "descriptionRaw": null,
+      "currencyCode": "BRL",
+      "amount": -100,
+      "date": "2026-09-02T00:00:00.000Z",
+      "type": "DEBIT",
+      "status": "POSTED",
+      "operationType": "PAGAMENTO_FATURA",
+      "paymentData": null,
+      "creditCardMetadata": null,
+      "providerCode": null,
+      "providerId": null
+    }
+  ]
+}
