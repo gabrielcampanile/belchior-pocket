@@ -1,0 +1,45 @@
+{
+  "description": "Synthetic Pluggy Sandbox-shaped fixture; not captured from an Item.",
+  "results": [
+    {
+      "id": "00000000-0000-4000-8000-000000000101",
+      "itemId": "00000000-0000-4000-8000-000000000001",
+      "type": "BANK",
+      "subtype": "CHECKING_ACCOUNT",
+      "name": "Conta corrente de teste",
+      "marketingName": "Sandbox Checking",
+      "balance": 21544.6,
+      "currencyCode": "BRL",
+      "bankData": {
+        "closingBalance": 21544.6,
+        "automaticallyInvestedBalance": 2154.46,
+        "hasReservedBalance": false,
+        "reservedBalances": []
+      },
+      "creditData": null
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000102",
+      "itemId": "00000000-0000-4000-8000-000000000001",
+      "type": "CREDIT",
+      "subtype": "CREDIT_CARD",
+      "number": "****1234",
+      "name": "Cartão de crédito de teste",
+      "marketingName": "Sandbox Credit Card",
+      "balance": -503.1,
+      "currencyCode": "BRL",
+      "bankData": null,
+      "creditData": {
+        "level": "BLACK",
+        "brand": "MASTERCARD",
+        "balanceCloseDate": "2026-07-23",
+        "balanceDueDate": "2026-07-28",
+        "creditLimit": 300000,
+        "availableCreditLimit": 300000,
+        "minimumPayment": 100.62,
+        "holderType": "MAIN",
+        "status": "ACTIVE"
+      }
+    }
+  ]
+}
