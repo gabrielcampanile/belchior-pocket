@@ -2,16 +2,18 @@
 
 **Document Version:** 1.0.0  
 **Audit Date:** 2026-09-29  
-**Target Repository:** `belchior-pocket` (Adopted from Lovable codebase)  
-**Status:** Audit Completed · Codebase Frozen (Read-Only Audit)
+**Target Repository:** belchior-pocket (evolved from an external low-code prototype)
+**Status:** Historical baseline snapshot; subsequent commits have changed the audited code.
 
 ---
+
+> Historical baseline: this audit describes the repository as inspected on 2026-09-29. PR #49 later removed the editor-specific Vite configuration, generated favicon, OAuth broker, and runtime telemetry. Findings and paths below must be rechecked against current code before they are treated as active defects.
 
 ## 1. Executive Summary
 
 Belchior Pocket is a Personal Finance Operating System (OS) built to answer three core questions for the user: _Past_ ("What happened to my money?"), _Present_ ("How is my financial situation now?"), and _Future_ ("Where will I end up if I continue like this?").
 
-The current repository was developed using the Lovable low-code generator and exported as a full-stack TypeScript application built with **TanStack Start**, **TanStack Router**, **TanStack Query**, **React 19**, **Tailwind CSS v4**, and **Supabase (PostgreSQL + RLS + GoTrue Auth)**.
+The audited repository originated from an external low-code generator and exported as a full-stack TypeScript application built with **TanStack Start**, **TanStack Router**, **TanStack Query**, **React 19**, **Tailwind CSS v4**, and **Supabase (PostgreSQL + RLS + GoTrue Auth)**.
 
 ### Key Strengths
 
@@ -27,7 +29,7 @@ The current repository was developed using the Lovable low-code generator and ex
 3. **Zero Installment (Parcelamento) Support:** Brazilian installment purchases (e.g., "1/10", "2/10") cannot be grouped, scheduled, or projected.
 4. **Collision-Prone Deduplication:** The deduplication hash (`dedupe_hash`) hashes `occurred_on + amount + currency + description` via a 32-bit FNV derivative. Legitimate repeated transactions on the same day (e.g., two coffees of R$ 8.00 at the same store) collide, causing unique constraint violations (`transactions_user_dedupe_key`).
 5. **No Mutation Freezing on Closed Months:** Closures (`closures`) store a frozen totals JSON snapshot, but transactions for closed months are not locked in database RLS or application routes.
-6. **Lovable Vendor Lock-In & Telemetry:** Google OAuth is routed through `@lovable.dev/cloud-auth-js` instead of native Supabase OAuth; client-side runtime errors are intercepted and forwarded to Lovable telemetry hooks.
+6. **External OAuth Broker & Editor Telemetry (historical):** At audit time, Google sign-in used an external broker and runtime errors were forwarded to editor-specific hooks. PR #49 removed both integrations and now uses Supabase OAuth directly.
 
 ---
 
@@ -42,7 +44,7 @@ graph TD
         TSRouter["TanStack Router (File-based Routes)"]
         TSQuery["TanStack Query Cache (useFinanceData, usePlanning)"]
         DomainCore["Pure Domain Layer (financialMetrics, projectionEngine, exchange)"]
-        LovableAuth["@lovable.dev/cloud-auth-js (OAuth Client)"]
+        LegacyAuthBroker["External OAuth Broker (historical; removed)"]
         SupabaseClient["@supabase/supabase-js (Client API)"]
     end
 
@@ -55,7 +57,7 @@ graph TD
 
     subgraph External ["External Services"]
         ExchangeAPI["open.er-api.com (Daily FX Rates)"]
-        LovableCloud["Lovable Cloud Auth / Telemetry"]
+        LegacyEditorServices["Editor-specific services (historical; removed)"]
     end
 
     subgraph Backend ["Supabase BaaS (PostgreSQL 14.5)"]
@@ -69,8 +71,8 @@ graph TD
     TSRouter --> TSQuery
     TSQuery --> DomainCore
     TSQuery --> SupabaseClient
-    UI --> LovableAuth
-    LovableAuth -.-> LovableCloud
+    %% Historical external OAuth path removed in PR #49
+    %% Historical external OAuth-to-editor-service edge removed in PR #49
 
     SupabaseClient -->|Bearer JWT + apikey| RLS
     RLS --> Tables
@@ -284,11 +286,11 @@ Credit-card handling is currently **not functional for real-world card mechanics
 
 ## 10. Security Concerns
 
-1. **Third-Party OAuth Proxy Dependency (`@lovable.dev/cloud-auth-js`):**
-   - In [`src/integrations/lovable/index.ts:L5`](file:///c:/Users/gabri/Git/Finance/belchior-pocket/src/integrations/lovable/index.ts#L5) and [`src/routes/auth.tsx:L72`](file:///c:/Users/gabri/Git/Finance/belchior-pocket/src/routes/auth.tsx#L72), Google OAuth triggers `lovable.auth.signInWithOAuth`.
-   - OAuth flows are brokered through an external Lovable Cloud proxy. If disconnected from Lovable, social authentication fails.
+1. **Third-Party OAuth Proxy Dependency (`the legacy OAuth broker client`):**
+   - At audit time, Google OAuth used a third-party broker; the wrapper was removed in PR #49 and the route now calls Supabase OAuth directly.
+   - OAuth flows are brokered through an external OAuth proxy. If disconnected from the external auth service, social authentication fails.
 2. **Client-Side Runtime Telemetry Hook:**
-   - In [`src/lib/lovable-error-reporting.ts`](file:///c:/Users/gabri/Git/Finance/belchior-pocket/src/lib/lovable-error-reporting.ts) and [`src/routes/__root.tsx:L44`](file:///c:/Users/gabri/Git/Finance/belchior-pocket/src/routes/__root.tsx#L44), errors and route paths are forwarded to `window.__lovableEvents` and `window.__lovableReportRuntimeError`.
+   - At audit time, runtime errors were forwarded to editor-specific hooks; the reporting module and those calls were removed in PR #49.
 3. **Admin Service Role Access in Server Functions:**
    - [`src/lib/exchangeRates.functions.ts:L15`](file:///c:/Users/gabri/Git/Finance/belchior-pocket/src/lib/exchangeRates.functions.ts#L15) imports `supabaseAdmin` using `process.env.SUPABASE_SERVICE_ROLE_KEY` to update daily exchange rates. Although protected with `requireSupabaseAuth`, granting service role operations from web handlers must be strictly monitored.
 4. **Missing Closed-Month Mutation Guard:**
@@ -317,7 +319,7 @@ There are currently **3 test files** with **27 passing unit tests**:
 
 ## 12. Recommended Remediation Order
 
-To transition from the Lovable prototype baseline to the production Belchior Pocket architecture, remediation should follow this strict sequence:
+To transition from the prototype baseline to the production Belchior Pocket architecture, remediation should follow this strict sequence:
 
 ```mermaid
 graph TD
@@ -331,7 +333,7 @@ graph TD
 1. Add `"test": "vitest run"` and `"test:watch": "vitest"` to `package.json`.
 2. Expand test coverage across `csv.ts`, `categorizationEngine.ts`, and `financialMetrics.ts`.
 3. Replace the faulty 32-bit FNV deduplication hash with a composite sequence counter or natural key (or permit same-day duplicate amounts with sequence salts).
-4. Remove Lovable telemetry error-reporting hooks and decouple Google OAuth from `@lovable.dev/cloud-auth-js` in favor of direct Supabase OAuth.
+4. Completed in PR #49: removed editor telemetry hooks and the OAuth broker, and switched Google sign-in to direct Supabase OAuth.
 5. Add DB triggers or check constraints preventing transaction mutation in closed months.
 
 ### Phase 2: Core Domain & Schema Expansion
@@ -387,4 +389,4 @@ Evaluation of Belchior Pocket's readiness for Open Finance integration across in
 | **Installment (Parcelamento) Support**    |    **NOT READY**    | No installment index, total, or recurrence group scheduling.                                |
 | **User Override Preservation**            |    **NOT READY**    | No flags or columns to prevent external syncs from overwriting user edits.                  |
 | **Open Finance Entity Mapping & Adapter** |    **NOT READY**    | No `external_id`, provider metadata, or normalization pipeline.                             |
-| **Independent Authentication**            | **PARTIALLY READY** | Standard Supabase email/password works, but Google OAuth is tied to Lovable Cloud.          |
+| **Independent Authentication**            | **PARTIALLY READY** | Standard Supabase email/password works, but Google OAuth now calls Supabase directly; each deployment still requires the Google provider and callback URLs to be configured in Supabase.          |
