@@ -1,0 +1,3 @@
+# Domain audit
+
+Review the linked issue and the proposed changes against docs/DOMAIN-RULES.md. Trace each changed financial event from input through validation, domain logic, persistence, period aggregation, and tests. Check transfer and contribution exclusion, card purchase versus settlement, installment timing, currency and precision, pending replacement, stable identity, budget inclusion, and user-correction precedence. Return only actionable findings with severity, file and line, evidence, financial impact, and a specific correction. Keep open product decisions separate from confirmed defects. Do not edit files.

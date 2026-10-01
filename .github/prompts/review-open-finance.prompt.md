@@ -1,0 +1,3 @@
+# Open Finance review
+
+Review the issue and diff against docs/OPEN-FINANCE.md, docs/DOMAIN-RULES.md, and docs/SECURITY.md. Inspect the provider boundary, consent and secret handling, canonical normalization, ownership and RLS, provider-scoped IDs, idempotent retries and webhooks, pending-to-posted reconciliation, preservation of user overrides, cursor durability, safe logs, and synthetic tests. Report actionable findings with severity, file and line, concrete evidence, impact, and a suggested fix. Distinguish verified issues from questions. Do not edit files or assume a provider is selected unless an explicit decision says so.

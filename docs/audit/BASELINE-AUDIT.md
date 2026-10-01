@@ -2,30 +2,34 @@
 
 **Document Version:** 1.0.0  
 **Audit Date:** 2026-09-29  
-**Target Repository:** `belchior-pocket` (Adopted from Lovable codebase)  
-**Status:** Audit Completed · Codebase Frozen (Read-Only Audit)
+**Target Repository:** belchior-pocket (evolved from an external low-code prototype)
+**Status:** Historical baseline snapshot; subsequent commits have changed the audited code.
 
 ---
 
+> Historical baseline: this audit describes the repository as inspected on 2026-09-29. PR #49 later removed the editor-specific Vite configuration, generated favicon, OAuth broker, and runtime telemetry. Findings and paths below must be rechecked against current code before they are treated as active defects.
+
 ## 1. Executive Summary
 
-Belchior Pocket is a Personal Finance Operating System (OS) built to answer three core questions for the user: *Past* ("What happened to my money?"), *Present* ("How is my financial situation now?"), and *Future* ("Where will I end up if I continue like this?").
+Belchior Pocket is a Personal Finance Operating System (OS) built to answer three core questions for the user: _Past_ ("What happened to my money?"), _Present_ ("How is my financial situation now?"), and _Future_ ("Where will I end up if I continue like this?").
 
-The current repository was developed using the Lovable low-code generator and exported as a full-stack TypeScript application built with **TanStack Start**, **TanStack Router**, **TanStack Query**, **React 19**, **Tailwind CSS v4**, and **Supabase (PostgreSQL + RLS + GoTrue Auth)**.
+The audited repository originated from an external low-code generator and exported as a full-stack TypeScript application built with **TanStack Start**, **TanStack Router**, **TanStack Query**, **React 19**, **Tailwind CSS v4**, and **Supabase (PostgreSQL + RLS + GoTrue Auth)**.
 
 ### Key Strengths
+
 1. **Deterministic Core:** The financial domain calculation logic (`src/domain/`) is strictly pure, deterministic, and integer-cents-based. No LLM or AI APIs are used for financial arithmetic.
 2. **Clean Separation of Domain:** Modules such as `projectionEngine.ts`, `financialMetrics.ts`, `planning.ts`, and `exchange.ts` are decoupled from React and database primitives.
 3. **Multi-Currency Foundation:** A sound multi-currency model with historic daily exchange rates and triangulation via a pivot currency is in place.
 4. **Unified Income Flow (Migration 7):** Real monthly income was recently consolidated into the `transactions` table (`type = 'INCOME'`), removing the deprecated `income_entries` table and unifying monthly closing derivations.
 
 ### Critical Deficits & Blockers
+
 1. **Open Finance Blockers:** The transaction and account models lack external identifiers (`external_id`, `provider`, `connector_id`), sync tokens, account sync statuses, and user override flags. Ingesting Open Finance data without schema redesign will result in data collisions or loss of manual user customizations.
 2. **Credit Card & Bill Payment Flaws:** The system has no concept of a `CREDIT_CARD` account type, credit limit, statement closing date, payment due date, or card invoices. Importing bank statement debits for credit card bill payments risks severe double-counting of expenses alongside individual card purchases.
 3. **Zero Installment (Parcelamento) Support:** Brazilian installment purchases (e.g., "1/10", "2/10") cannot be grouped, scheduled, or projected.
 4. **Collision-Prone Deduplication:** The deduplication hash (`dedupe_hash`) hashes `occurred_on + amount + currency + description` via a 32-bit FNV derivative. Legitimate repeated transactions on the same day (e.g., two coffees of R$ 8.00 at the same store) collide, causing unique constraint violations (`transactions_user_dedupe_key`).
 5. **No Mutation Freezing on Closed Months:** Closures (`closures`) store a frozen totals JSON snapshot, but transactions for closed months are not locked in database RLS or application routes.
-6. **Lovable Vendor Lock-In & Telemetry:** Google OAuth is routed through `@lovable.dev/cloud-auth-js` instead of native Supabase OAuth; client-side runtime errors are intercepted and forwarded to Lovable telemetry hooks.
+6. **External OAuth Broker & Editor Telemetry (historical):** At audit time, Google sign-in used an external broker and runtime errors were forwarded to editor-specific hooks. PR #49 removed both integrations and now uses Supabase OAuth directly.
 
 ---
 
@@ -40,7 +44,7 @@ graph TD
         TSRouter["TanStack Router (File-based Routes)"]
         TSQuery["TanStack Query Cache (useFinanceData, usePlanning)"]
         DomainCore["Pure Domain Layer (financialMetrics, projectionEngine, exchange)"]
-        LovableAuth["@lovable.dev/cloud-auth-js (OAuth Client)"]
+        LegacyAuthBroker["External OAuth Broker (historical; removed)"]
         SupabaseClient["@supabase/supabase-js (Client API)"]
     end
 
@@ -53,7 +57,7 @@ graph TD
 
     subgraph External ["External Services"]
         ExchangeAPI["open.er-api.com (Daily FX Rates)"]
-        LovableCloud["Lovable Cloud Auth / Telemetry"]
+        LegacyEditorServices["Editor-specific services (historical; removed)"]
     end
 
     subgraph Backend ["Supabase BaaS (PostgreSQL 14.5)"]
@@ -67,8 +71,8 @@ graph TD
     TSRouter --> TSQuery
     TSQuery --> DomainCore
     TSQuery --> SupabaseClient
-    UI --> LovableAuth
-    LovableAuth -.-> LovableCloud
+    %% Historical external OAuth path removed in PR #49
+    %% Historical external OAuth-to-editor-service edge removed in PR #49
 
     SupabaseClient -->|Bearer JWT + apikey| RLS
     RLS --> Tables
@@ -143,21 +147,21 @@ supabase/migrations/
 
 ### Database Tables Summary
 
-| Table | Primary Key | Key Foreign Keys | Unique Constraints | RLS Enabled |
-|---|---|---|---|:---:|
-| `profiles` | `id (UUID)` | `id -> auth.users.id` | PK | Yes |
-| `settings` | `user_id (UUID)` | `user_id -> auth.users.id` | PK | Yes |
-| `categories` | `id (UUID)` | `user_id -> auth.users.id`, `parent_id -> categories.id` | None | Yes |
-| `categorization_rules` | `id (UUID)` | `user_id -> auth.users.id`, `category_id -> categories.id` | None | Yes |
-| `accounts` | `id (UUID)` | `user_id -> auth.users.id` | None | Yes |
-| `account_balances` | `id (UUID)` | `user_id -> auth.users.id`, `account_id -> accounts.id` | `(user_id, account_id, month)` | Yes |
-| `closures` | `id (UUID)` | `user_id -> auth.users.id` | `(user_id, month)` | Yes |
-| `transactions` | `id (UUID)` | `user_id -> auth.users.id`, `category_id`, `account_id`, `closure_id` | `(user_id, dedupe_hash)` | Yes |
-| `exchange_rates` | `id (UUID)` | Shared lookup table | `(base_currency, quote_currency, effective_on)` | Yes (Public Read) |
-| `scenarios` | `id (UUID)` | `user_id -> auth.users.id` | None | Yes |
-| `income_plans` | `id (UUID)` | `user_id -> auth.users.id`, `scenario_id -> scenarios.id` | None | Yes |
-| `expense_plans` | `id (UUID)` | `user_id -> auth.users.id`, `scenario_id -> scenarios.id`, `category_id` | None | Yes |
-| `import_profiles` | `id (UUID)` | `user_id -> auth.users.id` | None | Yes |
+| Table                  | Primary Key      | Key Foreign Keys                                                         | Unique Constraints                              |    RLS Enabled    |
+| ---------------------- | ---------------- | ------------------------------------------------------------------------ | ----------------------------------------------- | :---------------: |
+| `profiles`             | `id (UUID)`      | `id -> auth.users.id`                                                    | PK                                              |        Yes        |
+| `settings`             | `user_id (UUID)` | `user_id -> auth.users.id`                                               | PK                                              |        Yes        |
+| `categories`           | `id (UUID)`      | `user_id -> auth.users.id`, `parent_id -> categories.id`                 | None                                            |        Yes        |
+| `categorization_rules` | `id (UUID)`      | `user_id -> auth.users.id`, `category_id -> categories.id`               | None                                            |        Yes        |
+| `accounts`             | `id (UUID)`      | `user_id -> auth.users.id`                                               | None                                            |        Yes        |
+| `account_balances`     | `id (UUID)`      | `user_id -> auth.users.id`, `account_id -> accounts.id`                  | `(user_id, account_id, month)`                  |        Yes        |
+| `closures`             | `id (UUID)`      | `user_id -> auth.users.id`                                               | `(user_id, month)`                              |        Yes        |
+| `transactions`         | `id (UUID)`      | `user_id -> auth.users.id`, `category_id`, `account_id`, `closure_id`    | `(user_id, dedupe_hash)`                        |        Yes        |
+| `exchange_rates`       | `id (UUID)`      | Shared lookup table                                                      | `(base_currency, quote_currency, effective_on)` | Yes (Public Read) |
+| `scenarios`            | `id (UUID)`      | `user_id -> auth.users.id`                                               | None                                            |        Yes        |
+| `income_plans`         | `id (UUID)`      | `user_id -> auth.users.id`, `scenario_id -> scenarios.id`                | None                                            |        Yes        |
+| `expense_plans`        | `id (UUID)`      | `user_id -> auth.users.id`, `scenario_id -> scenarios.id`, `category_id` | None                                            |        Yes        |
+| `import_profiles`      | `id (UUID)`      | `user_id -> auth.users.id`                                               | None                                            |        Yes        |
 
 ---
 
@@ -185,30 +189,36 @@ The following components and business rules are implemented cleanly and adhere t
 ## 6. Incorrect or Risky Areas
 
 ### 6.1 Transaction Deduplication Collision (Critical Bug)
+
 - **Code:** [`src/domain/csv.ts:L196-L216`](file:///c:/Users/gabri/Git/Finance/belchior-pocket/src/domain/csv.ts#L196-L216)
 - **Issue:** The dedupe hash is computed strictly from `occurredOn|amountCents|currency|normalizedDescription`.  
   A database constraint `UNIQUE(user_id, dedupe_hash)` exists on `transactions`.
 - **Consequence:** If a user conducts two identical transactions on the same day (e.g., two coffees for R$ 8.00 at "Padaria Estrela", or two R$ 20.00 metro card recharges), the second transaction is dropped during import or fails with a unique constraint violation when entered manually.
 
 ### 6.2 Investment Return Calculation on Illiquid / Non-Invested Assets
+
 - **Code:** [`src/domain/projectionEngine.ts:L99`](file:///c:/Users/gabri/Git/Finance/belchior-pocket/src/domain/projectionEngine.ts#L99)
 - **Specification (README L887):** $\text{investmentReturn} = \text{investedBalanceStartOfMonth} \times \text{monthlyRate}$.
 - **Actual Code:** `investmentReturn = netWorth > 0 ? Math.round(netWorth * input.expectedMonthlyReturn) : 0`.
 - **Consequence:** If a user has a house valued at R$ 800,000 and a car at R$ 100,000, but only R$ 50,000 in stocks, the projection applies the 0.8% monthly return to the entire R$ 950,000 net worth, massively exaggerating future portfolio gains.
 
 ### 6.3 Hardcoded 2,000 Transaction Query Limit
+
 - **Code:** [`src/hooks/useFinanceData.ts:L102`](file:///c:/Users/gabri/Git/Finance/belchior-pocket/src/hooks/useFinanceData.ts#L102)
 - **Issue:** `query.limit(2000)` is hardcoded without pagination or cursor support. Users with high transaction volumes or long histories will have historical transactions silently truncated.
 
 ### 6.4 Client-Side O(N) Sequential Mutation Loop on Rule Reapplication
+
 - **Code:** [`src/routes/configuracoes.tsx:L145-L157`](file:///c:/Users/gabri/Git/Finance/belchior-pocket/src/routes/configuracoes.tsx#L145-L157)
 - **Issue:** Reapplying categorization rules runs a client-side JavaScript loop with sequential `await updateTransaction.mutateAsync(...)` calls. For 500 uncategorized transactions, this triggers 500 individual sequential HTTP mutations to Supabase.
 
 ### 6.5 Settings UI Rule Creation Hardcodes "EXPENSE"
+
 - **Code:** [`src/routes/configuracoes.tsx:L138`](file:///c:/Users/gabri/Git/Finance/belchior-pocket/src/routes/configuracoes.tsx#L138)
 - **Issue:** When adding a rule in the settings dialog, `target_type: "EXPENSE"` is hardcoded. Users cannot define rules to automatically classify transactions as `INCOME`, `TRANSFER`, or `INVESTMENT_CONTRIBUTION`.
 
 ### 6.6 Closures Do Not Freeze Transactions
+
 - **Code:** [`src/routes/fechamentos.tsx:L72-L81`](file:///c:/Users/gabri/Git/Finance/belchior-pocket/src/routes/fechamentos.tsx#L72-L81)
 - **Issue:** Toggling a month to `CLOSED` stores a snapshot in `closures.totals`, but does not associate `transactions.closure_id` nor enforce any database constraint preventing transactions in closed months from being edited, created, or deleted.
 
@@ -253,37 +263,37 @@ Credit-card handling is currently **not functional for real-world card mechanics
 
 ## 9. Business-Rule Violations & Inconsistencies
 
-| Business Rule | Implementation Status | Finding / Violation Detail |
-|---|:---:|---|
-| **Monthly result = income - expenses** | **COMPLIANT** | Derived directly in `financialMetrics.ts:L250` as `income.total - expenses.total`. |
-| **Transfers are not income or expenses** | **COMPLIANT** | Ignored by both `expenseBreakdown` and `incomeBreakdown`. |
-| **Investment contributions are allocations, not expenses** | **COMPLIANT** | Ignored by `expenseBreakdown`, isolated in `investmentTotal`. |
-| **Credit-card purchases are expenses on purchase date** | **PARTIALLY COMPLIANT** | Imported with `occurred_on = purchase_date`, but lacks billing cycle / invoice tracking. |
-| **Installments must be represented individually** | **NON-COMPLIANT** | **VIOLATION:** Schema has no installment index, total, or parent group concept. |
-| **Card bill payment must not create an expense** | **AT RISK** | **VIOLATION:** No automatic detection or transfer reconciliation for card bill debits; easily double-counted as an expense. |
-| **Cash withdrawal is an expense** | **PARTIALLY COMPLIANT** | Treated as expense if mapped to `EXPENSE`, but no explicit ATM / cash classification. |
-| **Bank fees and interest are expenses** | **COMPLIANT** | Handled as standard `EXPENSE` entries. |
-| **Income categories are customizable** | **COMPLIANT** | Fully supported in `categories` where `kind = 'INCOME'`. |
-| **Expense categories are customizable** | **COMPLIANT** | Fully supported in `categories` where `kind = 'EXPENSE'`. |
-| **User edits must survive Open Finance sync** | **NON-COMPLIANT** | **VIOLATION:** No override tracking (`user_modified`, original fields) exists in the schema. |
-| **Open Finance data normalized to domain** | **NON-COMPLIANT** | **VIOLATION:** No ingestion, normalization, or provider adapter layer exists. |
-| **Provider concepts must not leak into domain** | **COMPLIANT** | Domain types in `src/domain/types.ts` remain clean of vendor tokens. |
-| **Financial calculations must be deterministic** | **COMPLIANT** | Pure functions across `src/domain/`, zero floating-point cents bugs. |
-| **AI never required for calculations** | **COMPLIANT** | Calculations are 100% deterministic code. |
-| **Raw financial data never sent to AI without need** | **COMPLIANT** | No AI SDKs or endpoints integrated. |
+| Business Rule                                              |  Implementation Status  | Finding / Violation Detail                                                                                                  |
+| ---------------------------------------------------------- | :---------------------: | --------------------------------------------------------------------------------------------------------------------------- |
+| **Monthly result = income - expenses**                     |      **COMPLIANT**      | Derived directly in `financialMetrics.ts:L250` as `income.total - expenses.total`.                                          |
+| **Transfers are not income or expenses**                   |      **COMPLIANT**      | Ignored by both `expenseBreakdown` and `incomeBreakdown`.                                                                   |
+| **Investment contributions are allocations, not expenses** |      **COMPLIANT**      | Ignored by `expenseBreakdown`, isolated in `investmentTotal`.                                                               |
+| **Credit-card purchases are expenses on purchase date**    | **PARTIALLY COMPLIANT** | Imported with `occurred_on = purchase_date`, but lacks billing cycle / invoice tracking.                                    |
+| **Installments must be represented individually**          |    **NON-COMPLIANT**    | **VIOLATION:** Schema has no installment index, total, or parent group concept.                                             |
+| **Card bill payment must not create an expense**           |       **AT RISK**       | **VIOLATION:** No automatic detection or transfer reconciliation for card bill debits; easily double-counted as an expense. |
+| **Cash withdrawal is an expense**                          | **PARTIALLY COMPLIANT** | Treated as expense if mapped to `EXPENSE`, but no explicit ATM / cash classification.                                       |
+| **Bank fees and interest are expenses**                    |      **COMPLIANT**      | Handled as standard `EXPENSE` entries.                                                                                      |
+| **Income categories are customizable**                     |      **COMPLIANT**      | Fully supported in `categories` where `kind = 'INCOME'`.                                                                    |
+| **Expense categories are customizable**                    |      **COMPLIANT**      | Fully supported in `categories` where `kind = 'EXPENSE'`.                                                                   |
+| **User edits must survive Open Finance sync**              |    **NON-COMPLIANT**    | **VIOLATION:** No override tracking (`user_modified`, original fields) exists in the schema.                                |
+| **Open Finance data normalized to domain**                 |    **NON-COMPLIANT**    | **VIOLATION:** No ingestion, normalization, or provider adapter layer exists.                                               |
+| **Provider concepts must not leak into domain**            |      **COMPLIANT**      | Domain types in `src/domain/types.ts` remain clean of vendor tokens.                                                        |
+| **Financial calculations must be deterministic**           |      **COMPLIANT**      | Pure functions across `src/domain/`, zero floating-point cents bugs.                                                        |
+| **AI never required for calculations**                     |      **COMPLIANT**      | Calculations are 100% deterministic code.                                                                                   |
+| **Raw financial data never sent to AI without need**       |      **COMPLIANT**      | No AI SDKs or endpoints integrated.                                                                                         |
 
 ---
 
 ## 10. Security Concerns
 
-1. **Third-Party OAuth Proxy Dependency (`@lovable.dev/cloud-auth-js`):**  
-   - In [`src/integrations/lovable/index.ts:L5`](file:///c:/Users/gabri/Git/Finance/belchior-pocket/src/integrations/lovable/index.ts#L5) and [`src/routes/auth.tsx:L72`](file:///c:/Users/gabri/Git/Finance/belchior-pocket/src/routes/auth.tsx#L72), Google OAuth triggers `lovable.auth.signInWithOAuth`.
-   - OAuth flows are brokered through an external Lovable Cloud proxy. If disconnected from Lovable, social authentication fails.
-2. **Client-Side Runtime Telemetry Hook:**  
-   - In [`src/lib/lovable-error-reporting.ts`](file:///c:/Users/gabri/Git/Finance/belchior-pocket/src/lib/lovable-error-reporting.ts) and [`src/routes/__root.tsx:L44`](file:///c:/Users/gabri/Git/Finance/belchior-pocket/src/routes/__root.tsx#L44), errors and route paths are forwarded to `window.__lovableEvents` and `window.__lovableReportRuntimeError`.
-3. **Admin Service Role Access in Server Functions:**  
+1. **Third-Party OAuth Proxy Dependency (`the legacy OAuth broker client`):**
+   - At audit time, Google OAuth used a third-party broker; the wrapper was removed in PR #49 and the route now calls Supabase OAuth directly.
+   - OAuth flows are brokered through an external OAuth proxy. If disconnected from the external auth service, social authentication fails.
+2. **Client-Side Runtime Telemetry Hook:**
+   - At audit time, runtime errors were forwarded to editor-specific hooks; the reporting module and those calls were removed in PR #49.
+3. **Admin Service Role Access in Server Functions:**
    - [`src/lib/exchangeRates.functions.ts:L15`](file:///c:/Users/gabri/Git/Finance/belchior-pocket/src/lib/exchangeRates.functions.ts#L15) imports `supabaseAdmin` using `process.env.SUPABASE_SERVICE_ROLE_KEY` to update daily exchange rates. Although protected with `requireSupabaseAuth`, granting service role operations from web handlers must be strictly monitored.
-4. **Missing Closed-Month Mutation Guard:**  
+4. **Missing Closed-Month Mutation Guard:**
    - RLS policies only check `auth.uid() = user_id`. There is no check verifying if the transaction date falls within a closed month (`closures.status = 'CLOSED'`), allowing silent alteration of historical financial records.
 
 ---
@@ -291,11 +301,13 @@ Credit-card handling is currently **not functional for real-world card mechanics
 ## 11. Testing Gaps
 
 There are currently **3 test files** with **27 passing unit tests**:
+
 - [`src/domain/__tests__/exchange.test.ts`](file:///c:/Users/gabri/Git/Finance/belchior-pocket/src/domain/__tests__/exchange.test.ts) (10 tests)
 - [`src/domain/__tests__/incomeFromTransactions.test.ts`](file:///c:/Users/gabri/Git/Finance/belchior-pocket/src/domain/__tests__/incomeFromTransactions.test.ts) (5 tests)
 - [`src/domain/__tests__/projection.test.ts`](file:///c:/Users/gabri/Git/Finance/belchior-pocket/src/domain/__tests__/projection.test.ts) (12 tests)
 
 ### Critical Untested Components
+
 1. **Categorization Engine (`categorizationEngine.ts`):** 0 tests for `normalize`, pattern matching (`CONTAINS`, `STARTS_WITH`, `EQUALS`, `REGEX`), and priority ordering.
 2. **CSV Parsing & Validation (`csv.ts`):** No tests for delimiter detection, quoting rules, date parsing (`parseDate`), amount-to-cents parsing (`parseAmountToCents`), row mapping, or `dedupeHash`.
 3. **Expense Breakdown & Net Worth (`financialMetrics.ts`):** No tests for `expenseBreakdown`, `netWorthForMonth`, `netWorthSeries`, `savingsRate`, `reserveMonths`, or `emergencyFundTarget`.
@@ -307,7 +319,7 @@ There are currently **3 test files** with **27 passing unit tests**:
 
 ## 12. Recommended Remediation Order
 
-To transition from the Lovable prototype baseline to the production Belchior Pocket architecture, remediation should follow this strict sequence:
+To transition from the prototype baseline to the production Belchior Pocket architecture, remediation should follow this strict sequence:
 
 ```mermaid
 graph TD
@@ -317,25 +329,29 @@ graph TD
 ```
 
 ### Phase 1: Stabilization & Hardening (No Architectural Disruption)
+
 1. Add `"test": "vitest run"` and `"test:watch": "vitest"` to `package.json`.
 2. Expand test coverage across `csv.ts`, `categorizationEngine.ts`, and `financialMetrics.ts`.
 3. Replace the faulty 32-bit FNV deduplication hash with a composite sequence counter or natural key (or permit same-day duplicate amounts with sequence salts).
-4. Remove Lovable telemetry error-reporting hooks and decouple Google OAuth from `@lovable.dev/cloud-auth-js` in favor of direct Supabase OAuth.
+4. Completed in PR #49: removed editor telemetry hooks and the OAuth broker, and switched Google sign-in to direct Supabase OAuth.
 5. Add DB triggers or check constraints preventing transaction mutation in closed months.
 
 ### Phase 2: Core Domain & Schema Expansion
+
 1. Fix projection return formula in `projectionEngine.ts` so investment return applies only to liquid/invested asset accounts, not illiquid property/debt.
 2. Add target type selection to rule creation in `configuracoes.tsx`.
 3. Add double-entry or paired transfer tracking (`destination_account_id` or `transfer_pair_id`) to `transactions`.
 4. Replace client-side sequential mutation loop in `reapplyRules` with a bulk Supabase RPC function.
 
 ### Phase 3: Credit Card & Billing Engine
+
 1. Add `CREDIT_CARD` account type to `accounts`.
 2. Create `credit_card_invoices` (faturas) table with `closing_date`, `due_date`, and `status`.
 3. Add installment metadata (`installment_number`, `installment_total`, `installment_group_id`) to `transactions`.
 4. Implement automatic reconciliation for credit card bill payment debits to prevent double-counting.
 
 ### Phase 4: Open Finance Adapter Layer
+
 1. Add external synchronization metadata columns (`external_id`, `provider`, `connector_id`, `last_synced_at`, `sync_status`).
 2. Add manual override tracking flags (`is_user_modified`, `original_description`, `original_category_id`).
 3. Build the normalization pipeline isolating external provider schemas from the Belchior domain.
@@ -356,21 +372,21 @@ graph TD
 
 Evaluation of Belchior Pocket's readiness for Open Finance integration across individual capabilities:
 
-| Functional Area | Status | Key Rationale |
-|---|:---:|---|
-| **Deterministic Financial Calculations** | **READY** | Integer cents, pure math functions, zero AI dependencies. |
-| **Multi-Currency System** | **READY** | Historical rate lookup, triangulation via BRL pivot, fallback safety. |
-| **Income Derivation from Transactions** | **READY** | Consolidated under `transactions`, categorized by nature and type. |
-| **Category Customization** | **READY** | Full support for user-defined expense and income category hierarchies. |
-| **Responsive Web Layout** | **READY** | Clean responsive layout with desktop sidebar and mobile navigation. |
-| **Deduplication & Idempotency** | **PARTIALLY READY** | Concept exists, but FNV 32-bit hash causes false positive collisions on same-day purchases. |
-| **Planning & Wealth Projections** | **PARTIALLY READY** | Engine works, but erroneously compounds returns over illiquid assets. |
-| **Monthly Closures (Fechamentos)** | **PARTIALLY READY** | Calculates totals correctly, but fails to lock closed transactions against edits. |
-| **Mobile / PWA Capabilities** | **PARTIALLY READY** | Mobile responsive, but no PWA manifest, service worker, or offline cache. |
-| **Credit Card Account Modeling** | **NOT READY** | No `CREDIT_CARD` account type, no credit limit, closing date, or due date. |
-| **Credit Card Invoice (Fatura) Handling** | **NOT READY** | Lacks invoice entity; card purchases cannot be assigned to billing cycles. |
-| **Bill Payment Reconciliation** | **NOT READY** | No mechanism to prevent card bill payment debits from double-counting expenses. |
-| **Installment (Parcelamento) Support** | **NOT READY** | No installment index, total, or recurrence group scheduling. |
-| **User Override Preservation** | **NOT READY** | No flags or columns to prevent external syncs from overwriting user edits. |
-| **Open Finance Entity Mapping & Adapter** | **NOT READY** | No `external_id`, provider metadata, or normalization pipeline. |
-| **Independent Authentication** | **PARTIALLY READY** | Standard Supabase email/password works, but Google OAuth is tied to Lovable Cloud. |
+| Functional Area                           |       Status        | Key Rationale                                                                               |
+| ----------------------------------------- | :-----------------: | ------------------------------------------------------------------------------------------- |
+| **Deterministic Financial Calculations**  |      **READY**      | Integer cents, pure math functions, zero AI dependencies.                                   |
+| **Multi-Currency System**                 |      **READY**      | Historical rate lookup, triangulation via BRL pivot, fallback safety.                       |
+| **Income Derivation from Transactions**   |      **READY**      | Consolidated under `transactions`, categorized by nature and type.                          |
+| **Category Customization**                |      **READY**      | Full support for user-defined expense and income category hierarchies.                      |
+| **Responsive Web Layout**                 |      **READY**      | Clean responsive layout with desktop sidebar and mobile navigation.                         |
+| **Deduplication & Idempotency**           | **PARTIALLY READY** | Concept exists, but FNV 32-bit hash causes false positive collisions on same-day purchases. |
+| **Planning & Wealth Projections**         | **PARTIALLY READY** | Engine works, but erroneously compounds returns over illiquid assets.                       |
+| **Monthly Closures (Fechamentos)**        | **PARTIALLY READY** | Calculates totals correctly, but fails to lock closed transactions against edits.           |
+| **Mobile / PWA Capabilities**             | **PARTIALLY READY** | Mobile responsive, but no PWA manifest, service worker, or offline cache.                   |
+| **Credit Card Account Modeling**          |    **NOT READY**    | No `CREDIT_CARD` account type, no credit limit, closing date, or due date.                  |
+| **Credit Card Invoice (Fatura) Handling** |    **NOT READY**    | Lacks invoice entity; card purchases cannot be assigned to billing cycles.                  |
+| **Bill Payment Reconciliation**           |    **NOT READY**    | No mechanism to prevent card bill payment debits from double-counting expenses.             |
+| **Installment (Parcelamento) Support**    |    **NOT READY**    | No installment index, total, or recurrence group scheduling.                                |
+| **User Override Preservation**            |    **NOT READY**    | No flags or columns to prevent external syncs from overwriting user edits.                  |
+| **Open Finance Entity Mapping & Adapter** |    **NOT READY**    | No `external_id`, provider metadata, or normalization pipeline.                             |
+| **Independent Authentication**            | **PARTIALLY READY** | Standard Supabase email/password works, but Google OAuth now calls Supabase directly; each deployment still requires the Google provider and callback URLs to be configured in Supabase.          |
