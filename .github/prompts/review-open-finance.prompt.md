@@ -1,3 +1,3 @@
-# Review prompt: Open Finance
+# Open Finance review
 
-Review the diff for provider isolation, external identity, idempotency, pending-to-posted transitions, override preservation, retry safety, error redaction, and RLS/ownership. Use `docs/OPEN-FINANCE.md` as the project contract. Cite concrete evidence and distinguish confirmed defects from risks that need verification.
+Review the issue and diff against docs/OPEN-FINANCE.md, docs/DOMAIN-RULES.md, and docs/SECURITY.md. Inspect the provider boundary, consent and secret handling, canonical normalization, ownership and RLS, provider-scoped IDs, idempotent retries and webhooks, pending-to-posted reconciliation, preservation of user overrides, cursor durability, safe logs, and synthetic tests. Report actionable findings with severity, file and line, concrete evidence, impact, and a suggested fix. Distinguish verified issues from questions. Do not edit files or assume a provider is selected unless an explicit decision says so.

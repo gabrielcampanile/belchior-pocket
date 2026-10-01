@@ -1,3 +1,3 @@
-# Review prompt: financial domain
+# Domain audit
 
-Review the proposed diff against `docs/DOMAIN-RULES.md`. Identify possible double counting, incorrect transaction semantics, rounding/currency errors, nondeterminism, closed-period mutation, and missing regression tests. Cite files and lines. Do not propose AI-based arithmetic. Return findings by severity, or state clearly that no findings were found.
+Review the linked issue and the proposed changes against docs/DOMAIN-RULES.md. Trace each changed financial event from input through validation, domain logic, persistence, period aggregation, and tests. Check transfer and contribution exclusion, card purchase versus settlement, installment timing, currency and precision, pending replacement, stable identity, budget inclusion, and user-correction precedence. Return only actionable findings with severity, file and line, evidence, financial impact, and a specific correction. Keep open product decisions separate from confirmed defects. Do not edit files.

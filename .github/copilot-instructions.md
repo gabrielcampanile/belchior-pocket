@@ -1,11 +1,18 @@
-# Repository guidance
+# Belchior Pocket: repository instructions
 
-Belchior Pocket is a personal finance application. Read `docs/DOMAIN-RULES.md` and `docs/ARCHITECTURE.md` before changing financial behavior.
+Belchior is a personal and household finance workspace. Read docs/PRD.md for product scope, docs/DOMAIN-RULES.md for financial invariants, docs/ARCHITECTURE.md for boundaries, docs/SECURITY.md for private-data handling, and docs/TESTING.md before changing behavior.
 
-- Keep calculations deterministic and use integer minor units.
-- Transfers between owned accounts are not income or expenses; investment contributions are not expenses.
-- Do not use AI for financial calculations.
-- Keep provider-specific payloads outside the domain and preserve user corrections during sync.
-- Validate baseline audit claims against current code.
-- Keep changes focused; schema, auth, RLS, and accounting changes need tests and explicit review.
-- Run `npm run lint`, `npm run typecheck`, `npm run build`, and `npm test` for relevant changes; report results accurately.
+Correctness rules:
+- Monthly result is income minus expenses. Own-account transfers and investment contributions are neither.
+- Card purchases or installments are expenses under the product's recognized date policy. Paying the statement settles a liability and is not another expense.
+- Preserve currency and exact money semantics. Do not use JavaScript floating point for canonical financial amounts.
+- Imported updates must be idempotent and preserve user corrections.
+- AI may suggest classification only. It cannot calculate totals or mutate amounts, dates, account ownership, or transaction type.
+- Never expose service-role or provider credentials; every personal record must be owner-scoped and protected by RLS.
+
+Implementation guidance:
+- Keep provider and persistence shapes at infrastructure boundaries; use canonical domain behavior.
+- Inspect migrations, generated types, callers, and existing tests before changing the model.
+- Keep changes within the linked issue and state unresolved product decisions rather than guessing.
+- Use synthetic data in tests, screenshots, and examples.
+- Report checks actually run and do not claim skipped checks passed.
