@@ -42,6 +42,7 @@ import { CurrencySelect } from "@/components/finance/CurrencySelect";
 import { refreshExchangeRates } from "@/lib/exchangeRates.functions";
 import { useServerFn } from "@tanstack/react-start";
 import { formatNumber } from "@/lib/format";
+import { checkMeuPluggyConnection } from "@/lib/pluggy.functions";
 
 export const Route = createFileRoute("/configuracoes")({
   head: () => ({
@@ -79,6 +80,30 @@ function SettingsPage() {
   const { rates, displayCurrency } = useCurrency();
   const { refetch: refetchRates, isFetching: ratesLoading } = useExchangeRates();
   const runRefreshRates = useServerFn(refreshExchangeRates);
+  const runCheckPluggyConnection = useServerFn(checkMeuPluggyConnection);
+  const [pluggyBusy, setPluggyBusy] = useState(false);
+  const [pluggyAccounts, setPluggyAccounts] = useState<
+    | {
+        name: string;
+        type: string;
+        subtype: string | null;
+        currencyCode: string | null;
+      }[]
+    | null
+  >(null);
+
+  async function verifyPluggyConnection() {
+    setPluggyBusy(true);
+    try {
+      const result = await runCheckPluggyConnection({});
+      setPluggyAccounts(result.accounts);
+      toast.success("Conexão com Meu Pluggy verificada.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Falha ao consultar Meu Pluggy.");
+    } finally {
+      setPluggyBusy(false);
+    }
+  }
 
   async function updateRates() {
     setBusy(true);
@@ -296,6 +321,46 @@ function SettingsPage() {
         </AssumptionNote>
       </Panel>
 
+      <Panel className="space-y-4">
+        <SectionHeader
+          title="Open Finance"
+          description="Verifique a conexão pessoal do Meu Pluggy. Esta etapa não importa nem grava dados financeiros."
+          action={
+            <Button variant="outline" onClick={verifyPluggyConnection} disabled={pluggyBusy}>
+              {pluggyBusy ? "Verificando…" : "Verificar conexão Meu Pluggy"}
+            </Button>
+          }
+        />
+        {pluggyAccounts === null ? (
+          <p className="text-sm text-muted-foreground">
+            A conexão aparecerá aqui depois da verificação.
+          </p>
+        ) : pluggyAccounts.length === 0 ? (
+          <p className="text-sm text-muted-foreground">
+            O Item configurado não retornou contas.
+          </p>
+        ) : (
+          <ul className="divide-y divide-border">
+            {pluggyAccounts.map((account, index) => (
+              <li
+                key={account.name + "-" + account.type + "-" + index}
+                className="flex items-center justify-between gap-4 py-2.5"
+              >
+                <div>
+                  <p className="text-sm">{account.name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {account.type}{account.subtype ? " · " + account.subtype : ""}
+                  </p>
+                </div>
+                <span className="text-sm text-muted-foreground">{account.currencyCode ?? "—"}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+        <AssumptionNote>
+          Só nome, tipo e moeda são enviados para esta tela. Saldo e transações não são lidos nem armazenados.
+        </AssumptionNote>
+      </Panel>
       <Panel className="space-y-4">
         <SectionHeader
           title="Premissas financeiras"
