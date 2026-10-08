@@ -1,0 +1,277 @@
+﻿{
+    "total":  3,
+    "totalPages":  1,
+    "page":  1,
+    "results":  [
+                    {
+                        "id":  "\u003credacted\u003e",
+                        "type":  "BANK",
+                        "subtype":  "CHECKING_ACCOUNT",
+                        "name":  "\u003credacted\u003e",
+                        "balance":  0,
+                        "currencyCode":  "BRL",
+                        "itemId":  "\u003credacted\u003e",
+                        "number":  "\u003credacted\u003e",
+                        "createdAt":  "2026-09-30T22:52:23.920Z",
+                        "updatedAt":  "2026-10-07T22:59:15.904Z",
+                        "marketingName":  null,
+                        "taxNumber":  "\u003credacted\u003e",
+                        "owner":  "\u003credacted\u003e",
+                        "bankData":  {
+                                         "transferNumber":  "\u003credacted\u003e",
+                                         "closingBalance":  0,
+                                         "automaticallyInvestedBalance":  0,
+                                         "overdraftContractedLimit":  0,
+                                         "overdraftUsedLimit":  0,
+                                         "unarrangedOverdraftAmount":  0,
+                                         "hasReservedBalance":  false,
+                                         "reservedBalances":  null
+                                     },
+                        "creditData":  null
+                    },
+                    {
+                        "id":  "\u003credacted\u003e",
+                        "type":  "BANK",
+                        "subtype":  "CHECKING_ACCOUNT",
+                        "name":  "\u003credacted\u003e",
+                        "balance":  0,
+                        "currencyCode":  "BRL",
+                        "itemId":  "\u003credacted\u003e",
+                        "number":  "\u003credacted\u003e",
+                        "createdAt":  "2026-09-30T22:52:24.278Z",
+                        "updatedAt":  "2026-10-07T22:59:15.907Z",
+                        "marketingName":  null,
+                        "taxNumber":  "\u003credacted\u003e",
+                        "owner":  "\u003credacted\u003e",
+                        "bankData":  {
+                                         "transferNumber":  "\u003credacted\u003e",
+                                         "closingBalance":  0,
+                                         "automaticallyInvestedBalance":  0,
+                                         "overdraftContractedLimit":  0,
+                                         "overdraftUsedLimit":  0,
+                                         "unarrangedOverdraftAmount":  0,
+                                         "hasReservedBalance":  false,
+                                         "reservedBalances":  null
+                                     },
+                        "creditData":  null
+                    },
+                    {
+                        "id":  "\u003credacted\u003e",
+                        "type":  "CREDIT",
+                        "subtype":  "CREDIT_CARD",
+                        "name":  "\u003credacted\u003e",
+                        "balance":  0,
+                        "currencyCode":  "BRL",
+                        "itemId":  "\u003credacted\u003e",
+                        "number":  "\u003credacted\u003e",
+                        "createdAt":  "2026-09-30T22:52:24.335Z",
+                        "updatedAt":  "2026-10-07T22:59:16.152Z",
+                        "marketingName":  null,
+                        "taxNumber":  null,
+                        "owner":  "\u003credacted\u003e",
+                        "bankData":  null,
+                        "creditData":  {
+                                           "level":  "INFINITE",
+                                           "brand":  "VISA",
+                                           "brandAdditionalInfo":  "",
+                                           "balanceCloseDate":  null,
+                                           "balanceDueDate":  "2026-09-10",
+                                           "availableCreditLimit":  null,
+                                           "balanceForeignCurrency":  null,
+                                           "minimumPayment":  0,
+                                           "creditLimit":  null,
+                                           "isLimitFlexible":  true,
+                                           "holderType":  null,
+                                           "status":  "ACTIVE",
+                                           "disaggregatedCreditLimits":  [
+                                                                             {
+                                                                                 "usedAmount":  7498.01,
+                                                                                 "isLimitFlexible":  true,
+                                                                                 "consolidationType":  "CONSOLIDADO",
+                                                                                 "creditLineLimitType":  "LIMITE_CREDITO_TOTAL",
+                                                                                 "identificationNumber":  "9892",
+                                                                                 "usedAmountCurrencyCode":  "BRL"
+                                                                             },
+                                                                             {
+                                                                                 "usedAmount":  7498.01,
+                                                                                 "isLimitFlexible":  true,
+                                                                                 "consolidationType":  "CONSOLIDADO",
+                                                                                 "creditLineLimitType":  "LIMITE_CREDITO_TOTAL",
+                                                                                 "identificationNumber":  "9043",
+                                                                                 "usedAmountCurrencyCode":  "BRL"
+                                                                             },
+                                                                             {
+                                                                                 "usedAmount":  7498.01,
+                                                                                 "isLimitFlexible":  true,
+                                                                                 "consolidationType":  "CONSOLIDADO",
+                                                                                 "creditLineLimitType":  "LIMITE_CREDITO_TOTAL",
+                                                                                 "identificationNumber":  "8905",
+                                                                                 "usedAmountCurrencyCode":  "BRL"
+                                                                             },
+                                                                             {
+                                                                                 "usedAmount":  7498.01,
+                                                                                 "isLimitFlexible":  true,
+                                                                                 "consolidationType":  "CONSOLIDADO",
+                                                                                 "creditLineLimitType":  "LIMITE_CREDITO_TOTAL",
+                                                                                 "identificationNumber":  "8739",
+                                                                                 "usedAmountCurrencyCode":  "BRL"
+                                                                             },
+                                                                             {
+                                                                                 "usedAmount":  7498.01,
+                                                                                 "isLimitFlexible":  true,
+                                                                                 "consolidationType":  "CONSOLIDADO",
+                                                                                 "creditLineLimitType":  "LIMITE_CREDITO_TOTAL",
+                                                                                 "identificationNumber":  "8613",
+                                                                                 "usedAmountCurrencyCode":  "BRL"
+                                                                             },
+                                                                             {
+                                                                                 "usedAmount":  7498.01,
+                                                                                 "isLimitFlexible":  true,
+                                                                                 "consolidationType":  "CONSOLIDADO",
+                                                                                 "creditLineLimitType":  "LIMITE_CREDITO_TOTAL",
+                                                                                 "identificationNumber":  "7848",
+                                                                                 "usedAmountCurrencyCode":  "BRL"
+                                                                             },
+                                                                             {
+                                                                                 "usedAmount":  7498.01,
+                                                                                 "isLimitFlexible":  true,
+                                                                                 "consolidationType":  "CONSOLIDADO",
+                                                                                 "creditLineLimitType":  "LIMITE_CREDITO_TOTAL",
+                                                                                 "identificationNumber":  "7531",
+                                                                                 "usedAmountCurrencyCode":  "BRL"
+                                                                             },
+                                                                             {
+                                                                                 "usedAmount":  7498.01,
+                                                                                 "isLimitFlexible":  true,
+                                                                                 "consolidationType":  "CONSOLIDADO",
+                                                                                 "creditLineLimitType":  "LIMITE_CREDITO_TOTAL",
+                                                                                 "identificationNumber":  "7286",
+                                                                                 "usedAmountCurrencyCode":  "BRL"
+                                                                             },
+                                                                             {
+                                                                                 "usedAmount":  7498.01,
+                                                                                 "isLimitFlexible":  true,
+                                                                                 "consolidationType":  "CONSOLIDADO",
+                                                                                 "creditLineLimitType":  "LIMITE_CREDITO_TOTAL",
+                                                                                 "identificationNumber":  "6891",
+                                                                                 "usedAmountCurrencyCode":  "BRL"
+                                                                             },
+                                                                             {
+                                                                                 "usedAmount":  7498.01,
+                                                                                 "isLimitFlexible":  true,
+                                                                                 "consolidationType":  "CONSOLIDADO",
+                                                                                 "creditLineLimitType":  "LIMITE_CREDITO_TOTAL",
+                                                                                 "identificationNumber":  "6254",
+                                                                                 "usedAmountCurrencyCode":  "BRL"
+                                                                             },
+                                                                             {
+                                                                                 "usedAmount":  7498.01,
+                                                                                 "isLimitFlexible":  true,
+                                                                                 "consolidationType":  "CONSOLIDADO",
+                                                                                 "creditLineLimitType":  "LIMITE_CREDITO_TOTAL",
+                                                                                 "identificationNumber":  "6159",
+                                                                                 "usedAmountCurrencyCode":  "BRL"
+                                                                             },
+                                                                             {
+                                                                                 "usedAmount":  7498.01,
+                                                                                 "isLimitFlexible":  true,
+                                                                                 "consolidationType":  "CONSOLIDADO",
+                                                                                 "creditLineLimitType":  "LIMITE_CREDITO_TOTAL",
+                                                                                 "identificationNumber":  "5025",
+                                                                                 "usedAmountCurrencyCode":  "BRL"
+                                                                             },
+                                                                             {
+                                                                                 "usedAmount":  7498.01,
+                                                                                 "isLimitFlexible":  true,
+                                                                                 "consolidationType":  "CONSOLIDADO",
+                                                                                 "creditLineLimitType":  "LIMITE_CREDITO_TOTAL",
+                                                                                 "identificationNumber":  "4883",
+                                                                                 "usedAmountCurrencyCode":  "BRL"
+                                                                             },
+                                                                             {
+                                                                                 "usedAmount":  7498.01,
+                                                                                 "isLimitFlexible":  true,
+                                                                                 "consolidationType":  "CONSOLIDADO",
+                                                                                 "creditLineLimitType":  "LIMITE_CREDITO_TOTAL",
+                                                                                 "identificationNumber":  "4686",
+                                                                                 "usedAmountCurrencyCode":  "BRL"
+                                                                             },
+                                                                             {
+                                                                                 "usedAmount":  7498.01,
+                                                                                 "isLimitFlexible":  true,
+                                                                                 "consolidationType":  "CONSOLIDADO",
+                                                                                 "creditLineLimitType":  "LIMITE_CREDITO_TOTAL",
+                                                                                 "identificationNumber":  "3376",
+                                                                                 "usedAmountCurrencyCode":  "BRL"
+                                                                             },
+                                                                             {
+                                                                                 "usedAmount":  7498.01,
+                                                                                 "isLimitFlexible":  true,
+                                                                                 "consolidationType":  "CONSOLIDADO",
+                                                                                 "creditLineLimitType":  "LIMITE_CREDITO_TOTAL",
+                                                                                 "identificationNumber":  "2207",
+                                                                                 "usedAmountCurrencyCode":  "BRL"
+                                                                             },
+                                                                             {
+                                                                                 "usedAmount":  7498.01,
+                                                                                 "isLimitFlexible":  true,
+                                                                                 "consolidationType":  "CONSOLIDADO",
+                                                                                 "creditLineLimitType":  "LIMITE_CREDITO_TOTAL",
+                                                                                 "identificationNumber":  "0708",
+                                                                                 "usedAmountCurrencyCode":  "BRL"
+                                                                             }
+                                                                         ],
+                                           "additionalCards":  [
+                                                                   {
+                                                                       "number":  "\u003credacted\u003e"
+                                                                   },
+                                                                   {
+                                                                       "number":  "\u003credacted\u003e"
+                                                                   },
+                                                                   {
+                                                                       "number":  "\u003credacted\u003e"
+                                                                   },
+                                                                   {
+                                                                       "number":  "\u003credacted\u003e"
+                                                                   },
+                                                                   {
+                                                                       "number":  "\u003credacted\u003e"
+                                                                   },
+                                                                   {
+                                                                       "number":  "\u003credacted\u003e"
+                                                                   },
+                                                                   {
+                                                                       "number":  "\u003credacted\u003e"
+                                                                   },
+                                                                   {
+                                                                       "number":  "\u003credacted\u003e"
+                                                                   },
+                                                                   {
+                                                                       "number":  "\u003credacted\u003e"
+                                                                   },
+                                                                   {
+                                                                       "number":  "\u003credacted\u003e"
+                                                                   },
+                                                                   {
+                                                                       "number":  "\u003credacted\u003e"
+                                                                   },
+                                                                   {
+                                                                       "number":  "\u003credacted\u003e"
+                                                                   },
+                                                                   {
+                                                                       "number":  "\u003credacted\u003e"
+                                                                   },
+                                                                   {
+                                                                       "number":  "\u003credacted\u003e"
+                                                                   },
+                                                                   {
+                                                                       "number":  "\u003credacted\u003e"
+                                                                   },
+                                                                   {
+                                                                       "number":  "\u003credacted\u003e"
+                                                                   }
+                                                               ]
+                                       }
+                    }
+                ]
+}
