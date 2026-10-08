@@ -1,1 +1,6 @@
-project_id = "ldnyogjfzqoqomehabfm"
+# Supabase project reference. The old Lovable project was discarded; a NEW database is
+# created from scratch for the OPIN integration (see docs/OPIN-SCHEMA.md).
+# Set this to the new project ref before `supabase link`, e.g.:
+#   project_id = "your-new-project-ref"
+# Left blank intentionally so no one links to the discarded Lovable project by accident.
+project_id = ""
