@@ -1,0 +1,20 @@
+# Normalize line endings: the repo stores LF; Windows checkouts must not
+# rewrite them to CRLF, which breaks prettier/eslint locally (CI runs on LF).
+* text=auto eol=lf
+
+# Explicitly treat known binaries as binary (never EOL-normalized).
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.pdf binary
+
+# Lockfiles: keep LF, never introduce EOL diff noise.
+bun.lock text eol=lf
+package-lock.json text eol=lf
