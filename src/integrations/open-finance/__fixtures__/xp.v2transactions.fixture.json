@@ -1,402 +1,402 @@
-﻿{
-    "results":  [
-                    {
-                        "id":  "\u003credacted\u003e",
-                        "description":  "\u003credacted\u003e",
-                        "descriptionRaw":  "\u003credacted\u003e",
-                        "currencyCode":  "BRL",
-                        "amount":  0,
-                        "amountInAccountCurrency":  null,
-                        "date":  "2026-10-07T18:31:31.787Z",
-                        "category":  "Automatic investment",
-                        "categoryId":  "03010000",
-                        "balance":  null,
-                        "accountId":  "\u003credacted\u003e",
-                        "providerCode":  null,
-                        "status":  "POSTED",
-                        "paymentData":  {
-                                            "payer":  null,
-                                            "paymentMethod":  "OTHER",
-                                            "reason":  null,
-                                            "receiver":  {
-                                                             "accountNumber":  null,
-                                                             "branchNumber":  null,
-                                                             "documentNumber":  {
-                                                                                    "type":  "CPF",
-                                                                                    "value":  "364.926.898-10"
-                                                                                },
-                                                             "name":  null,
-                                                             "routingNumber":  null,
-                                                             "routingNumberISPB":  null
-                                                         },
-                                            "receiverReferenceId":  null,
-                                            "authenticationCode":  null,
-                                            "referenceNumber":  null,
-                                            "boletoMetadata":  null
-                                        },
-                        "type":  "CREDIT",
-                        "operationType":  "RENDIMENTO_APLIC_FINANCEIRA",
-                        "operationTypeAdditionalInfo":  "Rendimento autom├ítico",
-                        "creditCardMetadata":  null,
-                        "merchant":  null,
-                        "providerId":  null,
-                        "order":  0,
-                        "createdAt":  "2026-10-07T22:59:15.891Z",
-                        "updatedAt":  "2026-10-07T22:59:15.891Z"
-                    },
-                    {
-                        "id":  "\u003credacted\u003e",
-                        "description":  "\u003credacted\u003e",
-                        "descriptionRaw":  "\u003credacted\u003e",
-                        "currencyCode":  "BRL",
-                        "amount":  0,
-                        "amountInAccountCurrency":  null,
-                        "date":  "2026-10-07T12:29:55.790Z",
-                        "category":  "Transfer - PIX",
-                        "categoryId":  "05070000",
-                        "balance":  null,
-                        "accountId":  "\u003credacted\u003e",
-                        "providerCode":  null,
-                        "status":  "POSTED",
-                        "paymentData":  {
-                                            "payer":  {
-                                                          "accountNumber":  "\u003credacted\u003e",
-                                                          "branchNumber":  "\u003credacted\u003e",
-                                                          "documentNumber":  {
-                                                                                 "type":  "CPF",
-                                                                                 "value":  "518.746.638-07"
-                                                                             },
-                                                          "name":  null,
-                                                          "routingNumber":  null,
-                                                          "routingNumberISPB":  null
-                                                      },
-                                            "paymentMethod":  "PIX",
-                                            "reason":  null,
-                                            "receiver":  {
-                                                             "accountNumber":  null,
-                                                             "branchNumber":  null,
-                                                             "documentNumber":  {
-                                                                                    "type":  "CPF",
-                                                                                    "value":  "364.926.898-10"
-                                                                                },
-                                                             "name":  null,
-                                                             "routingNumber":  null,
-                                                             "routingNumberISPB":  null
-                                                         },
-                                            "receiverReferenceId":  null,
-                                            "authenticationCode":  null,
-                                            "referenceNumber":  null,
-                                            "boletoMetadata":  null
-                                        },
-                        "type":  "CREDIT",
-                        "operationType":  "PIX",
-                        "operationTypeAdditionalInfo":  null,
-                        "creditCardMetadata":  null,
-                        "merchant":  null,
-                        "providerId":  null,
-                        "order":  1,
-                        "createdAt":  "2026-10-07T22:59:15.891Z",
-                        "updatedAt":  "2026-10-07T22:59:15.891Z"
-                    },
-                    {
-                        "id":  "\u003credacted\u003e",
-                        "description":  "\u003credacted\u003e",
-                        "descriptionRaw":  "\u003credacted\u003e",
-                        "currencyCode":  "BRL",
-                        "amount":  0,
-                        "amountInAccountCurrency":  null,
-                        "date":  "2026-10-07T12:29:17.818Z",
-                        "category":  "Same person transfer",
-                        "categoryId":  "04000000",
-                        "balance":  null,
-                        "accountId":  "\u003credacted\u003e",
-                        "providerCode":  null,
-                        "status":  "POSTED",
-                        "paymentData":  {
-                                            "payer":  {
-                                                          "accountNumber":  "\u003credacted\u003e",
-                                                          "branchNumber":  "\u003credacted\u003e",
-                                                          "documentNumber":  {
-                                                                                 "type":  "CPF",
-                                                                                 "value":  "364.926.898-10"
-                                                                             },
-                                                          "name":  null,
-                                                          "routingNumber":  null,
-                                                          "routingNumberISPB":  null
-                                                      },
-                                            "paymentMethod":  "PIX",
-                                            "reason":  null,
-                                            "receiver":  {
-                                                             "accountNumber":  null,
-                                                             "branchNumber":  null,
-                                                             "documentNumber":  {
-                                                                                    "type":  "CPF",
-                                                                                    "value":  "364.926.898-10"
-                                                                                },
-                                                             "name":  null,
-                                                             "routingNumber":  null,
-                                                             "routingNumberISPB":  null
-                                                         },
-                                            "receiverReferenceId":  null,
-                                            "authenticationCode":  null,
-                                            "referenceNumber":  null,
-                                            "boletoMetadata":  null
-                                        },
-                        "type":  "CREDIT",
-                        "operationType":  "PIX",
-                        "operationTypeAdditionalInfo":  null,
-                        "creditCardMetadata":  null,
-                        "merchant":  null,
-                        "providerId":  null,
-                        "order":  2,
-                        "createdAt":  "2026-10-07T22:59:15.891Z",
-                        "updatedAt":  "2026-10-07T22:59:15.891Z"
-                    },
-                    {
-                        "id":  "\u003credacted\u003e",
-                        "description":  "\u003credacted\u003e",
-                        "descriptionRaw":  "\u003credacted\u003e",
-                        "currencyCode":  "BRL",
-                        "amount":  0,
-                        "amountInAccountCurrency":  null,
-                        "date":  "2026-10-06T18:44:31.057Z",
-                        "category":  "Automatic investment",
-                        "categoryId":  "03010000",
-                        "balance":  null,
-                        "accountId":  "\u003credacted\u003e",
-                        "providerCode":  null,
-                        "status":  "POSTED",
-                        "paymentData":  {
-                                            "payer":  null,
-                                            "paymentMethod":  "OTHER",
-                                            "reason":  null,
-                                            "receiver":  {
-                                                             "accountNumber":  null,
-                                                             "branchNumber":  null,
-                                                             "documentNumber":  {
-                                                                                    "type":  "CPF",
-                                                                                    "value":  "364.926.898-10"
-                                                                                },
-                                                             "name":  null,
-                                                             "routingNumber":  null,
-                                                             "routingNumberISPB":  null
-                                                         },
-                                            "receiverReferenceId":  null,
-                                            "authenticationCode":  null,
-                                            "referenceNumber":  null,
-                                            "boletoMetadata":  null
-                                        },
-                        "type":  "CREDIT",
-                        "operationType":  "RENDIMENTO_APLIC_FINANCEIRA",
-                        "operationTypeAdditionalInfo":  "Rendimento autom├ítico",
-                        "creditCardMetadata":  null,
-                        "merchant":  null,
-                        "providerId":  null,
-                        "order":  0,
-                        "createdAt":  "2026-10-06T22:58:11.679Z",
-                        "updatedAt":  "2026-10-06T22:58:11.679Z"
-                    },
-                    {
-                        "id":  "\u003credacted\u003e",
-                        "description":  "\u003credacted\u003e",
-                        "descriptionRaw":  "\u003credacted\u003e",
-                        "currencyCode":  "BRL",
-                        "amount":  0,
-                        "amountInAccountCurrency":  null,
-                        "date":  "2026-10-06T12:15:08.158Z",
-                        "category":  "Transfer - PIX",
-                        "categoryId":  "05070000",
-                        "balance":  null,
-                        "accountId":  "\u003credacted\u003e",
-                        "providerCode":  null,
-                        "status":  "POSTED",
-                        "paymentData":  {
-                                            "payer":  {
-                                                          "accountNumber":  "\u003credacted\u003e",
-                                                          "branchNumber":  "\u003credacted\u003e",
-                                                          "documentNumber":  {
-                                                                                 "type":  "CPF",
-                                                                                 "value":  "518.746.638-07"
-                                                                             },
-                                                          "name":  null,
-                                                          "routingNumber":  null,
-                                                          "routingNumberISPB":  null
-                                                      },
-                                            "paymentMethod":  "PIX",
-                                            "reason":  null,
-                                            "receiver":  {
-                                                             "accountNumber":  null,
-                                                             "branchNumber":  null,
-                                                             "documentNumber":  {
-                                                                                    "type":  "CPF",
-                                                                                    "value":  "364.926.898-10"
-                                                                                },
-                                                             "name":  null,
-                                                             "routingNumber":  null,
-                                                             "routingNumberISPB":  null
-                                                         },
-                                            "receiverReferenceId":  null,
-                                            "authenticationCode":  null,
-                                            "referenceNumber":  null,
-                                            "boletoMetadata":  null
-                                        },
-                        "type":  "CREDIT",
-                        "operationType":  "PIX",
-                        "operationTypeAdditionalInfo":  null,
-                        "creditCardMetadata":  null,
-                        "merchant":  null,
-                        "providerId":  null,
-                        "order":  1,
-                        "createdAt":  "2026-10-06T22:58:11.679Z",
-                        "updatedAt":  "2026-10-06T22:58:11.679Z"
-                    },
-                    {
-                        "id":  "\u003credacted\u003e",
-                        "description":  "\u003credacted\u003e",
-                        "descriptionRaw":  "\u003credacted\u003e",
-                        "currencyCode":  "BRL",
-                        "amount":  0,
-                        "amountInAccountCurrency":  null,
-                        "date":  "2026-10-05T18:38:08.240Z",
-                        "category":  "Automatic investment",
-                        "categoryId":  "03010000",
-                        "balance":  null,
-                        "accountId":  "\u003credacted\u003e",
-                        "providerCode":  null,
-                        "status":  "POSTED",
-                        "paymentData":  {
-                                            "payer":  null,
-                                            "paymentMethod":  "OTHER",
-                                            "reason":  null,
-                                            "receiver":  {
-                                                             "accountNumber":  null,
-                                                             "branchNumber":  null,
-                                                             "documentNumber":  {
-                                                                                    "type":  "CPF",
-                                                                                    "value":  "364.926.898-10"
-                                                                                },
-                                                             "name":  null,
-                                                             "routingNumber":  null,
-                                                             "routingNumberISPB":  null
-                                                         },
-                                            "receiverReferenceId":  null,
-                                            "authenticationCode":  null,
-                                            "referenceNumber":  null,
-                                            "boletoMetadata":  null
-                                        },
-                        "type":  "CREDIT",
-                        "operationType":  "RENDIMENTO_APLIC_FINANCEIRA",
-                        "operationTypeAdditionalInfo":  "Rendimento autom├ítico",
-                        "creditCardMetadata":  null,
-                        "merchant":  null,
-                        "providerId":  null,
-                        "order":  0,
-                        "createdAt":  "2026-10-05T22:57:07.459Z",
-                        "updatedAt":  "2026-10-05T22:57:07.459Z"
-                    },
-                    {
-                        "id":  "\u003credacted\u003e",
-                        "description":  "\u003credacted\u003e",
-                        "descriptionRaw":  "\u003credacted\u003e",
-                        "currencyCode":  "BRL",
-                        "amount":  0,
-                        "amountInAccountCurrency":  null,
-                        "date":  "2026-10-05T01:25:04.205Z",
-                        "category":  "Houseware",
-                        "categoryId":  "17030000",
-                        "balance":  null,
-                        "accountId":  "\u003credacted\u003e",
-                        "providerCode":  null,
-                        "status":  "POSTED",
-                        "paymentData":  {
-                                            "payer":  {
-                                                          "accountNumber":  null,
-                                                          "branchNumber":  null,
-                                                          "documentNumber":  {
-                                                                                 "type":  "CPF",
-                                                                                 "value":  "364.926.898-10"
-                                                                             },
-                                                          "name":  null,
-                                                          "routingNumber":  null,
-                                                          "routingNumberISPB":  null
-                                                      },
-                                            "paymentMethod":  "PIX",
-                                            "reason":  null,
-                                            "receiver":  {
-                                                             "accountNumber":  "\u003credacted\u003e",
-                                                             "branchNumber":  "\u003credacted\u003e",
-                                                             "documentNumber":  {
-                                                                                    "type":  "CNPJ",
-                                                                                    "value":  "10.490.181/0001-35"
-                                                                                },
-                                                             "name":  "\u003credacted\u003e",
-                                                             "routingNumber":  null,
-                                                             "routingNumberISPB":  "60701190"
-                                                         },
-                                            "receiverReferenceId":  null,
-                                            "authenticationCode":  null,
-                                            "referenceNumber":  null,
-                                            "boletoMetadata":  null
-                                        },
-                        "type":  "DEBIT",
-                        "operationType":  "PIX",
-                        "operationTypeAdditionalInfo":  null,
-                        "creditCardMetadata":  null,
-                        "merchant":  {
-                                         "cnae":  "4754701",
-                                         "cnpj":  "10490181000135",
-                                         "category":  "Houseware",
-                                         "businessName":  "MADEIRAMADEIRA COMERCIO ELETRONICO S/A"
-                                     },
-                        "providerId":  null,
-                        "order":  1,
-                        "createdAt":  "2026-10-05T22:57:07.459Z",
-                        "updatedAt":  "2026-10-05T22:57:07.459Z"
-                    },
-                    {
-                        "id":  "\u003credacted\u003e",
-                        "description":  "\u003credacted\u003e",
-                        "descriptionRaw":  "\u003credacted\u003e",
-                        "currencyCode":  "BRL",
-                        "amount":  0,
-                        "amountInAccountCurrency":  null,
-                        "date":  "2026-10-02T18:28:50.189Z",
-                        "category":  "Automatic investment",
-                        "categoryId":  "03010000",
-                        "balance":  null,
-                        "accountId":  "\u003credacted\u003e",
-                        "providerCode":  null,
-                        "status":  "POSTED",
-                        "paymentData":  {
-                                            "payer":  null,
-                                            "paymentMethod":  "OTHER",
-                                            "reason":  null,
-                                            "receiver":  {
-                                                             "accountNumber":  null,
-                                                             "branchNumber":  null,
-                                                             "documentNumber":  {
-                                                                                    "type":  "CPF",
-                                                                                    "value":  "364.926.898-10"
-                                                                                },
-                                                             "name":  null,
-                                                             "routingNumber":  null,
-                                                             "routingNumberISPB":  null
-                                                         },
-                                            "receiverReferenceId":  null,
-                                            "authenticationCode":  null,
-                                            "referenceNumber":  null,
-                                            "boletoMetadata":  null
-                                        },
-                        "type":  "CREDIT",
-                        "operationType":  "RENDIMENTO_APLIC_FINANCEIRA",
-                        "operationTypeAdditionalInfo":  "Rendimento autom├ítico",
-                        "creditCardMetadata":  null,
-                        "merchant":  null,
-                        "providerId":  null,
-                        "order":  0,
-                        "createdAt":  "2026-10-02T22:54:06.812Z",
-                        "updatedAt":  "2026-10-02T22:54:06.812Z"
-                    }
-                ],
-    "next":  ""
+{
+  "results": [
+    {
+      "id": "tx-0",
+      "description": "<redacted>",
+      "descriptionRaw": "<redacted>",
+      "currencyCode": "BRL",
+      "amount": 0,
+      "amountInAccountCurrency": null,
+      "date": "2026-10-07T18:31:31.787Z",
+      "category": "Automatic investment",
+      "categoryId": "03010000",
+      "balance": null,
+      "accountId": "acc-xp-checking-0",
+      "providerCode": null,
+      "status": "POSTED",
+      "paymentData": {
+        "payer": null,
+        "paymentMethod": "OTHER",
+        "reason": null,
+        "receiver": {
+          "accountNumber": null,
+          "branchNumber": null,
+          "documentNumber": {
+            "type": "CPF",
+            "value": "000.000.000-00"
+          },
+          "name": null,
+          "routingNumber": null,
+          "routingNumberISPB": null
+        },
+        "receiverReferenceId": null,
+        "authenticationCode": null,
+        "referenceNumber": null,
+        "boletoMetadata": null
+      },
+      "type": "CREDIT",
+      "operationType": "RENDIMENTO_APLIC_FINANCEIRA",
+      "operationTypeAdditionalInfo": "Rendimento autom├ítico",
+      "creditCardMetadata": null,
+      "merchant": null,
+      "providerId": "prov-tx-0",
+      "order": 0,
+      "createdAt": "2026-10-07T22:59:15.891Z",
+      "updatedAt": "2026-10-07T22:59:15.891Z"
+    },
+    {
+      "id": "tx-1",
+      "description": "<redacted>",
+      "descriptionRaw": "<redacted>",
+      "currencyCode": "BRL",
+      "amount": 0,
+      "amountInAccountCurrency": null,
+      "date": "2026-10-07T12:29:55.790Z",
+      "category": "Transfer - PIX",
+      "categoryId": "05070000",
+      "balance": null,
+      "accountId": "acc-xp-checking-0",
+      "providerCode": null,
+      "status": "POSTED",
+      "paymentData": {
+        "payer": {
+          "accountNumber": "<redacted>",
+          "branchNumber": "<redacted>",
+          "documentNumber": {
+            "type": "CPF",
+            "value": "000.000.000-00"
+          },
+          "name": null,
+          "routingNumber": null,
+          "routingNumberISPB": null
+        },
+        "paymentMethod": "PIX",
+        "reason": null,
+        "receiver": {
+          "accountNumber": null,
+          "branchNumber": null,
+          "documentNumber": {
+            "type": "CPF",
+            "value": "000.000.000-00"
+          },
+          "name": null,
+          "routingNumber": null,
+          "routingNumberISPB": null
+        },
+        "receiverReferenceId": null,
+        "authenticationCode": null,
+        "referenceNumber": null,
+        "boletoMetadata": null
+      },
+      "type": "CREDIT",
+      "operationType": "PIX",
+      "operationTypeAdditionalInfo": null,
+      "creditCardMetadata": null,
+      "merchant": null,
+      "providerId": "prov-tx-1",
+      "order": 1,
+      "createdAt": "2026-10-07T22:59:15.891Z",
+      "updatedAt": "2026-10-07T22:59:15.891Z"
+    },
+    {
+      "id": "tx-2",
+      "description": "<redacted>",
+      "descriptionRaw": "<redacted>",
+      "currencyCode": "BRL",
+      "amount": 0,
+      "amountInAccountCurrency": null,
+      "date": "2026-10-07T12:29:17.818Z",
+      "category": "Same person transfer",
+      "categoryId": "04000000",
+      "balance": null,
+      "accountId": "acc-xp-checking-0",
+      "providerCode": null,
+      "status": "POSTED",
+      "paymentData": {
+        "payer": {
+          "accountNumber": "<redacted>",
+          "branchNumber": "<redacted>",
+          "documentNumber": {
+            "type": "CPF",
+            "value": "000.000.000-00"
+          },
+          "name": null,
+          "routingNumber": null,
+          "routingNumberISPB": null
+        },
+        "paymentMethod": "PIX",
+        "reason": null,
+        "receiver": {
+          "accountNumber": null,
+          "branchNumber": null,
+          "documentNumber": {
+            "type": "CPF",
+            "value": "000.000.000-00"
+          },
+          "name": null,
+          "routingNumber": null,
+          "routingNumberISPB": null
+        },
+        "receiverReferenceId": null,
+        "authenticationCode": null,
+        "referenceNumber": null,
+        "boletoMetadata": null
+      },
+      "type": "CREDIT",
+      "operationType": "PIX",
+      "operationTypeAdditionalInfo": null,
+      "creditCardMetadata": null,
+      "merchant": null,
+      "providerId": "prov-tx-2",
+      "order": 2,
+      "createdAt": "2026-10-07T22:59:15.891Z",
+      "updatedAt": "2026-10-07T22:59:15.891Z"
+    },
+    {
+      "id": "tx-3",
+      "description": "<redacted>",
+      "descriptionRaw": "<redacted>",
+      "currencyCode": "BRL",
+      "amount": 0,
+      "amountInAccountCurrency": null,
+      "date": "2026-10-06T18:44:31.057Z",
+      "category": "Automatic investment",
+      "categoryId": "03010000",
+      "balance": null,
+      "accountId": "acc-xp-checking-0",
+      "providerCode": null,
+      "status": "POSTED",
+      "paymentData": {
+        "payer": null,
+        "paymentMethod": "OTHER",
+        "reason": null,
+        "receiver": {
+          "accountNumber": null,
+          "branchNumber": null,
+          "documentNumber": {
+            "type": "CPF",
+            "value": "000.000.000-00"
+          },
+          "name": null,
+          "routingNumber": null,
+          "routingNumberISPB": null
+        },
+        "receiverReferenceId": null,
+        "authenticationCode": null,
+        "referenceNumber": null,
+        "boletoMetadata": null
+      },
+      "type": "CREDIT",
+      "operationType": "RENDIMENTO_APLIC_FINANCEIRA",
+      "operationTypeAdditionalInfo": "Rendimento autom├ítico",
+      "creditCardMetadata": null,
+      "merchant": null,
+      "providerId": "prov-tx-3",
+      "order": 0,
+      "createdAt": "2026-10-06T22:58:11.679Z",
+      "updatedAt": "2026-10-06T22:58:11.679Z"
+    },
+    {
+      "id": "tx-4",
+      "description": "<redacted>",
+      "descriptionRaw": "<redacted>",
+      "currencyCode": "BRL",
+      "amount": 0,
+      "amountInAccountCurrency": null,
+      "date": "2026-10-06T12:15:08.158Z",
+      "category": "Transfer - PIX",
+      "categoryId": "05070000",
+      "balance": null,
+      "accountId": "acc-xp-checking-0",
+      "providerCode": null,
+      "status": "POSTED",
+      "paymentData": {
+        "payer": {
+          "accountNumber": "<redacted>",
+          "branchNumber": "<redacted>",
+          "documentNumber": {
+            "type": "CPF",
+            "value": "000.000.000-00"
+          },
+          "name": null,
+          "routingNumber": null,
+          "routingNumberISPB": null
+        },
+        "paymentMethod": "PIX",
+        "reason": null,
+        "receiver": {
+          "accountNumber": null,
+          "branchNumber": null,
+          "documentNumber": {
+            "type": "CPF",
+            "value": "000.000.000-00"
+          },
+          "name": null,
+          "routingNumber": null,
+          "routingNumberISPB": null
+        },
+        "receiverReferenceId": null,
+        "authenticationCode": null,
+        "referenceNumber": null,
+        "boletoMetadata": null
+      },
+      "type": "CREDIT",
+      "operationType": "PIX",
+      "operationTypeAdditionalInfo": null,
+      "creditCardMetadata": null,
+      "merchant": null,
+      "providerId": "prov-tx-4",
+      "order": 1,
+      "createdAt": "2026-10-06T22:58:11.679Z",
+      "updatedAt": "2026-10-06T22:58:11.679Z"
+    },
+    {
+      "id": "tx-5",
+      "description": "<redacted>",
+      "descriptionRaw": "<redacted>",
+      "currencyCode": "BRL",
+      "amount": 0,
+      "amountInAccountCurrency": null,
+      "date": "2026-10-05T18:38:08.240Z",
+      "category": "Automatic investment",
+      "categoryId": "03010000",
+      "balance": null,
+      "accountId": "acc-xp-checking-0",
+      "providerCode": null,
+      "status": "POSTED",
+      "paymentData": {
+        "payer": null,
+        "paymentMethod": "OTHER",
+        "reason": null,
+        "receiver": {
+          "accountNumber": null,
+          "branchNumber": null,
+          "documentNumber": {
+            "type": "CPF",
+            "value": "000.000.000-00"
+          },
+          "name": null,
+          "routingNumber": null,
+          "routingNumberISPB": null
+        },
+        "receiverReferenceId": null,
+        "authenticationCode": null,
+        "referenceNumber": null,
+        "boletoMetadata": null
+      },
+      "type": "CREDIT",
+      "operationType": "RENDIMENTO_APLIC_FINANCEIRA",
+      "operationTypeAdditionalInfo": "Rendimento autom├ítico",
+      "creditCardMetadata": null,
+      "merchant": null,
+      "providerId": "prov-tx-5",
+      "order": 0,
+      "createdAt": "2026-10-05T22:57:07.459Z",
+      "updatedAt": "2026-10-05T22:57:07.459Z"
+    },
+    {
+      "id": "tx-6",
+      "description": "<redacted>",
+      "descriptionRaw": "<redacted>",
+      "currencyCode": "BRL",
+      "amount": 0,
+      "amountInAccountCurrency": null,
+      "date": "2026-10-05T01:25:04.205Z",
+      "category": "Houseware",
+      "categoryId": "17030000",
+      "balance": null,
+      "accountId": "acc-xp-checking-0",
+      "providerCode": null,
+      "status": "POSTED",
+      "paymentData": {
+        "payer": {
+          "accountNumber": null,
+          "branchNumber": null,
+          "documentNumber": {
+            "type": "CPF",
+            "value": "000.000.000-00"
+          },
+          "name": null,
+          "routingNumber": null,
+          "routingNumberISPB": null
+        },
+        "paymentMethod": "PIX",
+        "reason": null,
+        "receiver": {
+          "accountNumber": "<redacted>",
+          "branchNumber": "<redacted>",
+          "documentNumber": {
+            "type": "CNPJ",
+            "value": "00.000.000/0000-00"
+          },
+          "name": "<redacted>",
+          "routingNumber": null,
+          "routingNumberISPB": "60701190"
+        },
+        "receiverReferenceId": null,
+        "authenticationCode": null,
+        "referenceNumber": null,
+        "boletoMetadata": null
+      },
+      "type": "DEBIT",
+      "operationType": "PIX",
+      "operationTypeAdditionalInfo": null,
+      "creditCardMetadata": null,
+      "merchant": {
+        "cnae": "4754701",
+        "cnpj": "00.000.000/0000-00",
+        "category": "Houseware",
+        "businessName": "MADEIRAMADEIRA COMERCIO ELETRONICO S/A"
+      },
+      "providerId": "prov-tx-6",
+      "order": 1,
+      "createdAt": "2026-10-05T22:57:07.459Z",
+      "updatedAt": "2026-10-05T22:57:07.459Z"
+    },
+    {
+      "id": "tx-7",
+      "description": "<redacted>",
+      "descriptionRaw": "<redacted>",
+      "currencyCode": "BRL",
+      "amount": 0,
+      "amountInAccountCurrency": null,
+      "date": "2026-10-02T18:28:50.189Z",
+      "category": "Automatic investment",
+      "categoryId": "03010000",
+      "balance": null,
+      "accountId": "acc-xp-checking-0",
+      "providerCode": null,
+      "status": "POSTED",
+      "paymentData": {
+        "payer": null,
+        "paymentMethod": "OTHER",
+        "reason": null,
+        "receiver": {
+          "accountNumber": null,
+          "branchNumber": null,
+          "documentNumber": {
+            "type": "CPF",
+            "value": "000.000.000-00"
+          },
+          "name": null,
+          "routingNumber": null,
+          "routingNumberISPB": null
+        },
+        "receiverReferenceId": null,
+        "authenticationCode": null,
+        "referenceNumber": null,
+        "boletoMetadata": null
+      },
+      "type": "CREDIT",
+      "operationType": "RENDIMENTO_APLIC_FINANCEIRA",
+      "operationTypeAdditionalInfo": "Rendimento autom├ítico",
+      "creditCardMetadata": null,
+      "merchant": null,
+      "providerId": "prov-tx-7",
+      "order": 0,
+      "createdAt": "2026-10-02T22:54:06.812Z",
+      "updatedAt": "2026-10-02T22:54:06.812Z"
+    }
+  ],
+  "next": ""
 }
