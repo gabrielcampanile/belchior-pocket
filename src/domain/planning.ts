@@ -10,7 +10,12 @@ import type { IncomeNature, IncomeType } from "./types";
 import { toMonthKey, type MonthKey } from "@/lib/months";
 
 export type PlanFrequency =
-  "MONTHLY" | "BIMONTHLY" | "QUARTERLY" | "SEMIANNUAL" | "YEARLY" | "ONCE";
+  | "MONTHLY"
+  | "BIMONTHLY"
+  | "QUARTERLY"
+  | "SEMIANNUAL"
+  | "YEARLY"
+  | "ONCE";
 
 export const FREQUENCY_LABEL: Record<PlanFrequency, string> = {
   MONTHLY: "Mensal",
