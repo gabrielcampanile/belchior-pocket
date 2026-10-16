@@ -1,6 +1,6 @@
 /**
  * Pure request helpers for the Pluggy API (no credentials, no I/O). Kept out of
- * pluggy.client.server.ts so they can be unit-tested: *.server.ts modules are replaced by
+ * pluggy.api.server.ts so they can be unit-tested: *.server.ts modules are replaced by
  * an import-protection mock outside the server runtime.
  */
 

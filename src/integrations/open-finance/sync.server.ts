@@ -19,7 +19,7 @@ import {
   type CategoryKind,
   type NeededGroup,
 } from "./categories";
-import { configuredItems, pluggy, type ConfiguredItem } from "./pluggy.client.server";
+import { configuredItems, pluggy, type ConfiguredItem } from "./pluggy.api.server";
 import type { PluggyAccount, PluggyCategory, PluggyTransaction } from "./pluggy.types";
 import {
   classifySyncError,
