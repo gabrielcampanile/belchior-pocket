@@ -52,11 +52,14 @@ describe("adapter: normalizeAccount (contrato com fixtures reais)", () => {
 
 describe("adapter: classifyTxType (regras determinísticas, sem IA)", () => {
   const mk = (
-    partial: Partial<Pick<PluggyTransaction, "type" | "category" | "operationType">>,
-  ): Pick<PluggyTransaction, "type" | "category" | "operationType"> => ({
+    partial: Partial<
+      Pick<PluggyTransaction, "type" | "category" | "operationType" | "description">
+    >,
+  ): Pick<PluggyTransaction, "type" | "category" | "operationType" | "description"> => ({
     type: "DEBIT",
     category: null,
     operationType: null,
+    description: "",
     ...partial,
   });
 
@@ -94,6 +97,30 @@ describe("adapter: classifyTxType (regras determinísticas, sem IA)", () => {
     expect(
       classifyTxType(mk({ type: "CREDIT", category: "Payment" }), { isCreditCardAccount: true }),
     ).toBe("CARD_PAYMENT");
+  });
+
+  it("8b. no cartão, crédito que não é pagamento de fatura é estorno: EXPENSE positivo", () => {
+    const card = { isCreditCardAccount: true };
+    expect(classifyTxType(mk({ type: "CREDIT", description: "Pagamento recebido" }), card)).toBe(
+      "CARD_PAYMENT",
+    );
+    expect(classifyTxType(mk({ type: "CREDIT", category: "Credit card payment" }), card)).toBe(
+      "CARD_PAYMENT",
+    );
+    const refund = mk({ type: "CREDIT", category: "Shopping", description: "ESTORNO LOJA X" });
+    expect(classifyTxType(refund, card)).toBe("EXPENSE");
+    const tx: PluggyTransaction = {
+      id: "r",
+      description: "ESTORNO LOJA X",
+      currencyCode: "BRL",
+      amount: 50,
+      date: "2026-01-01T00:00:00Z",
+      accountId: "card",
+      status: "POSTED",
+      type: "CREDIT",
+      category: "Shopping",
+    };
+    expect(normalizeTransaction(tx, card).amountCents).toBe(5000);
   });
 });
 
