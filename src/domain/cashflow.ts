@@ -9,7 +9,8 @@ import { identityConverter, type MoneyConverter } from "./exchange";
  *    move money between the user's own pockets and never inflate either side;
  *  - hidden rows are excluded by the caller's query, but are filtered here too;
  *  - every amount is converted to the display currency on its own date BEFORE summing;
- *  - EXPENSE amounts are stored negative and INCOME positive: we sum magnitudes.
+ *  - EXPENSE amounts are stored negative and INCOME positive; a positive EXPENSE is a
+ *    refund and reduces spending.
  */
 
 export type CashflowKind = "INCOME" | "EXPENSE";
@@ -60,7 +61,10 @@ function totalsBySide(
   let total = 0;
   for (const tx of transactions) {
     if (tx.hidden || tx.type !== kind) continue;
-    const value = Math.abs(Math.round(convert(money(tx.amountCents, tx.currency), tx.occurredOn)));
+    const converted = Math.round(convert(money(tx.amountCents, tx.currency), tx.occurredOn));
+    // Signed: an EXPENSE stored positive is a refund and REDUCES spending (same for a
+    // negative INCOME, e.g. a reversed credit).
+    const value = kind === "EXPENSE" ? -converted : converted;
     // A category id the user deleted (or that is not loaded) counts as uncategorized.
     const key = tx.categoryId && nameById.has(tx.categoryId) ? tx.categoryId : null;
     byCategory.set(key, (byCategory.get(key) ?? 0) + value);

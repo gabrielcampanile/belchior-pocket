@@ -97,6 +97,15 @@ describe("cashflow: monthCashflow", () => {
       { categoryId: null, name: UNCATEGORIZED_LABEL, totalCents: 1_000, share: 1 },
     ]);
   });
+
+  it("5b. estorno (despesa positiva) reduz o gasto da categoria", () => {
+    const flow = monthCashflow(
+      [tx("EXPENSE", -30_000, "Lazer"), tx("EXPENSE", 10_000, "Lazer")],
+      categories,
+    );
+    expect(flow.expenseCents).toBe(20_000);
+    expect(flow.expense[0].totalCents).toBe(20_000);
+  });
 });
 
 describe("cashflow: orçamento", () => {

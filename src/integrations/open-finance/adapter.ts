@@ -104,12 +104,25 @@ export interface ClassifyContext {
   counterpartyIsOwnAccount?: boolean;
 }
 
+/** Card-side CREDIT that is the bill payment (by category, or by its usual description). */
+const BILL_PAYMENT_DESCRIPTION = /\b(pagamento|pagto|pgto|payment)\b/i;
+function isCardBillPayment(
+  tx: Pick<PluggyTransaction, "category"> & Partial<Pick<PluggyTransaction, "description">>,
+): boolean {
+  return (
+    CARD_PAYMENT_CATEGORIES.has(tx.category ?? "") ||
+    BILL_PAYMENT_DESCRIPTION.test(tx.category ?? "") ||
+    BILL_PAYMENT_DESCRIPTION.test(tx.description ?? "")
+  );
+}
+
 /**
  * Deterministic domain-type derivation from Pluggy sign + category + operationType.
  * No AI, no heuristics beyond these explicit rules.
  */
 export function classifyTxType(
-  tx: Pick<PluggyTransaction, "type" | "category" | "operationType">,
+  tx: Pick<PluggyTransaction, "type" | "category" | "operationType"> &
+    Partial<Pick<PluggyTransaction, "description">>,
   ctx: ClassifyContext = {},
 ): CanonicalTxType {
   const category = tx.category ?? "";
@@ -130,10 +143,11 @@ export function classifyTxType(
     return tx.type === "CREDIT" ? "INCOME" : "EXPENSE";
   }
 
-  // Paying a credit-card bill: a DEBIT from a bank account toward a card is a settlement.
+  // On a credit-card account an incoming CREDIT is either the bill payment landing or a
+  // refund. Only the payment is a settlement; a refund is an EXPENSE stored positive, so it
+  // reduces spending instead of disappearing from it.
   if (ctx.isCreditCardAccount && tx.type === "CREDIT") {
-    // On the card account, an incoming CREDIT is the bill payment landing.
-    return "CARD_PAYMENT";
+    return isCardBillPayment(tx) ? "CARD_PAYMENT" : "EXPENSE";
   }
 
   return tx.type === "CREDIT" ? "INCOME" : "EXPENSE";
@@ -149,6 +163,8 @@ export function signedCents(tx: PluggyTransaction, domainType: CanonicalTxType):
     case "INCOME":
       return magnitude;
     case "EXPENSE":
+      // A CREDIT classified as EXPENSE is a refund (card): positive, reduces spending.
+      return tx.type === "CREDIT" ? magnitude : -magnitude;
     case "CARD_PAYMENT":
       return -magnitude;
     case "TRANSFER":
