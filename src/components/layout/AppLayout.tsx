@@ -1,39 +1,23 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import {
-  ArrowLeftRight,
-  BarChart3,
-  CalendarCheck,
-  LayoutDashboard,
-  LineChart,
-  LogOut,
-  Menu,
-  Settings,
-  Target,
-  Wallet,
-} from "lucide-react";
+import { ArrowLeftRight, BarChart3, LayoutDashboard, Link2, LogOut, Menu } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/useSession";
-import { useProfile } from "@/hooks/useFinanceData";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { CurrencySelect } from "@/components/finance/CurrencySelect";
 
+// v1: balanço mensal com Open Finance. Planejamento, cenários, patrimônio etc. são v2
+// (telas de referência em legacy/lovable-screens).
 const NAV = [
-  { to: "/", label: "Visão geral", icon: LayoutDashboard },
+  { to: "/", label: "Mês atual", icon: LayoutDashboard },
   { to: "/transacoes", label: "Transações", icon: ArrowLeftRight },
-  { to: "/fechamentos", label: "Fechamentos", icon: CalendarCheck },
-  { to: "/planejamento", label: "Planejamento", icon: Target },
-  { to: "/cenarios", label: "Cenários", icon: LineChart },
-  { to: "/patrimonio", label: "Patrimônio", icon: Wallet },
   { to: "/relatorios", label: "Relatórios", icon: BarChart3 },
-  { to: "/configuracoes", label: "Configurações", icon: Settings },
+  { to: "/conexoes", label: "Conexões", icon: Link2 },
 ] as const;
 
-const MOBILE_NAV = NAV.filter((item) =>
-  ["/", "/transacoes", "/fechamentos", "/patrimonio", "/configuracoes"].includes(item.to),
-);
+const MOBILE_NAV = NAV;
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const { session, loading } = useSession();
@@ -41,17 +25,10 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { data: profile } = useProfile();
 
   useEffect(() => {
     if (!loading && !session) navigate({ to: "/auth", replace: true });
   }, [loading, session, navigate]);
-
-  useEffect(() => {
-    if (session && profile && !profile.onboarded && pathname !== "/onboarding") {
-      navigate({ to: "/onboarding", replace: true });
-    }
-  }, [session, profile, pathname, navigate]);
 
   useEffect(() => setMobileOpen(false), [pathname]);
 
@@ -128,7 +105,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
         <div className="mx-auto w-full max-w-6xl space-y-8">{children}</div>
       </main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-5 border-t border-border bg-background/95 backdrop-blur lg:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-4 border-t border-border bg-background/95 backdrop-blur lg:hidden">
         {MOBILE_NAV.map((item) => (
           <Link
             key={item.to}

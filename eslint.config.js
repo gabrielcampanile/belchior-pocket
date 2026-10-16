@@ -15,6 +15,8 @@ export default tseslint.config(
       // (routeTree.gen.ts and the Supabase types header both say not to lint/format them.)
       "src/routeTree.gen.ts",
       "src/integrations/supabase/types.ts",
+      // Lovable reference screens: out of the build, kept only as visual reference.
+      "legacy",
     ],
   },
   {
