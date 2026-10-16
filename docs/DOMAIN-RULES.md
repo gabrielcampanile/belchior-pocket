@@ -11,6 +11,7 @@ These rules are the source of truth for domain behavior. UI labels, imported pro
 - Cash withdrawal is a transfer from bank account to cash only when the cash account is tracked. Without a tracked cash destination, the product may record it as spending only under an explicit user decision; do not silently classify every withdrawal as consumption.
 - Bank fee, card fee, interest, and tax charged to the household are expenses.
 - A credit card purchase is an expense when the purchase or installment is recognized. Paying the card statement settles a liability and is not another expense.
+- A refund on a card (a credit that is not the statement payment) is an expense stored with a positive amount: it reduces the spending of its category instead of counting as income. V1 recognizes the statement payment by Pluggy's category or a "pagamento/payment" description.
 
 ## Period totals
 

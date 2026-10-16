@@ -4,7 +4,7 @@ Belchior Pocket is a personal and family finance workspace for understanding mon
 
 ## Current focus
 
-The first product phase prioritizes the present and recent past: accounts, transactions, income and expenses, budgets, and monthly reporting. Open Finance is the intended data source, but provider integration must follow domain normalization and safe synchronization design.
+V1 is live (https://belchiorpocket.vercel.app): monthly cash flow from Open Finance (Pluggy: XP and Wise) with categories, a fixed monthly budget, a transaction statement with manual edits, and reports. What it does is in [docs/PRD.md](docs/PRD.md); what comes next is in [docs/ROADMAP.md](docs/ROADMAP.md).
 
 ## Financial invariants
 
@@ -17,7 +17,7 @@ The first product phase prioritizes the present and recent past: accounts, trans
 
 ## Development
 
-See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for setup and quality commands, [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for boundaries, and [docs/PRD.md](docs/PRD.md) for scope and milestones. The baseline audit is in [docs/audit/BASELINE-AUDIT.md](docs/audit/BASELINE-AUDIT.md).
+See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for setup and quality commands, [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for boundaries, [docs/DATA-MODEL.md](docs/DATA-MODEL.md) for the live schema, and [docs/DEPLOY.md](docs/DEPLOY.md) for Vercel and environment variables. The baseline audit is in [docs/audit/BASELINE-AUDIT.md](docs/audit/BASELINE-AUDIT.md).
 
 ## Product direction
 

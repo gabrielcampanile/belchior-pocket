@@ -3,7 +3,7 @@
  * Maps raw Pluggy shapes (./pluggy.types.ts) to canonical DTOs the application layer
  * persists. Provider concepts stay here and never leak into src/domain.
  *
- * Invariants (AGENTS.md / DOMAIN-RULES, see docs/OPIN-SCHEMA.md):
+ * Invariants (AGENTS.md / DOMAIN-RULES, see docs/DATA-MODEL.md):
  *  - money is integer minor units (cents);
  *  - Pluggy `type` (CREDIT/DEBIT) is only a sign; the domain type is DERIVED from
  *    type + category + operationType, deterministically;
