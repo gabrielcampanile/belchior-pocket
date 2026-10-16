@@ -26,11 +26,21 @@ async function syncAndRates(userId: string) {
   let ratesError: string | null = null;
   try {
     await refreshLatestRates();
-    if (result.earliestTransactionOn) {
+    // Anchor on the oldest STORED transaction, not on this run's upserts: a backfill that
+    // failed once must be retried by the next sync (it is a cheap no-op once covered).
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: oldestTx } = await supabaseAdmin
+      .from("transactions")
+      .select("occurred_on")
+      .eq("user_id", userId)
+      .order("occurred_on", { ascending: true })
+      .limit(1);
+    const earliest = oldestTx?.[0]?.occurred_on
+      ? String(oldestTx[0].occurred_on)
+      : result.earliestTransactionOn;
+    if (earliest) {
       const floor = new Date(Date.now() - MAX_HISTORY_DAYS * 86_400_000).toISOString().slice(0, 10);
-      await backfillRatesSince(
-        result.earliestTransactionOn < floor ? floor : result.earliestTransactionOn,
-      );
+      await backfillRatesSince(earliest < floor ? floor : earliest);
     }
   } catch (err) {
     console.error("[sync] exchange rates failed:", err instanceof Error ? err.message : err);
