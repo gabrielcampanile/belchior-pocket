@@ -236,8 +236,20 @@ export function classifySyncError(err: unknown): {
   if (status === 401 || status === 403) {
     return { status: "auth_error", error: "Provider authentication failed." };
   }
-  if (status === 429 || (status >= 500 && status <= 599) || status === 0) {
+  if (status === 429 || (status >= 500 && status <= 599)) {
     return { status: "transient_error", error: "Transient provider error; retry later." };
+  }
+  if (status === 0) {
+    // No HTTP status: either the network/timeout (transient) or our own code/database
+    // failing. Reporting the latter as a provider outage hides real bugs.
+    const name = (err as { name?: string })?.name;
+    if (name === "TimeoutError" || name === "AbortError" || err instanceof TypeError) {
+      return {
+        status: "transient_error",
+        error: "Provider unreachable or timed out; retry later.",
+      };
+    }
+    return { status: "permanent_error", error: "Internal sync error; see the server log." };
   }
   return { status: "permanent_error", error: "Permanent provider error." };
 }

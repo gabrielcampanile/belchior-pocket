@@ -83,6 +83,11 @@ function must<T>(result: { data: T; error: { message: string } | null }): NonNul
   return result.data;
 }
 
+/** For writes without .select(): PostgREST returns data = null on success, so only check error. */
+function ok(result: { error: { message: string } | null }): void {
+  if (result.error) throw new Error(result.error.message);
+}
+
 /** PostgREST caps a select at 1000 rows; page through with .range(). */
 async function selectAll<T>(
   page: (
@@ -146,7 +151,7 @@ class CategoryResolver {
     );
 
     if (plan.categoriesToCreate.length > 0) {
-      must(
+      ok(
         await supabaseAdmin.from("categories").upsert(
           plan.categoriesToCreate.map((c) => ({
             user_id: this.userId,
@@ -173,7 +178,7 @@ class CategoryResolver {
         : [];
     });
     if (mappingRows.length > 0) {
-      must(
+      ok(
         await supabaseAdmin.from("category_mappings").upsert(mappingRows, {
           onConflict: "user_id,kind,provider_category_id",
           ignoreDuplicates: true,
@@ -297,7 +302,7 @@ async function syncItem(
     );
     const rawById = new Map(rawAccounts.map((a) => [a.id, a]));
     if (accountPlan.length > 0) {
-      must(
+      ok(
         await supabaseAdmin.from("accounts").upsert(
           accountPlan.map(({ dto }) => ({
             user_id: userId,
@@ -384,6 +389,11 @@ async function syncItem(
       for (const u of upserts) {
         if (!earliest || u.dto.occurredOn < earliest) earliest = u.dto.occurredOn;
       }
+      // Counts only (no ids, amounts or descriptions): enough to tell "nothing new" from
+      // "the provider returned nothing".
+      console.info(
+        `[sync] ${institution} ${kind}: fetched=${transactions.length} existing=${existing.length} upserts=${upserts.length} stale=${stale.length} from=${windowStart ?? "all"}`,
+      );
       work.push({ accountId: account.id, upserts, staleProviderTxIds: stale });
     }
 
@@ -418,7 +428,7 @@ async function syncItem(
         };
       });
       for (const batch of chunks(rows)) {
-        must(
+        ok(
           await supabaseAdmin
             .from("transactions")
             .upsert(batch, { onConflict: "account_id,provider_tx_id" }),
@@ -427,7 +437,7 @@ async function syncItem(
       upserted += rows.length;
 
       for (const ids of chunks(w.staleProviderTxIds)) {
-        must(
+        ok(
           await supabaseAdmin
             .from("transactions")
             .delete()
@@ -443,7 +453,7 @@ async function syncItem(
     }
 
     const finishedAt = new Date().toISOString();
-    must(
+    ok(
       await supabaseAdmin
         .from("sync_runs")
         .update({
@@ -454,7 +464,7 @@ async function syncItem(
         })
         .eq("id", run.id),
     );
-    must(
+    ok(
       await supabaseAdmin
         .from("provider_connections")
         .update({ last_synced_at: finishedAt, last_error: null, status: connectionStatus })
