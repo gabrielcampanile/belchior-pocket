@@ -1,8 +1,15 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { refreshExchangeRates } from "@/lib/exchangeRates.functions";
-import { supabase } from "@/integrations/supabase/client";
 
 import {
   DEFAULT_CURRENCY,
@@ -19,9 +26,10 @@ import {
 } from "@/domain/exchange";
 import { fetchExchangeRates } from "@/lib/exchangeRateService";
 import { formatCents } from "@/lib/format";
-import { useProfile } from "@/hooks/useFinanceData";
+import { useSession } from "@/hooks/useSession";
 
 const RATES_SYNC_KEY = "belchior:rates-sync";
+const DISPLAY_CURRENCY_KEY = "belchior:display-currency";
 
 interface CurrencyContextValue {
   displayCurrency: CurrencyCode;
@@ -49,16 +57,23 @@ export function useExchangeRates() {
 }
 
 export function CurrencyProvider({ children }: { children: ReactNode }) {
-  const { data: profile } = useProfile();
+  const { session } = useSession();
   const { data: rates = [] } = useExchangeRates();
   const queryClient = useQueryClient();
 
-  const displayCurrency = toCurrencyCode(profile?.display_currency, DEFAULT_CURRENCY);
+  // v1 é single-user: a moeda de visualização é preferência local, não fica no banco.
+  const [displayCurrency, setDisplayCurrencyState] = useState<CurrencyCode>(DEFAULT_CURRENCY);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setDisplayCurrencyState(
+      toCurrencyCode(window.localStorage.getItem(DISPLAY_CURRENCY_KEY), DEFAULT_CURRENCY),
+    );
+  }, []);
 
   // Atualiza as cotações uma vez por dia, ao entrar na plataforma.
   const refresh = useServerFn(refreshExchangeRates);
   useEffect(() => {
-    if (!profile) return;
+    if (!session) return;
     const today = new Date().toISOString().slice(0, 10);
     if (typeof window === "undefined") return;
     if (window.localStorage.getItem(RATES_SYNC_KEY) === today) return;
@@ -66,20 +81,15 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     void refresh()
       .then(() => queryClient.invalidateQueries({ queryKey: ["exchange-rates"] }))
       .catch(() => window.localStorage.removeItem(RATES_SYNC_KEY));
-  }, [profile, refresh, queryClient]);
+  }, [session, refresh, queryClient]);
 
   const mutation = useMutation({
     mutationFn: async (currency: CurrencyCode) => {
-      const { data: auth } = await supabase.auth.getUser();
-      const userId = auth.user?.id;
-      if (!userId) throw new Error("Sessão expirada.");
-      const { error } = await supabase
-        .from("profiles")
-        .update({ display_currency: currency })
-        .eq("id", userId);
-      if (error) throw new Error(error.message);
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(DISPLAY_CURRENCY_KEY, currency);
+      }
+      setDisplayCurrencyState(currency);
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["profile"] }),
   });
 
   const convert = useMemo(() => createConverter(displayCurrency, rates), [displayCurrency, rates]);

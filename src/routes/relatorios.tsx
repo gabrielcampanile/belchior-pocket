@@ -16,10 +16,13 @@ export const Route = createFileRoute("/relatorios")({
   }),
   component: () => (
     <AppLayout>
-      <PageHeader title="Relatórios" description="Consolidados mensais, anuais e exportação." />
+      <PageHeader
+        title="Relatórios"
+        description="Histórico de receitas e despesas por categoria nos últimos meses."
+      />
       <EmptyState
-        title="Disponível na Fase 5"
-        description="Enquanto isso, os fechamentos mensais já congelam todos os totais que alimentarão os relatórios."
+        title="Em construção"
+        description="Os gráficos por categoria entram depois da tela do mês atual."
       />
     </AppLayout>
   ),

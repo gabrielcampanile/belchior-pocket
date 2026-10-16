@@ -11,13 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as CenariosRouteImport } from './routes/cenarios'
-import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
-import { Route as FechamentosRouteImport } from './routes/fechamentos'
-import { Route as ImportarRouteImport } from './routes/importar'
-import { Route as OnboardingRouteImport } from './routes/onboarding'
-import { Route as PatrimonioRouteImport } from './routes/patrimonio'
-import { Route as PlanejamentoRouteImport } from './routes/planejamento'
+import { Route as ConexoesRouteImport } from './routes/conexoes'
 import { Route as RelatoriosRouteImport } from './routes/relatorios'
 import { Route as TransacoesRouteImport } from './routes/transacoes'
 
@@ -31,39 +25,9 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CenariosRoute = CenariosRouteImport.update({
-  id: '/cenarios',
-  path: '/cenarios',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
-  id: '/configuracoes',
-  path: '/configuracoes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FechamentosRoute = FechamentosRouteImport.update({
-  id: '/fechamentos',
-  path: '/fechamentos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ImportarRoute = ImportarRouteImport.update({
-  id: '/importar',
-  path: '/importar',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OnboardingRoute = OnboardingRouteImport.update({
-  id: '/onboarding',
-  path: '/onboarding',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PatrimonioRoute = PatrimonioRouteImport.update({
-  id: '/patrimonio',
-  path: '/patrimonio',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PlanejamentoRoute = PlanejamentoRouteImport.update({
-  id: '/planejamento',
-  path: '/planejamento',
+const ConexoesRoute = ConexoesRouteImport.update({
+  id: '/conexoes',
+  path: '/conexoes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RelatoriosRoute = RelatoriosRouteImport.update({
@@ -80,26 +44,14 @@ const TransacoesRoute = TransacoesRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/cenarios': typeof CenariosRoute
-  '/configuracoes': typeof ConfiguracoesRoute
-  '/fechamentos': typeof FechamentosRoute
-  '/importar': typeof ImportarRoute
-  '/onboarding': typeof OnboardingRoute
-  '/patrimonio': typeof PatrimonioRoute
-  '/planejamento': typeof PlanejamentoRoute
+  '/conexoes': typeof ConexoesRoute
   '/relatorios': typeof RelatoriosRoute
   '/transacoes': typeof TransacoesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/cenarios': typeof CenariosRoute
-  '/configuracoes': typeof ConfiguracoesRoute
-  '/fechamentos': typeof FechamentosRoute
-  '/importar': typeof ImportarRoute
-  '/onboarding': typeof OnboardingRoute
-  '/patrimonio': typeof PatrimonioRoute
-  '/planejamento': typeof PlanejamentoRoute
+  '/conexoes': typeof ConexoesRoute
   '/relatorios': typeof RelatoriosRoute
   '/transacoes': typeof TransacoesRoute
 }
@@ -107,68 +59,22 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/cenarios': typeof CenariosRoute
-  '/configuracoes': typeof ConfiguracoesRoute
-  '/fechamentos': typeof FechamentosRoute
-  '/importar': typeof ImportarRoute
-  '/onboarding': typeof OnboardingRoute
-  '/patrimonio': typeof PatrimonioRoute
-  '/planejamento': typeof PlanejamentoRoute
+  '/conexoes': typeof ConexoesRoute
   '/relatorios': typeof RelatoriosRoute
   '/transacoes': typeof TransacoesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/auth'
-    | '/cenarios'
-    | '/configuracoes'
-    | '/fechamentos'
-    | '/importar'
-    | '/onboarding'
-    | '/patrimonio'
-    | '/planejamento'
-    | '/relatorios'
-    | '/transacoes'
+  fullPaths: '/' | '/auth' | '/conexoes' | '/relatorios' | '/transacoes'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/auth'
-    | '/cenarios'
-    | '/configuracoes'
-    | '/fechamentos'
-    | '/importar'
-    | '/onboarding'
-    | '/patrimonio'
-    | '/planejamento'
-    | '/relatorios'
-    | '/transacoes'
-  id:
-    | '__root__'
-    | '/'
-    | '/auth'
-    | '/cenarios'
-    | '/configuracoes'
-    | '/fechamentos'
-    | '/importar'
-    | '/onboarding'
-    | '/patrimonio'
-    | '/planejamento'
-    | '/relatorios'
-    | '/transacoes'
+  to: '/' | '/auth' | '/conexoes' | '/relatorios' | '/transacoes'
+  id: '__root__' | '/' | '/auth' | '/conexoes' | '/relatorios' | '/transacoes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
-  CenariosRoute: typeof CenariosRoute
-  ConfiguracoesRoute: typeof ConfiguracoesRoute
-  FechamentosRoute: typeof FechamentosRoute
-  ImportarRoute: typeof ImportarRoute
-  OnboardingRoute: typeof OnboardingRoute
-  PatrimonioRoute: typeof PatrimonioRoute
-  PlanejamentoRoute: typeof PlanejamentoRoute
+  ConexoesRoute: typeof ConexoesRoute
   RelatoriosRoute: typeof RelatoriosRoute
   TransacoesRoute: typeof TransacoesRoute
 }
@@ -189,53 +95,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/cenarios': {
-      id: '/cenarios'
-      path: '/cenarios'
-      fullPath: '/cenarios'
-      preLoaderRoute: typeof CenariosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/configuracoes': {
-      id: '/configuracoes'
-      path: '/configuracoes'
-      fullPath: '/configuracoes'
-      preLoaderRoute: typeof ConfiguracoesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/fechamentos': {
-      id: '/fechamentos'
-      path: '/fechamentos'
-      fullPath: '/fechamentos'
-      preLoaderRoute: typeof FechamentosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/importar': {
-      id: '/importar'
-      path: '/importar'
-      fullPath: '/importar'
-      preLoaderRoute: typeof ImportarRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/onboarding': {
-      id: '/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof OnboardingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/patrimonio': {
-      id: '/patrimonio'
-      path: '/patrimonio'
-      fullPath: '/patrimonio'
-      preLoaderRoute: typeof PatrimonioRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/planejamento': {
-      id: '/planejamento'
-      path: '/planejamento'
-      fullPath: '/planejamento'
-      preLoaderRoute: typeof PlanejamentoRouteImport
+    '/conexoes': {
+      id: '/conexoes'
+      path: '/conexoes'
+      fullPath: '/conexoes'
+      preLoaderRoute: typeof ConexoesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/relatorios': {
@@ -258,13 +122,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
-  CenariosRoute: CenariosRoute,
-  ConfiguracoesRoute: ConfiguracoesRoute,
-  FechamentosRoute: FechamentosRoute,
-  ImportarRoute: ImportarRoute,
-  OnboardingRoute: OnboardingRoute,
-  PatrimonioRoute: PatrimonioRoute,
-  PlanejamentoRoute: PlanejamentoRoute,
+  ConexoesRoute: ConexoesRoute,
   RelatoriosRoute: RelatoriosRoute,
   TransacoesRoute: TransacoesRoute,
 }
