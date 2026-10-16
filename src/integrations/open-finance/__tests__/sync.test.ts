@@ -42,6 +42,8 @@ function existingTransactionsFromFixture(): ExistingTransaction[] {
       amountCents: dto.amountCents,
       type: dto.type,
       status: dto.status,
+      occurredOn: dto.occurredOn,
+      description: dto.description,
       userOverridden: false,
     }));
 }

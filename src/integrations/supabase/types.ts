@@ -108,7 +108,6 @@ export type Database = {
           monthly_budget_cents: number | null
           name: string
           parent_id: string | null
-          provider_category_id: string | null
           sort_order: number
           updated_at: string
           user_id: string
@@ -122,7 +121,6 @@ export type Database = {
           monthly_budget_cents?: number | null
           name: string
           parent_id?: string | null
-          provider_category_id?: string | null
           sort_order?: number
           updated_at?: string
           user_id: string
@@ -136,7 +134,6 @@ export type Database = {
           monthly_budget_cents?: number | null
           name?: string
           parent_id?: string | null
-          provider_category_id?: string | null
           sort_order?: number
           updated_at?: string
           user_id?: string
@@ -145,6 +142,44 @@ export type Database = {
           {
             foreignKeyName: "categories_parent_id_fkey"
             columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      category_mappings: {
+        Row: {
+          category_id: string
+          created_at: string
+          id: string
+          kind: Database["public"]["Enums"]["category_kind"]
+          provider_category_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          id?: string
+          kind: Database["public"]["Enums"]["category_kind"]
+          provider_category_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["category_kind"]
+          provider_category_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "category_mappings_category_id_fkey"
+            columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "categories"
             referencedColumns: ["id"]

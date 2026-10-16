@@ -4,6 +4,7 @@ import { ArrowLeftRight, BarChart3, LayoutDashboard, Link2, LogOut, Menu } from 
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/useSession";
+import { useAutoSync } from "@/hooks/useOpenFinanceSync";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { CurrencySelect } from "@/components/finance/CurrencySelect";
@@ -25,6 +26,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
+  useAutoSync();
 
   useEffect(() => {
     if (!loading && !session) navigate({ to: "/auth", replace: true });

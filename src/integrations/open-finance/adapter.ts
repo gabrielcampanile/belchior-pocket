@@ -73,14 +73,21 @@ export function normalizeAccount(a: PluggyAccount): CanonicalAccountDTO {
 
 // --- Domain-type classification -------------------------------------------
 
-// Pluggy categories that denote a transfer between the user's own accounts.
+// Pluggy already resolved the counterparty as the account holder: always an own-account
+// TRANSFER (e.g. XP -> Wise), never income/expense.
+const OWN_TRANSFER_CATEGORIES = new Set(["Same person transfer"]);
+
+// Pluggy categories that MAY be a transfer between the user's own accounts.
 const TRANSFER_CATEGORIES = new Set([
   "Transfer - PIX",
   "Transfer - TED",
   "Transfer - DOC",
   "Transfers",
-  "Same person transfer",
 ]);
+
+// Paying the credit-card bill from a bank account. The card purchases are already the
+// expenses; counting the bill too would double-count them.
+const CARD_PAYMENT_CATEGORIES = new Set(["Credit card payment"]);
 
 // Categories / operationTypes that denote an automatic investment allocation (aporte).
 const INVESTMENT_CATEGORIES = new Set(["Automatic investment", "Investment"]);
@@ -111,6 +118,10 @@ export function classifyTxType(
   if (INVESTMENT_CATEGORIES.has(category) || INVESTMENT_OPERATION_TYPES.has(op)) {
     return "INVESTMENT_CONTRIBUTION";
   }
+
+  if (OWN_TRANSFER_CATEGORIES.has(category)) return "TRANSFER";
+
+  if (CARD_PAYMENT_CATEGORIES.has(category)) return "CARD_PAYMENT";
 
   if (TRANSFER_CATEGORIES.has(category)) {
     // A transfer category is only a true TRANSFER when it moves money between the

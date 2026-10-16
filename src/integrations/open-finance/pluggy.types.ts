@@ -70,7 +70,31 @@ export interface PluggyTransaction {
   providerCode?: string | null;
 }
 
-/** v2 response: results + opaque cursor. Empty/absent `next` means last page. */
+/** GET /items/{id}. Only the fields the sync reads. */
+export interface PluggyItem {
+  id: string;
+  /** UPDATED | UPDATING | LOGIN_ERROR | OUTDATED | WAITING_USER_INPUT | ... */
+  status: string;
+  connector?: { id?: number | null; name?: string | null } | null;
+}
+
+/** GET /categories. Ids are hierarchical: '17030000' belongs to top-level '17000000'. */
+export interface PluggyCategory {
+  id: string;
+  description: string;
+  /** Portuguese label, used to name the user's categories. */
+  descriptionTranslated?: string | null;
+  parentId?: string | null;
+}
+
+export interface PluggyCategoriesResponse {
+  results: PluggyCategory[];
+}
+
+/**
+ * v2 response: results + `next`, a ready-to-use QUERY STRING for the next page
+ * (GET /v2/transactions{next}). Empty/absent `next` means last page.
+ */
 export interface PluggyTransactionsPage {
   results: PluggyTransaction[];
   next?: string | null;
