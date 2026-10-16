@@ -44,6 +44,9 @@ export interface ExistingTransaction {
   amountCents: number;
   type: CanonicalTransactionDTO["type"];
   status: CanonicalTransactionDTO["status"];
+  /** YYYY-MM-DD. A PENDING row often gets a new date when it posts. */
+  occurredOn: string;
+  description: string;
   /** User edited this row: sync must NOT clobber it (BP-031). */
   userOverridden: boolean;
 }

@@ -34,3 +34,10 @@ supabase/.branches/
 *.njsproj
 *.sln
 *.sw?
+
+
+# Local env files carry secrets (Supabase secret key, Pluggy credentials).
+.env
+.env.*
+!.env.example
+.dev.vars

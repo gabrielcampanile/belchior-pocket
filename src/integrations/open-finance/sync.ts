@@ -168,8 +168,35 @@ export function planTransactionSync(
 
 function transactionChanged(prior: ExistingTransaction, dto: CanonicalTransactionDTO): boolean {
   return (
-    prior.amountCents !== dto.amountCents || prior.type !== dto.type || prior.status !== dto.status
+    prior.amountCents !== dto.amountCents ||
+    prior.type !== dto.type ||
+    prior.status !== dto.status ||
+    prior.occurredOn !== dto.occurredOn ||
+    prior.description !== dto.description
   );
+}
+
+/**
+ * PENDING rows the provider no longer returns. A pending transaction may disappear (or post
+ * under a new id), so after a COMPLETE drain of a window every pending row in that window we
+ * did not see again is stale and must be removed, or it would be counted twice.
+ * Only call this when the drain finished (no page cap hit). User-edited rows are kept.
+ * `windowStart` (YYYY-MM-DD) limits the check to the window that was fetched.
+ */
+export function planStalePendingRemovals(
+  existing: ExistingTransaction[],
+  seenProviderTxIds: ReadonlySet<string>,
+  windowStart?: string,
+): string[] {
+  return existing
+    .filter(
+      (t) =>
+        t.status === "PENDING" &&
+        !t.userOverridden &&
+        (!windowStart || t.occurredOn >= windowStart) &&
+        !seenProviderTxIds.has(t.providerTxId),
+    )
+    .map((t) => t.providerTxId);
 }
 
 // --- Run summary -----------------------------------------------------------
@@ -197,7 +224,10 @@ export function summarizeSyncRun(
  * Classify a thrown provider error into a sanitized sync status. Never surfaces the raw
  * error text to the summary (tokens/payloads must not land in sync_runs.error).
  */
-export function classifySyncError(err: unknown): { status: SyncStatus; error: string } {
+export function classifySyncError(err: unknown): {
+  status: Exclude<SyncStatus, "running" | "success">;
+  error: string;
+} {
   const status = Number(
     (err as { status?: number; statusCode?: number })?.status ??
       (err as { statusCode?: number })?.statusCode ??
@@ -206,8 +236,20 @@ export function classifySyncError(err: unknown): { status: SyncStatus; error: st
   if (status === 401 || status === 403) {
     return { status: "auth_error", error: "Provider authentication failed." };
   }
-  if (status === 429 || (status >= 500 && status <= 599) || status === 0) {
+  if (status === 429 || (status >= 500 && status <= 599)) {
     return { status: "transient_error", error: "Transient provider error; retry later." };
+  }
+  if (status === 0) {
+    // No HTTP status: either the network/timeout (transient) or our own code/database
+    // failing. Reporting the latter as a provider outage hides real bugs.
+    const name = (err as { name?: string })?.name;
+    if (name === "TimeoutError" || name === "AbortError" || err instanceof TypeError) {
+      return {
+        status: "transient_error",
+        error: "Provider unreachable or timed out; retry later.",
+      };
+    }
+    return { status: "permanent_error", error: "Internal sync error; see the server log." };
   }
   return { status: "permanent_error", error: "Permanent provider error." };
 }

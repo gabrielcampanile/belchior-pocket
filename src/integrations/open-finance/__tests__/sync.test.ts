@@ -42,6 +42,8 @@ function existingTransactionsFromFixture(): ExistingTransaction[] {
       amountCents: dto.amountCents,
       type: dto.type,
       status: dto.status,
+      occurredOn: dto.occurredOn,
+      description: dto.description,
       userOverridden: false,
     }));
 }
@@ -178,5 +180,10 @@ describe("sync: summarizeSyncRun + classifySyncError", () => {
     expect(classifySyncError({ status: 429 }).status).toBe("transient_error");
     expect(classifySyncError({ status: 400 }).status).toBe("permanent_error");
     expect(classifySyncError(new Error("secret token leaked")).error).not.toContain("secret");
+    // Non-HTTP failures: network/timeout is transient, our own bug/DB error is not.
+    const timeout = Object.assign(new Error("t"), { name: "TimeoutError" });
+    expect(classifySyncError(timeout).status).toBe("transient_error");
+    expect(classifySyncError(new TypeError("fetch failed")).status).toBe("transient_error");
+    expect(classifySyncError(new Error("duplicate key")).status).toBe("permanent_error");
   });
 });
