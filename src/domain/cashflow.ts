@@ -204,3 +204,63 @@ export function monthElapsedRatio(month: string, today: string): number {
   if (today.slice(0, 7) !== month.slice(0, 7)) return 1;
   return Number(today.slice(8, 10)) / days;
 }
+
+// --- History ------------------------------------------------------------------
+
+export interface MonthPoint {
+  /** "YYYY-MM-01" */
+  month: string;
+  incomeCents: number;
+  expenseCents: number;
+  balanceCents: number;
+  /** balance / income; null when there was no income. */
+  savingsRatio: number | null;
+}
+
+/**
+ * One point per month in `months` (in that order), zero-filled, so a month with no
+ * movement still shows up in the chart instead of silently collapsing the axis.
+ */
+export function cashflowByMonth(
+  transactions: CashflowTransaction[],
+  months: string[],
+  categories: CashflowCategory[],
+  convert: MoneyConverter = identityConverter,
+): MonthPoint[] {
+  const byMonth = new Map<string, CashflowTransaction[]>(months.map((m) => [m, []]));
+  for (const tx of transactions) {
+    byMonth.get(`${tx.occurredOn.slice(0, 7)}-01`)?.push(tx);
+  }
+  return months.map((month) => {
+    const flow = monthCashflow(byMonth.get(month) ?? [], categories, convert);
+    return {
+      month,
+      incomeCents: flow.incomeCents,
+      expenseCents: flow.expenseCents,
+      balanceCents: flow.balanceCents,
+      savingsRatio: flow.incomeCents > 0 ? flow.balanceCents / flow.incomeCents : null,
+    };
+  });
+}
+
+export interface PeriodSummary {
+  incomeCents: number;
+  expenseCents: number;
+  balanceCents: number;
+  /** Averages over the months of the period, including empty months. */
+  avgIncomeCents: number;
+  avgExpenseCents: number;
+}
+
+export function summarizePeriod(points: MonthPoint[]): PeriodSummary {
+  const income = points.reduce((s, p) => s + p.incomeCents, 0);
+  const expense = points.reduce((s, p) => s + p.expenseCents, 0);
+  const n = points.length || 1;
+  return {
+    incomeCents: income,
+    expenseCents: expense,
+    balanceCents: income - expense,
+    avgIncomeCents: Math.round(income / n),
+    avgExpenseCents: Math.round(expense / n),
+  };
+}

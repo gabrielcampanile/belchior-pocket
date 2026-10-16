@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 import {
   budgetProgress,
   budgetStatus,
+  cashflowByMonth,
   monthCashflow,
   monthElapsedRatio,
+  summarizePeriod,
   UNCATEGORIZED_LABEL,
   type CashflowCategory,
   type CashflowTransaction,
@@ -164,5 +166,41 @@ describe("cashflow: orçamento", () => {
     expect(monthElapsedRatio("2026-10-01", "2026-10-16")).toBeCloseTo(16 / 31);
     expect(monthElapsedRatio("2026-09-01", "2026-10-16")).toBe(1);
     expect(monthElapsedRatio("2026-11-01", "2026-10-16")).toBe(0);
+  });
+});
+
+describe("cashflow: histórico", () => {
+  it("11. um ponto por mês, na ordem pedida, com meses vazios zerados", () => {
+    const points = cashflowByMonth(
+      [
+        tx("INCOME", 500_000, "Salário", { occurredOn: "2026-08-05" }),
+        tx("EXPENSE", -100_000, "Mercado", { occurredOn: "2026-08-20" }),
+        tx("EXPENSE", -40_000, "Lazer", { occurredOn: "2026-10-01" }),
+        tx("EXPENSE", -99_000, "Lazer", { occurredOn: "2026-05-01" }), // fora do período
+      ],
+      ["2026-08-01", "2026-09-01", "2026-10-01"],
+      categories,
+    );
+    expect(points.map((p) => [p.month, p.incomeCents, p.expenseCents])).toEqual([
+      ["2026-08-01", 500_000, 100_000],
+      ["2026-09-01", 0, 0],
+      ["2026-10-01", 0, 40_000],
+    ]);
+    expect(points[0].savingsRatio).toBeCloseTo(0.8);
+    expect(points[2].savingsRatio).toBeNull();
+  });
+
+  it("12. resumo do período soma e tira a média contando meses vazios", () => {
+    const s = summarizePeriod([
+      { month: "a", incomeCents: 300, expenseCents: 100, balanceCents: 200, savingsRatio: null },
+      { month: "b", incomeCents: 0, expenseCents: 0, balanceCents: 0, savingsRatio: null },
+    ]);
+    expect(s).toEqual({
+      incomeCents: 300,
+      expenseCents: 100,
+      balanceCents: 200,
+      avgIncomeCents: 150,
+      avgExpenseCents: 50,
+    });
   });
 });
