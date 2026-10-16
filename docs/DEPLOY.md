@@ -20,17 +20,17 @@ Set them in Vercel → Project → Settings → Environment Variables, for **Pro
 **Preview**. Never commit them. Only `VITE_*` values reach the browser, so only public
 values may use that prefix.
 
-| Variable | Where it runs | What it is |
-|---|---|---|
-| `VITE_SUPABASE_URL` | browser | Supabase project URL |
-| `VITE_SUPABASE_PUBLISHABLE_KEY` | browser | publishable key (public by design, RLS applies) |
-| `SUPABASE_URL` | server | same URL, read by server code |
-| `SUPABASE_PUBLISHABLE_KEY` | server | same publishable key, used by the auth middleware |
-| `SUPABASE_SERVICE_ROLE_KEY` | server | secret key; bypasses RLS, used only by the sync |
-| `PLUGGY_CLIENT_ID` | server | Pluggy application id |
-| `PLUGGY_CLIENT_SECRET` | server | Pluggy application secret |
-| `PLUGGY_ITEM_IDS` | server | `XP:<item-uuid>,Wise:<item-uuid>` |
-| `PLUGGY_OWNER_USER_ID` | server | the only Supabase user allowed to sync these items |
+| Variable                        | Where it runs | What it is                                         |
+| ------------------------------- | ------------- | -------------------------------------------------- |
+| `VITE_SUPABASE_URL`             | browser       | Supabase project URL                               |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | browser       | publishable key (public by design, RLS applies)    |
+| `SUPABASE_URL`                  | server        | same URL, read by server code                      |
+| `SUPABASE_PUBLISHABLE_KEY`      | server        | same publishable key, used by the auth middleware  |
+| `SUPABASE_SERVICE_ROLE_KEY`     | server        | secret key; bypasses RLS, used only by the sync    |
+| `PLUGGY_CLIENT_ID`              | server        | Pluggy application id                              |
+| `PLUGGY_CLIENT_SECRET`          | server        | Pluggy application secret                          |
+| `PLUGGY_ITEM_IDS`               | server        | `XP:<item-uuid>,Wise:<item-uuid>`                  |
+| `PLUGGY_OWNER_USER_ID`          | server        | the only Supabase user allowed to sync these items |
 
 `VITE_*` values are inlined at build time: changing one requires a redeploy.
 
