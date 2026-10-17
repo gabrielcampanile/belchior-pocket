@@ -80,7 +80,11 @@ function ConexoesPage() {
   const syncNow = useSyncNow();
 
   const syncButton = (
-    <Button onClick={() => syncNow.mutate()} disabled={syncNow.isPending} className="gap-2">
+    <Button
+      onClick={() => syncNow.mutate()}
+      disabled={syncNow.isPending}
+      className="h-11 flex-1 gap-2 sm:h-10 sm:flex-none"
+    >
       <RefreshCw className={syncNow.isPending ? "h-4 w-4 animate-spin" : "h-4 w-4"} />
       {syncNow.isPending ? "Sincronizando…" : "Sincronizar agora"}
     </Button>
@@ -90,7 +94,7 @@ function ConexoesPage() {
     <AppLayout>
       <PageHeader
         title="Conexões"
-        description="Instituições do Open Finance, status da sincronização e contas manuais."
+        description="Open Finance, sincronização e contas manuais."
         action={syncButton}
       />
 
@@ -111,19 +115,19 @@ function ConexoesPage() {
             const accounts = data.accounts.filter((a) => a.connection_id === connection.id);
             return (
               <Panel key={connection.id} className="space-y-4">
-                <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <h2 className="text-base font-semibold text-foreground">
                       {connection.institution_name}
                     </h2>
-                    <p className="text-sm text-muted-foreground">
-                      Última sincronização {formatRelative(connection.last_synced_at)}
+                    <p className="text-xs text-muted-foreground sm:text-sm">
+                      Sincronizado {formatRelative(connection.last_synced_at)}
                       {lastRun?.status === "success"
-                        ? ` · ${lastRun.transactions_upserted} transações atualizadas`
+                        ? ` · ${lastRun.transactions_upserted} atualizadas`
                         : ""}
                     </p>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex shrink-0 flex-wrap justify-end gap-1.5">
                     {lastRun && lastRun.status !== "success" ? (
                       <Badge variant={lastRun.status === "running" ? "secondary" : "destructive"}>
                         {RUN_LABEL[lastRun.status] ?? lastRun.status}
