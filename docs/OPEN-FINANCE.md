@@ -45,13 +45,13 @@ Retry only transient network, throttling, or provider availability failures. Use
 
 ### Retry policy (BP-035, `src/integrations/open-finance/retry.ts`)
 
-| Failure | Retried? | Final state shown in Conexões |
-|---|---|---|
-| 408, 425, 5xx (except 501/505), timeout, network | yes | `transient_error`: try again later |
-| 429 | yes, honouring `Retry-After` | `transient_error`: wait a few minutes |
-| 401, 403 | no | `auth_error` (connection `LOGIN_ERROR`): reconnect in Pluggy |
-| other 4xx, 501, 505 | no | `permanent_error`: retrying will not help |
-| no status, not network (our code/DB) | no | `permanent_error`: internal error, see server log |
+| Failure                                          | Retried?                     | Final state shown in Conexões                                |
+| ------------------------------------------------ | ---------------------------- | ------------------------------------------------------------ |
+| 408, 425, 5xx (except 501/505), timeout, network | yes                          | `transient_error`: try again later                           |
+| 429                                              | yes, honouring `Retry-After` | `transient_error`: wait a few minutes                        |
+| 401, 403                                         | no                           | `auth_error` (connection `LOGIN_ERROR`): reconnect in Pluggy |
+| other 4xx, 501, 505                              | no                           | `permanent_error`: retrying will not help                    |
+| no status, not network (our code/DB)             | no                           | `permanent_error`: internal error, see server log            |
 
 - Each Pluggy request (token POST or one GET page) is retried on its own: at most 3 attempts,
   30 s total budget per request. Delay is `Retry-After` when sent, else full-jitter backoff
