@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { CreditCard, Landmark, RefreshCw } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { EmptyState, PageHeader, Panel } from "@/components/finance/primitives";
+import { ManualAccountsPanel } from "@/components/finance/ManualAccountsPanel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -89,7 +90,7 @@ function ConexoesPage() {
     <AppLayout>
       <PageHeader
         title="Conexões"
-        description="Instituições conectadas via Open Finance e status da sincronização."
+        description="Instituições do Open Finance, status da sincronização e contas manuais."
         action={syncButton}
       />
 
@@ -187,6 +188,8 @@ function ConexoesPage() {
           </p>
         </div>
       )}
+
+      <ManualAccountsPanel />
     </AppLayout>
   );
 }
