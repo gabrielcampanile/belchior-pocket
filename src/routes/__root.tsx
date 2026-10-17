@@ -77,10 +77,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       // Installed on the phone's home screen it opens full-screen, like an app.
-      { name: "theme-color", content: "#fafafb" },
+      // The app is always dark (<html class="dark">); match the status bar to it.
+      { name: "theme-color", content: "#0b0c10" },
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
-      { name: "apple-mobile-web-app-status-bar-style", content: "default" },
+      // Content draws under the status bar; the header pads by safe-area-inset-top.
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
       { name: "apple-mobile-web-app-title", content: "Belchior" },
       { title: "Belchior · Personal Finance OS" },
       {
