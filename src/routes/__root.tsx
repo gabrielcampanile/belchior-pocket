@@ -8,6 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { type ReactNode } from "react";
+import { Analytics } from "@vercel/analytics/react";
 
 import { Toaster } from "@/components/ui/sonner";
 import { CurrencyProvider } from "@/hooks/useCurrency";
@@ -125,6 +126,7 @@ function RootShell({ children }: { children: ReactNode }) {
       <body>
         {children}
         <Toaster position="top-right" richColors />
+        <Analytics />
         <Scripts />
       </body>
     </html>
