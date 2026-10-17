@@ -2,32 +2,12 @@ import { useMemo } from "react";
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import type { CurrencyCode } from "@/domain/currency";
 import { formatCents, formatCentsShort } from "@/lib/format";
+import { MAX_SLICES, PALETTE } from "./categoryColors";
 
 export interface DonutSlice {
   categoryId: string | null;
   name: string;
   total: number;
-}
-
-/** Paleta determinística: a mesma categoria recebe sempre a mesma cor. */
-const PALETTE = [
-  "var(--chart-1)",
-  "var(--chart-2)",
-  "var(--chart-3)",
-  "var(--chart-4)",
-  "var(--chart-5)",
-  "var(--chart-6)",
-];
-
-const MAX_SLICES = 6;
-
-/**
- * Color of the row at `index` in a list sorted by total desc, matching the donut: the first
- * MAX_SLICES-1 get their own color, everything after is folded into "Outros" (last color).
- */
-export function sliceColor(index: number, count: number): string {
-  if (count > MAX_SLICES && index >= MAX_SLICES - 1) return PALETTE[MAX_SLICES - 1];
-  return PALETTE[index % PALETTE.length];
 }
 
 export function CategoryDonut({
