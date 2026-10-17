@@ -37,6 +37,9 @@ has RLS; private tables are scoped by `user_id = auth.uid()`.
   (unless overridden), so a pending→posted change never double-counts.
 - **No stored monthly balances**: monthly figures are derived from transactions in
   `src/domain/cashflow.ts`.
+- **Manual accounts** (`source = MANUAL`): `balance_cents` is the opening balance the user
+  typed; the shown balance is opening + all visible transactions on the account. They are
+  archived, not deleted, once they have transactions (delete would cascade the history).
 - **Budgets** are a fixed BRL value per expense category; the month total is their sum and
   is compared with all expenses of the month.
 
