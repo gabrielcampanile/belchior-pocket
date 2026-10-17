@@ -20,7 +20,7 @@ has RLS; private tables are scoped by `user_id = auth.uid()`.
 
 ## Enums
 
-- `currency_code`: BRL, CAD, USD, EUR, ARS
+- `currency_code`: BRL, CAD, USD, EUR, ARS, BTC. Amounts are integer minor units per currency: centavos (2 decimals) for fiat, **satoshis (8 decimals) for BTC** (`CURRENCIES[code].decimals`). Conversion rescales between minor units; rates are per whole unit. BTC rates come from CoinGecko (refreshed on every sync, 365 days of daily history); BTC is not offered as a display currency.
 - `account_kind`: CHECKING, CREDIT_CARD, INVESTMENT, CASH, OTHER
 - `tx_domain_type`: EXPENSE, INCOME, TRANSFER, INVESTMENT_CONTRIBUTION, CARD_PAYMENT
 - `tx_status`: POSTED, PENDING · `tx_source`: IMPORT, MANUAL

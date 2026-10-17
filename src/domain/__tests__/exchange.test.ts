@@ -76,3 +76,38 @@ describe("câmbio determinístico", () => {
     );
   });
 });
+
+describe("bitcoin (satoshis, 8 casas)", () => {
+  // 1 BTC = R$ 350.000,00  ->  1 BRL = 1/350000 BTC
+  const btcRates: ExchangeRate[] = [
+    { base: "BRL", quote: "BTC", rate: 1 / 350_000, effectiveOn: "2026-10-16", source: "test" },
+    { base: "BRL", quote: "USD", rate: 0.2, effectiveOn: "2026-10-16", source: "test" },
+  ];
+
+  it("B1. 0,001 BTC (100.000 sats) vira R$ 350,00 (35.000 centavos)", () => {
+    expect(convertMoney(money(100_000, "BTC"), "BRL", btcRates)).toEqual(money(35_000, "BRL"));
+  });
+
+  it("B2. R$ 350,00 vira 100.000 sats; triangulação BTC -> USD via BRL", () => {
+    expect(convertMoney(money(35_000, "BRL"), "BTC", btcRates)).toEqual(money(100_000, "BTC"));
+    // 0,001 BTC = R$ 350 = US$ 70
+    expect(convertMoney(money(100_000, "BTC"), "USD", btcRates)).toEqual(money(7_000, "USD"));
+  });
+
+  it("B3. sem cotação, o fallback reescala e nunca soma satoshis como centavos", () => {
+    const toBrl = createConverter("BRL", []);
+    expect(toBrl(money(100_000, "BTC"))).toBe(0); // 0,001 "BRL" arredonda para 0 centavos
+    expect(toBrl(money(1_000, "CAD"))).toBe(1_000); // fiat continua 1:1 como antes
+  });
+
+  it("B4. formatação e entrada em BTC", async () => {
+    const { centsToInput, parseCurrencyToCents } = await import("@/lib/format");
+    expect(formatCents(150_000, "BTC")).toBe("₿ 0,0015");
+    expect(formatCents(100_000_000, "BTC")).toBe("₿ 1,00");
+    expect(parseCurrencyToCents("0,0015", "BTC")).toBe(150_000);
+    expect(parseCurrencyToCents("₿ 1", "BTC")).toBe(100_000_000);
+    expect(parseCurrencyToCents("12,34")).toBe(1_234); // padrão continua centavos
+    expect(centsToInput(150_000, "BTC")).toBe("0,0015");
+    expect(centsToInput(123_456, "BRL")).toBe("1234,56");
+  });
+});

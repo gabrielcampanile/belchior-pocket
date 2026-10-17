@@ -8,6 +8,15 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 export const refreshExchangeRates = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async () => {
-    const { refreshLatestRates } = await import("@/lib/exchangeRates.server");
-    return refreshLatestRates();
+    const { refreshLatestRates, refreshBtcRate } = await import("@/lib/exchangeRates.server");
+    const fiat = await refreshLatestRates();
+    // Bitcoin is a separate source; its failure must not hide the fiat refresh.
+    let btc = true;
+    try {
+      await refreshBtcRate();
+    } catch (err) {
+      btc = false;
+      console.error("[rates] bitcoin failed:", err instanceof Error ? err.message : err);
+    }
+    return { ...fiat, btc };
   });

@@ -70,7 +70,7 @@ export function TransactionDialog({
     if (!open) return;
     setAccountId(editing?.accountId ?? accounts[0]?.id ?? "");
     setDescription(editing?.description ?? "");
-    setAmount(editing ? centsToInput(Math.abs(editing.amountCents)) : "");
+    setAmount(editing ? centsToInput(Math.abs(editing.amountCents), editing.currency) : "");
     setOccurredOn(editing?.occurredOn ?? format(new Date(), "yyyy-MM-dd"));
     setType((editing?.type as TxType) ?? "EXPENSE");
     setRefund(editing?.type === "EXPENSE" && editing.amountCents > 0);
@@ -80,8 +80,8 @@ export function TransactionDialog({
 
   const kind = categoryKindForType(type);
   const options = kind ? categories.filter((c) => c.kind === kind) : [];
-  const magnitude = parseCurrencyToCents(amount);
   const account = accounts.find((a) => a.id === accountId);
+  const magnitude = parseCurrencyToCents(amount, account?.currency ?? editing?.currency);
   const valid =
     description.trim().length > 0 &&
     magnitude != null &&

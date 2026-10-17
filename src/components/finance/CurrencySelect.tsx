@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CURRENCY_LIST, type CurrencyCode } from "@/domain/currency";
+import { DISPLAY_CURRENCY_LIST, type CurrencyCode } from "@/domain/currency";
 import { useCurrency } from "@/hooks/useCurrency";
 
 /** Seletor global da moeda de visualização. Não altera nenhum dado armazenado. */
@@ -27,7 +27,7 @@ export function CurrencySelect({ className }: { className?: string }) {
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
-        {CURRENCY_LIST.map((c) => (
+        {DISPLAY_CURRENCY_LIST.map((c) => (
           <SelectItem key={c.code} value={c.code}>
             {c.shortLabel} {c.code}
           </SelectItem>
@@ -55,7 +55,7 @@ export function CurrencyField({
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
-        {CURRENCY_LIST.map((c) => (
+        {DISPLAY_CURRENCY_LIST.map((c) => (
           <SelectItem key={c.code} value={c.code}>
             {c.code} · {c.name}
           </SelectItem>
