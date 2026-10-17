@@ -1,6 +1,17 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ChevronLeft, ChevronRight, Eye, EyeOff, Pencil, Plus, Trash2 } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Eye,
+  EyeOff,
+  Pencil,
+  Plus,
+  Trash2,
+  WandSparkles,
+} from "lucide-react";
+import { toast } from "sonner";
+import { RuleDialog, type RuleSeed } from "@/components/finance/RuleDialog";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { TransactionDialog } from "@/components/finance/TransactionDialog";
 import { EmptyState, PageHeader, Panel } from "@/components/finance/primitives";
@@ -50,6 +61,8 @@ function TransacoesPage() {
   const [filters, setFilters] = useState<TransactionFilters>(DEFAULT_FILTERS);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<TransactionRow | null>(null);
+  const [ruleSeed, setRuleSeed] = useState<RuleSeed | null>(null);
+  const openRule = (seed: RuleSeed) => setRuleSeed(seed);
 
   const from = yearView ? shiftMonth(month, -11) : month;
   const list = useTransactionList(from, month);
@@ -264,6 +277,7 @@ function TransacoesPage() {
                       setEditing(tx);
                       setDialogOpen(true);
                     }}
+                    onCreateRule={openRule}
                   />
                 ))}
               </ul>
@@ -277,6 +291,17 @@ function TransacoesPage() {
         onOpenChange={setDialogOpen}
         editing={editing}
         accounts={accounts}
+        categories={categories}
+        onImportedEdited={(seed) =>
+          toast.success("Transação salva.", {
+            action: { label: "Aplicar às parecidas", onClick: () => openRule(seed) },
+          })
+        }
+      />
+      <RuleDialog
+        open={ruleSeed !== null}
+        onOpenChange={(open) => !open && setRuleSeed(null)}
+        seed={ruleSeed}
         categories={categories}
       />
     </AppLayout>
@@ -317,11 +342,13 @@ function TransactionItem({
   account,
   categories,
   onEdit,
+  onCreateRule,
 }: {
   tx: TransactionRow;
   account: AccountOption | undefined;
   categories: CashflowCategory[];
   onEdit: () => void;
+  onCreateRule: (seed: RuleSeed) => void;
 }) {
   const setCategory = useSetCategory();
   const setHidden = useSetHidden();
@@ -365,13 +392,25 @@ function TransactionItem({
             className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-xs text-foreground"
             value={tx.categoryId ?? ""}
             disabled={setCategory.isPending}
-            onChange={(e) =>
-              setCategory.mutate({
-                id: tx.id,
-                source: tx.source,
-                categoryId: e.target.value || null,
-              })
-            }
+            onChange={(e) => {
+              const next = e.target.value || null;
+              setCategory.mutate(
+                { id: tx.id, source: tx.source, categoryId: next },
+                {
+                  onSuccess: () => {
+                    // The fix is for this row; offer to make it the rule for all similar ones.
+                    if (tx.source === "IMPORT" && next) {
+                      toast.success("Categoria salva.", {
+                        action: {
+                          label: "Aplicar às parecidas",
+                          onClick: () => onCreateRule({ ...tx, categoryId: next }),
+                        },
+                      });
+                    }
+                  },
+                },
+              );
+            }}
           >
             <option value="">Sem categoria</option>
             <CategoryOptions categories={categories} kind={kind} />
@@ -401,6 +440,17 @@ function TransactionItem({
         >
           <Pencil className="h-4 w-4" aria-hidden="true" />
         </Button>
+        {tx.source === "IMPORT" ? (
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={() => onCreateRule(tx)}
+            aria-label={`Criar regra a partir de ${tx.description}`}
+            title="Criar regra para transações parecidas"
+          >
+            <WandSparkles className="h-4 w-4" aria-hidden="true" />
+          </Button>
+        ) : null}
         <Button
           size="icon"
           variant="ghost"

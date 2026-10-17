@@ -149,6 +149,12 @@ export function useDeleteCategory() {
           .update({ category_id: mergeInto })
           .eq("category_id", id);
         if (txs.error) throw new Error(txs.error.message);
+        // Rules pointing at the merged category follow it (otherwise they cascade away).
+        const rules = await supabase
+          .from("categorization_rules")
+          .update({ category_id: mergeInto })
+          .eq("category_id", id);
+        if (rules.error) throw new Error(rules.error.message);
       }
       const { error } = await supabase.from("categories").delete().eq("id", id);
       if (error) throw new Error(error.message);
