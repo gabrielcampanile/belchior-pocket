@@ -89,9 +89,21 @@ const TRANSFER_CATEGORIES = new Set([
 // expenses; counting the bill too would double-count them.
 const CARD_PAYMENT_CATEGORIES = new Set(["Credit card payment"]);
 
-// Categories / operationTypes that denote an automatic investment allocation (aporte).
+// Categories / operationTypes that denote money moving in or out of an investment,
+// inside the same institution. An allocation (aporte), its yield credited back, and a
+// redemption of the principal are all INVESTMENT_CONTRIBUTION: they are movements of the
+// user's own capital, never cash-flow income/expense. Treating the redemption symmetrically
+// to the allocation keeps the monthly balance about spending, not about shuffling savings.
 const INVESTMENT_CATEGORIES = new Set(["Automatic investment", "Investment"]);
-const INVESTMENT_OPERATION_TYPES = new Set(["RENDIMENTO_APLIC_FINANCEIRA", "APLICACAO"]);
+const INVESTMENT_OPERATION_TYPES = new Set([
+  "RENDIMENTO_APLIC_FINANCEIRA",
+  "APLICACAO",
+  "RESGATE_APLIC_FINANCEIRA",
+]);
+
+// Moving money between available and reserved balance INSIDE the same account (Mercado Pago
+// "saldo reservado"). Same owner, same institution: a TRANSFER, never income/expense.
+const RESERVED_BALANCE_OPERATION_TYPES = new Set(["TRANSFERENCIA_SALDO_RESERVADO"]);
 
 export interface ClassifyContext {
   /** The account this transaction belongs to is a credit card. */
@@ -154,6 +166,9 @@ export function classifyTxType(
   if (INVESTMENT_CATEGORIES.has(category) || INVESTMENT_OPERATION_TYPES.has(op)) {
     return "INVESTMENT_CONTRIBUTION";
   }
+
+  // Available <-> reserved balance inside the same institution account: a self-transfer.
+  if (RESERVED_BALANCE_OPERATION_TYPES.has(op)) return "TRANSFER";
 
   if (OWN_TRANSFER_CATEGORIES.has(category)) return "TRANSFER";
 
