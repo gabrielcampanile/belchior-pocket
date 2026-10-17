@@ -47,16 +47,16 @@ export function MetricValue({
           ? "text-primary"
           : "text-foreground";
   return (
-    <div className={cn("rounded-2xl border border-border bg-card p-5", className)}>
+    <div className={cn("rounded-2xl border border-border bg-card p-4 sm:p-5", className)}>
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2">
         <p className="min-w-0 truncate text-xs font-medium uppercase tracking-widest text-muted-foreground">
           {label}
         </p>
-        {badge ? <DataBadge kind={badge} /> : null}
+        {badge ? <DataBadge kind={badge} className="hidden sm:inline-flex" /> : null}
       </div>
       <p
         className={cn(
-          "mt-3 text-2xl font-semibold tabular-nums tracking-tight sm:text-3xl",
+          "mt-2 text-xl font-semibold tabular-nums tracking-tight sm:mt-3 sm:text-3xl",
           valueTone,
         )}
       >
@@ -97,12 +97,23 @@ export function PageHeader({
   action?: ReactNode;
 }) {
   return (
-    <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:flex sm:flex-wrap sm:justify-between">
+    // Mobile first: title + description take the full width (never squeezed by the actions,
+    // which made the title truncate to "Re..." and the description wrap one word per line);
+    // actions go on their own row and scroll sideways instead of wrapping. From sm up, one row.
+    <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
       <div className="min-w-0">
-        <h1 className="truncate text-2xl font-semibold tracking-tight text-foreground">{title}</h1>
-        {description ? <p className="mt-1 text-sm text-muted-foreground">{description}</p> : null}
+        <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
+          {title}
+        </h1>
+        {description ? (
+          <p className="mt-0.5 line-clamp-2 text-sm text-muted-foreground">{description}</p>
+        ) : null}
       </div>
-      {action}
+      {action ? (
+        <div className="-mx-4 flex shrink-0 gap-2 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:overflow-visible sm:px-0">
+          {action}
+        </div>
+      ) : null}
     </header>
   );
 }
@@ -135,7 +146,7 @@ export function AssumptionNote({ children }: { children: ReactNode }) {
 
 export function Panel({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <section className={cn("rounded-2xl border border-border bg-card p-5", className)}>
+    <section className={cn("rounded-2xl border border-border bg-card p-4 sm:p-5", className)}>
       {children}
     </section>
   );
