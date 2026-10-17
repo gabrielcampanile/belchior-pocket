@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  chargedAmount,
   classifyTxType,
   normalizeAccount,
   normalizeTransaction,
@@ -121,6 +122,50 @@ describe("adapter: classifyTxType (regras determinísticas, sem IA)", () => {
       category: "Shopping",
     };
     expect(normalizeTransaction(tx, card).amountCents).toBe(5000);
+  });
+});
+
+describe("adapter: compra em moeda estrangeira no cartão", () => {
+  const ars: PluggyTransaction = {
+    id: "eth",
+    description: "ETHIOPIAN AIRLINES",
+    currencyCode: "ARS",
+    amount: 604440,
+    amountInAccountCurrency: 2395.34,
+    date: "2026-06-06T22:41:00Z",
+    accountId: "card",
+    status: "POSTED",
+    type: "DEBIT",
+  };
+  const card = { isCreditCardAccount: true, accountCurrency: "BRL" as const };
+
+  it("13. usa o valor cobrado em reais na moeda da conta", () => {
+    const out = normalizeTransaction(ars, card);
+    expect(out.currency).toBe("BRL");
+    expect(out.amountCents).toBe(-239534);
+  });
+
+  it("14. sem o valor cobrado, mantém a moeda original para converter pela cotação", () => {
+    const out = normalizeTransaction({ ...ars, amountInAccountCurrency: null }, card);
+    expect(out.currency).toBe("ARS");
+    expect(out.amountCents).toBe(-60444000);
+  });
+
+  it("15. na mesma moeda da conta, ignora o campo e usa o valor original", () => {
+    const brl = { ...ars, currencyCode: "BRL", amount: 83.84, amountInAccountCurrency: 83.84 };
+    expect(normalizeTransaction(brl, card)).toMatchObject({ currency: "BRL", amountCents: -8384 });
+  });
+
+  it("16. estorno estrangeiro no cartão continua positivo, em reais", () => {
+    const refund = { ...ars, type: "CREDIT" as const, category: "Shopping" };
+    expect(normalizeTransaction(refund, card)).toMatchObject({
+      currency: "BRL",
+      amountCents: 239534,
+    });
+  });
+
+  it("17. sem a moeda da conta no contexto, mantém o comportamento anterior", () => {
+    expect(chargedAmount(ars)).toEqual({ amount: 604440, currency: "ARS" });
   });
 });
 

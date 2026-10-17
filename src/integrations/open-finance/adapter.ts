@@ -102,6 +102,29 @@ export interface ClassifyContext {
    * The application layer supplies this after resolving the counterparty.
    */
   counterpartyIsOwnAccount?: boolean;
+  /**
+   * Currency of the account the transaction belongs to. When the purchase was made in
+   * another currency (e.g. ARS on a BRL card), the amount the institution actually charged
+   * (`amountInAccountCurrency`) is stored instead of converting at a market rate.
+   */
+  accountCurrency?: CurrencyCode;
+}
+
+/**
+ * The amount + currency to store. A foreign-currency purchase uses what the institution
+ * charged in the account's currency (card FX rate, spread included), when Pluggy sends it.
+ * Without that value the original currency is kept and converted at the market rate later.
+ */
+export function chargedAmount(
+  tx: Pick<PluggyTransaction, "amount" | "currencyCode" | "amountInAccountCurrency">,
+  accountCurrency?: CurrencyCode,
+): { amount: number; currency: CurrencyCode } {
+  const original = toCurrencyCode(tx.currencyCode);
+  const charged = tx.amountInAccountCurrency;
+  if (accountCurrency && original !== accountCurrency && charged != null && charged !== 0) {
+    return { amount: Math.abs(charged), currency: accountCurrency };
+  }
+  return { amount: tx.amount, currency: original };
 }
 
 /** Card-side CREDIT that is the bill payment (by category, or by its usual description). */
@@ -178,10 +201,11 @@ export function normalizeTransaction(
   ctx: ClassifyContext = {},
 ): CanonicalTransactionDTO {
   const type = classifyTxType(tx, ctx);
+  const { amount, currency } = chargedAmount(tx, ctx.accountCurrency);
   return {
     providerTxId: tx.providerId ?? tx.id ?? null,
-    amountCents: signedCents(tx, type),
-    currency: toCurrencyCode(tx.currencyCode),
+    amountCents: signedCents({ ...tx, amount }, type),
+    currency,
     occurredOn: (tx.date ?? "").slice(0, 10),
     description: tx.description ?? "",
     type,
