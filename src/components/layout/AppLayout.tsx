@@ -1,6 +1,6 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { ArrowLeftRight, BarChart3, LayoutDashboard, Link2, LogOut, Menu } from "lucide-react";
+import { ArrowLeftRight, BarChart3, LayoutDashboard, Link2, LogOut } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/useSession";
@@ -18,21 +18,21 @@ const NAV = [
   { to: "/conexoes", label: "Conexões", icon: Link2 },
 ] as const;
 
-const MOBILE_NAV = NAV;
-
+/**
+ * Mobile first: on a phone the app is used installed (standalone), so the shell respects the
+ * notch / home-indicator safe areas, the bottom tab bar is the only navigation (no duplicate
+ * hamburger menu) and every tap target is at least 44px tall.
+ */
 export function AppLayout({ children }: { children: ReactNode }) {
   const { session, loading } = useSession();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const [mobileOpen, setMobileOpen] = useState(false);
   useAutoSync();
 
   useEffect(() => {
     if (!loading && !session) navigate({ to: "/auth", replace: true });
   }, [loading, session, navigate]);
-
-  useEffect(() => setMobileOpen(false), [pathname]);
 
   async function handleSignOut() {
     await queryClient.cancelQueries();
@@ -50,7 +50,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen w-full bg-background text-foreground">
+    <div className="min-h-dvh w-full bg-background text-foreground">
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-border bg-sidebar px-3 py-6 lg:flex">
         <BrandMark />
         <nav className="mt-8 flex flex-1 flex-col gap-1">
@@ -67,60 +67,58 @@ export function AppLayout({ children }: { children: ReactNode }) {
         </Button>
       </aside>
 
-      <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-background/80 px-4 py-3 backdrop-blur lg:hidden">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setMobileOpen((v) => !v)}
-          aria-label="Menu"
-        >
-          <Menu className="h-5 w-5" />
-        </Button>
+      <header className="sticky top-0 z-20 flex items-center gap-2 border-b border-border bg-background/90 px-4 pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))] backdrop-blur lg:hidden">
         <BrandMark compact />
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-1">
           <CurrencySelect />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-11 w-11 text-muted-foreground"
+            onClick={handleSignOut}
+            aria-label="Sair"
+          >
+            <LogOut className="h-5 w-5" aria-hidden="true" />
+          </Button>
         </div>
       </header>
 
-      {mobileOpen ? (
-        <div className="fixed inset-x-0 top-[57px] z-30 border-b border-border bg-surface px-3 py-3 lg:hidden">
-          <nav className="flex flex-col gap-1">
-            {NAV.map((item) => (
-              <NavLink key={item.to} {...item} active={pathname === item.to} />
-            ))}
-            <Button
-              variant="ghost"
-              className="justify-start gap-2 text-muted-foreground"
-              onClick={handleSignOut}
-            >
-              <LogOut className="h-4 w-4" /> Sair
-            </Button>
-          </nav>
-        </div>
-      ) : null}
-
-      <div className="hidden lg:flex lg:ml-60 lg:justify-end lg:px-10 lg:pt-6">
+      <div className="hidden lg:ml-60 lg:flex lg:justify-end lg:px-10 lg:pt-6">
         <CurrencySelect />
       </div>
 
-      <main className="px-4 pb-28 pt-6 sm:px-6 lg:ml-60 lg:px-10 lg:pb-14 lg:pt-4">
-        <div className="mx-auto w-full max-w-6xl space-y-8">{children}</div>
+      <main className="px-4 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-4 sm:px-6 lg:ml-60 lg:px-10 lg:pb-14 lg:pt-4">
+        <div className="mx-auto w-full max-w-6xl space-y-6 lg:space-y-8">{children}</div>
       </main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-4 border-t border-border bg-background/95 backdrop-blur lg:hidden">
-        {MOBILE_NAV.map((item) => (
-          <Link
-            key={item.to}
-            to={item.to}
-            className={cn(
-              "flex flex-col items-center gap-1 py-2.5 text-[10px]",
-              pathname === item.to ? "text-primary" : "text-muted-foreground",
-            )}
-          >
-            <item.icon className="h-4 w-4" />
-            <span className="truncate">{item.label}</span>
-          </Link>
-        ))}
+      <nav
+        aria-label="Navegação principal"
+        className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-4 border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
+      >
+        {NAV.map((item) => {
+          const active = pathname === item.to;
+          return (
+            <Link
+              key={item.to}
+              to={item.to}
+              aria-current={active ? "page" : undefined}
+              className={cn(
+                "flex min-h-14 flex-col items-center justify-center gap-1 text-[11px] font-medium",
+                active ? "text-primary" : "text-muted-foreground",
+              )}
+            >
+              <span
+                className={cn(
+                  "grid h-7 w-12 place-items-center rounded-full transition-colors",
+                  active && "bg-primary/10",
+                )}
+              >
+                <item.icon className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <span className="truncate">{item.label}</span>
+            </Link>
+          );
+        })}
       </nav>
     </div>
   );
