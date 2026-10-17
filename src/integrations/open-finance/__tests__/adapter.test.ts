@@ -100,6 +100,22 @@ describe("adapter: classifyTxType (regras determinísticas, sem IA)", () => {
     ).toBe("CARD_PAYMENT");
   });
 
+  it("8e. resgate de aplicação financeira é INVESTMENT_CONTRIBUTION (fora do fluxo de caixa)", () => {
+    // Simétrico ao aporte: o principal voltando da aplicação não é renda.
+    expect(
+      classifyTxType(mk({ type: "CREDIT", operationType: "RESGATE_APLIC_FINANCEIRA" })),
+    ).toBe<CanonicalTxType>("INVESTMENT_CONTRIBUTION");
+  });
+
+  it("8f. movimento de saldo reservado (Mercado Pago) é TRANSFER, não renda/despesa", () => {
+    expect(
+      classifyTxType(mk({ type: "DEBIT", operationType: "TRANSFERENCIA_SALDO_RESERVADO" })),
+    ).toBe<CanonicalTxType>("TRANSFER");
+    expect(
+      classifyTxType(mk({ type: "CREDIT", operationType: "TRANSFERENCIA_SALDO_RESERVADO" })),
+    ).toBe<CanonicalTxType>("TRANSFER");
+  });
+
   it("8b. no cartão, crédito que não é pagamento de fatura é estorno: EXPENSE positivo", () => {
     const card = { isCreditCardAccount: true };
     expect(classifyTxType(mk({ type: "CREDIT", description: "Pagamento recebido" }), card)).toBe(
