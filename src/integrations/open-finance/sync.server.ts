@@ -8,6 +8,7 @@
  */
 
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { toCurrencyCode } from "@/domain/currency";
 import { normalizeTransaction, type CanonicalAccountKind } from "./adapter";
 import {
   categoryKindFor,
@@ -344,7 +345,7 @@ async function syncItem(
     const accounts = must(
       await supabaseAdmin
         .from("accounts")
-        .select("id, provider_account_id, kind")
+        .select("id, provider_account_id, kind, currency")
         .eq("user_id", userId)
         .eq("connection_id", connection.id),
     );
@@ -394,7 +395,10 @@ async function syncItem(
           : [],
       );
 
-      const ctx = { isCreditCardAccount: kind === "CREDIT_CARD" };
+      const ctx = {
+        isCreditCardAccount: kind === "CREDIT_CARD",
+        accountCurrency: toCurrencyCode(account.currency),
+      };
       const { upserts } = planTransactionSync(transactions, existing, () => ctx, adjust);
 
       // Only a complete drain proves a missing pending row is gone.

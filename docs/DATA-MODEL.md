@@ -33,6 +33,11 @@ has RLS; private tables are scoped by `user_id = auth.uid()`.
 - **Identity is the provider id**, never a content hash. Re-sync upserts on
   `(account_id, provider_tx_id)`.
 - **`user_overridden = true`** rows are skipped by the sync entirely.
+- **Foreign-currency purchases** on an imported account (e.g. ARS on the BRL XP card) are
+  stored in the account's currency with the amount the institution charged
+  (`amountInAccountCurrency`: card FX rate and spread included; IOF is a separate row).
+  Only when Pluggy omits that value is the original currency kept and converted at the
+  market rate (`exchange_rates`) on display. See `chargedAmount` in the adapter.
 - **Categorization order** for an imported row: manual edit (`user_overridden`) > user rule
   (`categorization_rules`, longest pattern first) > Pluggy group mapping. Rules run inside
   the sync before change detection (so a re-sync does not revert them) and, when created,
