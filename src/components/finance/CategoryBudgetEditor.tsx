@@ -11,6 +11,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RulesList } from "@/components/finance/RulesList";
 import type { CashflowCategory, CashflowKind } from "@/domain/cashflow";
 import {
   useCreateCategory,
@@ -48,10 +49,14 @@ export function CategoryBudgetEditor({
           </SheetDescription>
         </SheetHeader>
         <Tabs defaultValue="EXPENSE" className="mt-6">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="EXPENSE">Despesas</TabsTrigger>
             <TabsTrigger value="INCOME">Receitas</TabsTrigger>
+            <TabsTrigger value="RULES">Regras</TabsTrigger>
           </TabsList>
+          <TabsContent value="RULES" className="mt-4">
+            <RulesList categories={categories} />
+          </TabsContent>
           {(["EXPENSE", "INCOME"] as const).map((kind) => (
             <TabsContent key={kind} value={kind} className="mt-4 space-y-3">
               <NewCategoryRow kind={kind} />

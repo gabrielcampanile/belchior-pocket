@@ -27,7 +27,9 @@ import {
   planAccountSync,
   planStalePendingRemovals,
   planTransactionSync,
+  ruleAdjuster,
 } from "./sync";
+import type { CategorizationRule } from "@/domain/rules";
 import type { ExistingTransaction, SyncStatus, TransactionUpsert } from "./sync.types";
 
 /** Re-read this many days before the last sync: pending rows post, dates shift. */
@@ -200,6 +202,24 @@ function groupOf(upsert: TransactionUpsert): { kind: CategoryKind; key: string }
 
 // --- One item ----------------------------------------------------------------
 
+/** The user's categorization rules (#66), in the shape the pure core expects. */
+async function loadRules(userId: string): Promise<CategorizationRule[]> {
+  const rows = must(
+    await supabaseAdmin
+      .from("categorization_rules")
+      .select("id, pattern, direction, set_type, category_id, created_at")
+      .eq("user_id", userId),
+  );
+  return rows.map((r) => ({
+    id: r.id,
+    pattern: r.pattern,
+    direction: r.direction as CategorizationRule["direction"],
+    setType: r.set_type,
+    categoryId: r.category_id,
+    createdAt: r.created_at,
+  }));
+}
+
 interface AccountWork {
   accountId: string;
   upserts: TransactionUpsert[];
@@ -210,6 +230,7 @@ async function syncItem(
   userId: string,
   item: ConfiguredItem,
   categories: CategoryResolver,
+  adjust: ReturnType<typeof ruleAdjuster>,
 ): Promise<ItemSyncResult & { earliest: string | null }> {
   const pluggyItem = await pluggy.getItem(item.itemId);
   const institution = item.label ?? pluggyItem.connector?.name ?? "Instituição";
@@ -374,7 +395,7 @@ async function syncItem(
       );
 
       const ctx = { isCreditCardAccount: kind === "CREDIT_CARD" };
-      const { upserts } = planTransactionSync(transactions, existing, () => ctx);
+      const { upserts } = planTransactionSync(transactions, existing, () => ctx, adjust);
 
       // Only a complete drain proves a missing pending row is gone.
       const complete = !lastCursor;
@@ -422,7 +443,12 @@ async function syncItem(
           type: u.dto.type,
           status: u.dto.status,
           source: "IMPORT" as const,
-          category_id: g ? (categoryByGroup.get(mappingKey(g.kind, g.key)) ?? null) : null,
+          category_id:
+            u.ruleCategoryId !== undefined
+              ? u.ruleCategoryId
+              : g
+                ? (categoryByGroup.get(mappingKey(g.kind, g.key)) ?? null)
+                : null,
           provider_operation_type: u.dto.providerOperationType,
           provider_category_id: u.dto.providerCategoryId,
         };
@@ -502,12 +528,13 @@ async function syncItem(
 /** Sync every configured Pluggy item for `userId`. One failing item does not stop the others. */
 export async function runOpenFinanceSync(userId: string): Promise<SyncResult> {
   const categories = new CategoryResolver(userId);
+  const adjust = ruleAdjuster(await loadRules(userId));
   const items: ItemSyncResult[] = [];
   let earliestTransactionOn: string | null = null;
 
   for (const item of configuredItems()) {
     try {
-      const { earliest, ...result } = await syncItem(userId, item, categories);
+      const { earliest, ...result } = await syncItem(userId, item, categories, adjust);
       items.push(result);
       if (earliest && (!earliestTransactionOn || earliest < earliestTransactionOn)) {
         earliestTransactionOn = earliest;

@@ -27,6 +27,7 @@ import {
   type TransactionRow,
 } from "@/hooks/useTransactions";
 import { centsToInput, parseCurrencyToCents } from "@/lib/format";
+import type { RuleSeed } from "@/components/finance/RuleDialog";
 
 const selectClass =
   "w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground disabled:opacity-60";
@@ -42,12 +43,15 @@ export function TransactionDialog({
   editing,
   accounts,
   categories,
+  onImportedEdited,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   editing: TransactionRow | null;
   accounts: AccountOption[];
   categories: CashflowCategory[];
+  /** An Open Finance row changed type or category: the page offers a rule for similar ones. */
+  onImportedEdited?: (seed: RuleSeed) => void;
 }) {
   const create = useCreateTransaction();
   const update = useUpdateTransaction();
@@ -101,8 +105,27 @@ export function TransactionDialog({
       categoryId: categoryId || null,
     };
     const done = { onSuccess: () => onOpenChange(false) };
-    if (editing) update.mutate({ id: editing.id, source: editing.source, input }, done);
-    else create.mutate({ ...input, currency: account.currency }, done);
+    if (editing) {
+      const reclassified =
+        editing.source === "IMPORT" &&
+        (input.type !== editing.type || input.categoryId !== editing.categoryId);
+      update.mutate(
+        { id: editing.id, source: editing.source, input },
+        {
+          onSuccess: () => {
+            onOpenChange(false);
+            if (reclassified) {
+              onImportedEdited?.({
+                description: input.description,
+                amountCents: input.amountCents,
+                type: input.type,
+                categoryId: input.categoryId,
+              });
+            }
+          },
+        },
+      );
+    } else create.mutate({ ...input, currency: account.currency }, done);
   };
 
   const typeChoices =

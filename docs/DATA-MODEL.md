@@ -14,6 +14,7 @@ has RLS; private tables are scoped by `user_id = auth.uid()`.
 | `transactions`         | the ledger: signed `amount_cents`, `currency`, `occurred_on`, `description`, `type`, `status`, `source`, `category_id`, `hidden`, `notes`, `user_overridden`, provider metadata | unique `(account_id, provider_tx_id)`; manual rows have `provider_tx_id = null`                         |
 | `categories`           | user categories: `kind` (INCOME/EXPENSE), `name`, optional fixed `monthly_budget_cents` (BRL), `color`                                                                          | unique `(user_id, kind, name)`                                                                          |
 | `category_mappings`    | Pluggy top-level category → user category, per kind                                                                                                                             | unique `(user_id, kind, provider_category_id)`; cascades on category delete                             |
+| `categorization_rules` | user rule: description contains `pattern` (normalized), `direction` IN/OUT/ANY, then `set_type` and/or `category_id`                                                            | unique `(user_id, pattern, direction)`; cascades on category delete                                     |
 | `exchange_rates`       | **global** FX history: `base_currency`, `quote_currency`, `rate`, `effective_on`, `source`                                                                                      | unique `(base, quote, effective_on)`; readable by authenticated users, written only by the service role |
 | `sync_runs`            | one row per sync attempt: status, range, counts, sanitized error                                                                                                                | —                                                                                                       |
 
@@ -32,6 +33,11 @@ has RLS; private tables are scoped by `user_id = auth.uid()`.
 - **Identity is the provider id**, never a content hash. Re-sync upserts on
   `(account_id, provider_tx_id)`.
 - **`user_overridden = true`** rows are skipped by the sync entirely.
+- **Categorization order** for an imported row: manual edit (`user_overridden`) > user rule
+  (`categorization_rules`, longest pattern first) > Pluggy group mapping. Rules run inside
+  the sync before change detection (so a re-sync does not revert them) and, when created,
+  over the whole history through `apply_transaction_patches(jsonb)` (security invoker;
+  imported, non-overridden rows only). Deleting a rule does not revert past rows.
 - **`hidden = true`** rows are excluded from every total and are not re-shown by sync.
 - **Pending rows** that disappear from a complete re-read of their window are deleted
   (unless overridden), so a pending→posted change never double-counts.
@@ -45,15 +51,16 @@ has RLS; private tables are scoped by `user_id = auth.uid()`.
 
 ## Where the logic lives
 
-| Concern                                     | Module                                         |
-| ------------------------------------------- | ---------------------------------------------- |
-| Pluggy → canonical DTO, type classification | `src/integrations/open-finance/adapter.ts`     |
-| Idempotent sync plan (pure)                 | `src/integrations/open-finance/sync.ts`        |
-| Sync persistence (server, service role)     | `src/integrations/open-finance/sync.server.ts` |
-| Default categories from Pluggy groups       | `src/integrations/open-finance/categories.ts`  |
-| Monthly cash flow, budget, history          | `src/domain/cashflow.ts`                       |
-| Transaction filters, sign rules             | `src/domain/transactions.ts`                   |
-| Currency conversion                         | `src/domain/exchange.ts`                       |
+| Concern                                                          | Module                                         |
+| ---------------------------------------------------------------- | ---------------------------------------------- |
+| Pluggy → canonical DTO, type classification                      | `src/integrations/open-finance/adapter.ts`     |
+| Idempotent sync plan (pure)                                      | `src/integrations/open-finance/sync.ts`        |
+| Sync persistence (server, service role)                          | `src/integrations/open-finance/sync.server.ts` |
+| Default categories from Pluggy groups                            | `src/integrations/open-finance/categories.ts`  |
+| Monthly cash flow, budget, history                               | `src/domain/cashflow.ts`                       |
+| Transaction filters, sign rules                                  | `src/domain/transactions.ts`                   |
+| Categorization rules (matching, precedence, retroactive patches) | `src/domain/rules.ts`                          |
+| Currency conversion                                              | `src/domain/exchange.ts`                       |
 
 ## Changing the schema
 

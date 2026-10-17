@@ -20,8 +20,10 @@ import {
   normalizeTransaction,
   type CanonicalAccountDTO,
   type CanonicalTransactionDTO,
+  type CanonicalTxType,
   type ClassifyContext,
 } from "./adapter";
+import { applyRule, ruleMatches, sortRules, type CategorizationRule } from "@/domain/rules";
 import type { PluggyTransaction } from "./pluggy.types";
 import type {
   AccountFetcher,
@@ -130,6 +132,15 @@ export function planTransactionSync(
   rawTransactions: PluggyTransaction[],
   existing: ExistingTransaction[],
   classify: (tx: PluggyTransaction) => ClassifyContext = () => ({}),
+  /**
+   * User categorization rules, applied to the normalized DTO BEFORE comparing with the
+   * stored row, so a re-sync of a rule-classified row is "unchanged" instead of reverting it.
+   * Returns the (possibly retyped) DTO and the category the rule decides (undefined = none).
+   */
+  adjust?: (dto: CanonicalTransactionDTO) => {
+    dto: CanonicalTransactionDTO;
+    categoryId: string | null | undefined;
+  },
 ): { upserts: TransactionUpsert[]; skips: TransactionSkip[] } {
   const byProvider = new Map(existing.map((t) => [t.providerTxId, t]));
   const upserts: TransactionUpsert[] = [];
@@ -137,7 +148,10 @@ export function planTransactionSync(
   const seen = new Set<string>();
 
   for (const raw of rawTransactions) {
-    const dto = normalizeTransaction(raw, classify(raw));
+    const adjusted = adjust
+      ? adjust(normalizeTransaction(raw, classify(raw)))
+      : { dto: normalizeTransaction(raw, classify(raw)), categoryId: undefined };
+    const { dto, categoryId } = adjusted;
     const id = dto.providerTxId;
 
     if (!id) {
@@ -152,12 +166,13 @@ export function planTransactionSync(
       skips.push({ providerTxId: id, reason: "user_overridden" });
       continue;
     }
+    const rule = categoryId === undefined ? {} : { ruleCategoryId: categoryId };
     if (!prior) {
-      upserts.push({ op: "insert", providerTxId: id, dto });
+      upserts.push({ op: "insert", providerTxId: id, dto, ...rule });
       continue;
     }
     if (transactionChanged(prior, dto)) {
-      upserts.push({ op: "update", providerTxId: id, dto });
+      upserts.push({ op: "update", providerTxId: id, dto, ...rule });
     } else {
       skips.push({ providerTxId: id, reason: "unchanged" });
     }
@@ -252,4 +267,22 @@ export function classifySyncError(err: unknown): {
     return { status: "permanent_error", error: "Internal sync error; see the server log." };
   }
   return { status: "permanent_error", error: "Permanent provider error." };
+}
+
+/**
+ * Bridge from the user's categorization rules (src/domain/rules.ts) to the `adjust` hook of
+ * planTransactionSync. Same matching code as the retroactive application, so past and future
+ * rows end up classified the same way.
+ */
+export function ruleAdjuster(rules: CategorizationRule[]) {
+  const sorted = sortRules(rules);
+  return (dto: CanonicalTransactionDTO) => {
+    const rule = sorted.find((r) => ruleMatches(r, dto));
+    if (!rule) return { dto, categoryId: undefined };
+    const out = applyRule(rule, dto);
+    return {
+      dto: { ...dto, type: out.type as CanonicalTxType, amountCents: out.amountCents },
+      categoryId: out.categoryId,
+    };
+  };
 }

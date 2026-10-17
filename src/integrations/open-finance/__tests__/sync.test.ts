@@ -5,10 +5,15 @@ import {
   MAX_TRANSACTION_PAGES,
   planAccountSync,
   planTransactionSync,
+  ruleAdjuster,
   summarizeSyncRun,
 } from "../sync";
 import { normalizeAccount, normalizeTransaction } from "../adapter";
-import type { PluggyAccountsResponse, PluggyTransactionsPage } from "../pluggy.types";
+import type {
+  PluggyAccountsResponse,
+  PluggyTransaction,
+  PluggyTransactionsPage,
+} from "../pluggy.types";
 import type { ExistingAccount, ExistingTransaction, SyncPlan } from "../sync.types";
 
 import xpAccounts from "../__fixtures__/xp.accounts.fixture.json";
@@ -185,5 +190,63 @@ describe("sync: summarizeSyncRun + classifySyncError", () => {
     expect(classifySyncError(timeout).status).toBe("transient_error");
     expect(classifySyncError(new TypeError("fetch failed")).status).toBe("transient_error");
     expect(classifySyncError(new Error("duplicate key")).status).toBe("permanent_error");
+  });
+});
+
+describe("sync: regras de categorização (#66)", () => {
+  const salaryTx: PluggyTransaction = {
+    id: "tx-salario",
+    providerId: "prov-salario",
+    description: "PIX RECEBIDO ACME LTDA",
+    currencyCode: "BRL",
+    amount: 9000,
+    date: "2026-10-05T00:00:00Z",
+    accountId: "acc",
+    status: "POSTED",
+    type: "CREDIT",
+    category: "Same person transfer",
+  };
+  const rules = [
+    {
+      id: "r1",
+      pattern: "acme ltda",
+      direction: "IN" as const,
+      setType: "INCOME" as const,
+      categoryId: "cat-salario",
+      createdAt: "2026-10-16T00:00:00Z",
+    },
+  ];
+
+  it("14. a regra reclassifica no sync e o re-sync seguinte não desfaz nem reescreve", () => {
+    const adjust = ruleAdjuster(rules);
+    const first = planTransactionSync([salaryTx], [], () => ({}), adjust);
+    expect(first.upserts).toHaveLength(1);
+    expect(first.upserts[0].dto.type).toBe("INCOME");
+    expect(first.upserts[0].dto.amountCents).toBe(900_000);
+    expect(first.upserts[0].ruleCategoryId).toBe("cat-salario");
+
+    const stored = {
+      providerTxId: "prov-salario",
+      amountCents: 900_000,
+      type: "INCOME" as const,
+      status: "POSTED" as const,
+      occurredOn: "2026-10-05",
+      description: "PIX RECEBIDO ACME LTDA",
+      userOverridden: false,
+    };
+    const second = planTransactionSync([salaryTx], [stored], () => ({}), adjust);
+    expect(second.upserts).toHaveLength(0);
+    expect(second.skips[0].reason).toBe("unchanged");
+  });
+
+  it("15. sem regra que case, nada muda (categoria fica com o mapeamento do Pluggy)", () => {
+    const plan = planTransactionSync(
+      [{ ...salaryTx, description: "OUTRA COISA" }],
+      [],
+      () => ({}),
+      ruleAdjuster(rules),
+    );
+    expect(plan.upserts[0].dto.type).toBe("TRANSFER");
+    expect(plan.upserts[0].ruleCategoryId).toBeUndefined();
   });
 });

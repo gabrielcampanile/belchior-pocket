@@ -65,6 +65,8 @@ export interface TransactionUpsert {
   op: "insert" | "update";
   providerTxId: string;
   dto: CanonicalTransactionDTO;
+  /** Set when a user rule decided the category (null = rule clears it). */
+  ruleCategoryId?: string | null;
 }
 
 /** A transaction the plan deliberately SKIPPED, with the reason (for observability). */
