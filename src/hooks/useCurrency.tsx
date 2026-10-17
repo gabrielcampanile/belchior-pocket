@@ -21,6 +21,7 @@ import {
 import {
   convertMoney,
   createConverter,
+  rescaleMinor,
   type ExchangeRate,
   type MoneyConverter,
 } from "@/domain/exchange";
@@ -97,7 +98,8 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
   const formatDisplay = useCallback(
     (value: Money, onDate?: string) =>
       formatCents(
-        convertMoney(value, displayCurrency, rates, onDate)?.amountCents ?? value.amountCents,
+        convertMoney(value, displayCurrency, rates, onDate)?.amountCents ??
+          rescaleMinor(value, displayCurrency),
         displayCurrency,
       ),
     [displayCurrency, rates],

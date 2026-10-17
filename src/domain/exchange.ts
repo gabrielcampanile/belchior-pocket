@@ -1,4 +1,10 @@
-import { DEFAULT_CURRENCY, money, type CurrencyCode, type Money } from "./currency";
+import {
+  DEFAULT_CURRENCY,
+  minorUnitFactor,
+  money,
+  type CurrencyCode,
+  type Money,
+} from "./currency";
 
 /**
  * Câmbio: funções puras e determinísticas.
@@ -80,7 +86,10 @@ export function convertMoney(
   if (value.currency === target) return money(value.amountCents, target);
   const rate = findRate(rates, value.currency, target, onDate);
   if (rate == null) return null;
-  return money(value.amountCents * rate, target);
+  // Rates are per WHOLE unit; amounts are minor units with per-currency decimals
+  // (centavos vs satoshis), so rescale between the two minor units.
+  const scale = minorUnitFactor(target) / minorUnitFactor(value.currency);
+  return money(value.amountCents * rate * scale, target);
 }
 
 /** Conversor pronto para a camada de apresentação/agregação. */
@@ -88,7 +97,17 @@ export type MoneyConverter = (value: Money, onDate?: string) => number;
 
 export function createConverter(target: CurrencyCode, rates: ExchangeRate[]): MoneyConverter {
   return (value, onDate) =>
-    convertMoney(value, target, rates, onDate)?.amountCents ?? value.amountCents;
+    convertMoney(value, target, rates, onDate)?.amountCents ?? rescaleMinor(value, target);
+}
+
+/**
+ * Fallback when no rate is known: keep the number but move it to the target's minor unit,
+ * so a missing BTC rate can never add satoshis to a BRL total as if they were centavos.
+ */
+export function rescaleMinor(value: Money, target: CurrencyCode): number {
+  return Math.round(
+    (value.amountCents * minorUnitFactor(target)) / minorUnitFactor(value.currency),
+  );
 }
 
 /** Conversor neutro: mantém o valor como está (usado quando não há multimoeda em jogo). */

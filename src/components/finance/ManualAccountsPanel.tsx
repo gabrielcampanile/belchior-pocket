@@ -5,7 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CURRENCY_CODES, type CurrencyCode } from "@/domain/currency";
+import { CURRENCY_CODES, money, type CurrencyCode } from "@/domain/currency";
+import { convertMoney } from "@/domain/exchange";
+import { useCurrency } from "@/hooks/useCurrency";
 import {
   canDeleteManualAccount,
   MANUAL_ACCOUNT_KIND_LABEL,
@@ -88,7 +90,7 @@ function NewManualAccountForm({ onDone }: { onDone: () => void }) {
   const [currency, setCurrency] = useState<CurrencyCode>("BRL");
   const [opening, setOpening] = useState("");
   const nameError = validateManualAccountName(name);
-  const openingCents = opening.trim() ? parseCurrencyToCents(opening) : 0;
+  const openingCents = opening.trim() ? parseCurrencyToCents(opening, currency) : 0;
   const valid = !nameError && openingCents != null;
 
   const submit = (e: React.FormEvent) => {
@@ -171,14 +173,21 @@ function NewManualAccountForm({ onDone }: { onDone: () => void }) {
 }
 
 function ManualAccountRow({ account }: { account: ManualAccount }) {
+  const { displayCurrency, rates } = useCurrency();
+  // No date: the latest known rate ("valor do momento").
+  const converted = convertMoney(
+    money(account.balanceCents, account.currency),
+    displayCurrency,
+    rates,
+  );
   const update = useUpdateManualAccount();
   const remove = useDeleteManualAccount();
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(account.name);
-  const [opening, setOpening] = useState(centsToInput(account.openingCents));
+  const [opening, setOpening] = useState(centsToInput(account.openingCents, account.currency));
   const [confirmDelete, setConfirmDelete] = useState(false);
   const nameError = validateManualAccountName(name);
-  const openingCents = opening.trim() ? parseCurrencyToCents(opening) : 0;
+  const openingCents = opening.trim() ? parseCurrencyToCents(opening, account.currency) : 0;
   const deletable = canDeleteManualAccount(account.transactionCount);
   const idBase = `ma-${account.id}`;
 
@@ -250,7 +259,11 @@ function ManualAccountRow({ account }: { account: ManualAccount }) {
           {formatCents(account.balanceCents, account.currency)}
         </p>
         <p className="text-xs text-muted-foreground">
-          inicial {formatCents(account.openingCents, account.currency)}
+          {account.currency !== displayCurrency
+            ? converted
+              ? `≈ ${formatCents(converted.amountCents, displayCurrency)} hoje`
+              : "cotação ainda indisponível"
+            : `inicial ${formatCents(account.openingCents, account.currency)}`}
         </p>
       </div>
       <div className="flex items-center gap-1">

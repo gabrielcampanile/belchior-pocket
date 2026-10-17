@@ -447,7 +447,7 @@ export type Database = {
       account_kind: "CHECKING" | "CREDIT_CARD" | "INVESTMENT" | "CASH" | "OTHER";
       category_kind: "INCOME" | "EXPENSE";
       connection_status: "ACTIVE" | "LOGIN_ERROR" | "OUTDATED" | "DISCONNECTED";
-      currency_code: "BRL" | "CAD" | "USD" | "EUR" | "ARS";
+      currency_code: "BRL" | "CAD" | "USD" | "EUR" | "ARS" | "BTC";
       of_provider: "PLUGGY";
       tx_domain_type:
         "EXPENSE" | "INCOME" | "TRANSFER" | "INVESTMENT_CONTRIBUTION" | "CARD_PAYMENT";
@@ -580,7 +580,7 @@ export const Constants = {
       account_kind: ["CHECKING", "CREDIT_CARD", "INVESTMENT", "CASH", "OTHER"],
       category_kind: ["INCOME", "EXPENSE"],
       connection_status: ["ACTIVE", "LOGIN_ERROR", "OUTDATED", "DISCONNECTED"],
-      currency_code: ["BRL", "CAD", "USD", "EUR", "ARS"],
+      currency_code: ["BRL", "CAD", "USD", "EUR", "ARS", "BTC"],
       of_provider: ["PLUGGY"],
       tx_domain_type: ["EXPENSE", "INCOME", "TRANSFER", "INVESTMENT_CONTRIBUTION", "CARD_PAYMENT"],
       tx_source: ["IMPORT", "MANUAL"],

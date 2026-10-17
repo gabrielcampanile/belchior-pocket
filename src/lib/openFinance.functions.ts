@@ -47,6 +47,16 @@ async function syncAndRates(userId: string) {
     ratesError = "Não foi possível atualizar as cotações agora.";
   }
 
+  // Bitcoin: price of the moment on every sync, plus a one-time daily history.
+  try {
+    const { refreshBtcRate, backfillBtcSince } = await import("@/lib/exchangeRates.server");
+    await refreshBtcRate();
+    await backfillBtcSince(new Date(Date.now() - 365 * 86_400_000).toISOString().slice(0, 10));
+  } catch (err) {
+    console.error("[sync] bitcoin rate failed:", err instanceof Error ? err.message : err);
+    ratesError ??= "Não foi possível atualizar a cotação do bitcoin agora.";
+  }
+
   return { skipped: false as const, items: result.items, ratesError };
 }
 

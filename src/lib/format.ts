@@ -1,6 +1,15 @@
-/** Formatação pt-BR multimoeda. Valores monetários são sempre inteiros em centavos. */
+/**
+ * Formatação pt-BR multimoeda. Valores monetários são sempre inteiros na unidade mínima da
+ * moeda (centavos; satoshis no BTC) — ver `CURRENCIES[code].decimals`.
+ */
 
-import { DEFAULT_CURRENCY, type CurrencyCode, type Money } from "@/domain/currency";
+import {
+  CURRENCIES,
+  DEFAULT_CURRENCY,
+  minorUnitFactor,
+  type CurrencyCode,
+  type Money,
+} from "@/domain/currency";
 
 const LOCALE = "pt-BR";
 
@@ -10,23 +19,35 @@ function formatter(currency: CurrencyCode, compact: boolean): Intl.NumberFormat 
   const key = `${currency}:${compact}`;
   let f = cache.get(key);
   if (!f) {
-    f = new Intl.NumberFormat(LOCALE, {
-      style: "currency",
-      currency,
-      minimumFractionDigits: compact ? 0 : 2,
-      maximumFractionDigits: compact ? 0 : 2,
-    });
+    const decimals = CURRENCIES[currency].decimals;
+    f = CURRENCIES[currency].crypto
+      ? // Intl has no symbol for BTC: plain number, the ₿ prefix is added below.
+        new Intl.NumberFormat(LOCALE, {
+          minimumFractionDigits: compact ? 0 : Math.min(decimals, 2),
+          maximumFractionDigits: compact ? 4 : decimals,
+        })
+      : new Intl.NumberFormat(LOCALE, {
+          style: "currency",
+          currency,
+          minimumFractionDigits: compact ? 0 : decimals,
+          maximumFractionDigits: compact ? 0 : decimals,
+        });
     cache.set(key, f);
   }
   return f;
 }
 
+function format(minor: number, currency: CurrencyCode, compact: boolean): string {
+  const text = formatter(currency, compact).format((minor ?? 0) / minorUnitFactor(currency));
+  return CURRENCIES[currency].crypto ? `${CURRENCIES[currency].shortLabel} ${text}` : text;
+}
+
 export function formatCents(cents: number, currency: CurrencyCode = DEFAULT_CURRENCY): string {
-  return formatter(currency, false).format((cents ?? 0) / 100);
+  return format(cents, currency, false);
 }
 
 export function formatCentsShort(cents: number, currency: CurrencyCode = DEFAULT_CURRENCY): string {
-  return formatter(currency, true).format((cents ?? 0) / 100);
+  return format(cents, currency, true);
 }
 
 /** Formatação canônica de um valor de domínio. */
@@ -69,12 +90,18 @@ export function formatNumber(value: number, digits = 1): string {
   });
 }
 
-/** Converte texto digitado pelo usuário ("1.234,56", "1234.56", "R$ 100") em centavos. */
-export function parseCurrencyToCents(input: string): number | null {
+/**
+ * Converte texto digitado pelo usuário ("1.234,56", "1234.56", "R$ 100", "₿ 0,0015") na
+ * unidade mínima de `currency` (centavos por padrão; satoshis no BTC).
+ */
+export function parseCurrencyToCents(
+  input: string,
+  currency: CurrencyCode = DEFAULT_CURRENCY,
+): number | null {
   if (input == null) return null;
   let raw = String(input).trim();
   if (!raw) return null;
-  raw = raw.replace(/[R$\s\u00a0]/gi, "");
+  raw = raw.replace(/[R$₿\s\u00a0]/gi, "");
   const negative = /^-/.test(raw) || /^\(.*\)$/.test(raw);
   raw = raw.replace(/[()-]/g, "");
   const hasComma = raw.includes(",");
@@ -90,14 +117,19 @@ export function parseCurrencyToCents(input: string): number | null {
   }
   const value = Number(raw);
   if (!Number.isFinite(value)) return null;
-  const cents = Math.round(value * 100);
-  return negative ? -cents : cents;
+  const minor = Math.round(value * minorUnitFactor(currency));
+  return negative ? -minor : minor;
 }
 
-export function centsToInput(cents: number | null | undefined): string {
+export function centsToInput(
+  cents: number | null | undefined,
+  currency: CurrencyCode = DEFAULT_CURRENCY,
+): string {
   if (cents == null) return "";
-  return (cents / 100).toLocaleString(LOCALE, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+  const decimals = CURRENCIES[currency].decimals;
+  return (cents / minorUnitFactor(currency)).toLocaleString(LOCALE, {
+    minimumFractionDigits: Math.min(decimals, 2),
+    maximumFractionDigits: decimals,
+    useGrouping: false,
   });
 }
