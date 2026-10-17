@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import type { CurrencyCode } from "@/domain/currency";
-import { formatCents } from "@/lib/format";
+import { formatCents, formatCentsShort } from "@/lib/format";
 
 export interface DonutSlice {
   categoryId: string | null;
@@ -21,14 +21,26 @@ const PALETTE = [
 
 const MAX_SLICES = 6;
 
+/**
+ * Color of the row at `index` in a list sorted by total desc, matching the donut: the first
+ * MAX_SLICES-1 get their own color, everything after is folded into "Outros" (last color).
+ */
+export function sliceColor(index: number, count: number): string {
+  if (count > MAX_SLICES && index >= MAX_SLICES - 1) return PALETTE[MAX_SLICES - 1];
+  return PALETTE[index % PALETTE.length];
+}
+
 export function CategoryDonut({
   slices,
   currency,
   emptyLabel = "Sem dados no período",
+  compact = false,
 }: {
   slices: DonutSlice[];
   currency: CurrencyCode;
   emptyLabel?: string;
+  /** Smaller, no legend (the list beside it is the legend), total in the center. */
+  compact?: boolean;
 }) {
   const data = useMemo(() => {
     const positive = slices.filter((s) => s.total > 0).sort((a, b) => b.total - a.total);
@@ -39,25 +51,28 @@ export function CategoryDonut({
   }, [slices]);
 
   const total = data.reduce((sum, s) => sum + s.total, 0);
+  const height = compact ? "h-44" : "h-64";
 
   if (!total) {
     return (
-      <div className="flex h-64 items-center justify-center rounded-xl border border-dashed border-border text-sm text-muted-foreground">
+      <div
+        className={`flex ${height} items-center justify-center rounded-xl border border-dashed border-border text-sm text-muted-foreground`}
+      >
         {emptyLabel}
       </div>
     );
   }
 
   return (
-    <div className="h-64 w-full">
+    <div className={`relative ${height} w-full`}>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
             data={data}
             dataKey="total"
             nameKey="name"
-            innerRadius="58%"
-            outerRadius="82%"
+            innerRadius={compact ? "68%" : "58%"}
+            outerRadius={compact ? "95%" : "82%"}
             paddingAngle={2}
             stroke="none"
           >
@@ -81,15 +96,27 @@ export function CategoryDonut({
               name,
             ]}
           />
-          <Legend
-            verticalAlign="bottom"
-            height={36}
-            formatter={(value: string) => (
-              <span className="text-xs text-muted-foreground">{value}</span>
-            )}
-          />
+          {!compact ? (
+            <Legend
+              verticalAlign="bottom"
+              height={36}
+              formatter={(value: string) => (
+                <span className="text-xs text-muted-foreground">{value}</span>
+              )}
+            />
+          ) : null}
         </PieChart>
       </ResponsiveContainer>
+      {compact ? (
+        <div className="pointer-events-none absolute inset-0 grid place-items-center text-center">
+          <div>
+            <p className="text-[11px] uppercase tracking-widest text-muted-foreground">Total</p>
+            <p className="text-lg font-semibold tabular-nums">
+              {formatCentsShort(total, currency)}
+            </p>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
