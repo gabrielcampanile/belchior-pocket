@@ -9,13 +9,12 @@ Monthly cash flow on Open Finance: schema (#54, #58), Pluggy adapter and idempot
 (#56, #57, #59), Mês atual with budget (#60), Transações with manual CRUD (#61),
 Relatórios (#62), Vercel deploy (#63, #64).
 
-## V1.1 — polish (milestone "V1.1 — Polimento")
+## Done — V1.1 Polimento (2026-10-17)
 
-- Manual accounts (cash) from the UI — the schema already supports `source = MANUAL`.
-- Mobile pass on the four screens (iPhone): touch targets, tables, sheet and dialog.
-- Sync retry/backoff for transient Pluggy errors (BP-035).
-- Recategorization rules: "always put UBER in Transporte" as a user rule applied by sync.
-- Local `bun.lock` aligned with `package-lock.json` (TanStack Start security bump, #64).
+Manual accounts (#69), recategorization rules (#71), `bun.lock` (#70), bitcoin manual
+accounts (#72), exchange-rate pagination fix (#73), card purchases at the charged BRL amount
+(#74), Mercado Pago internal movements as transfers (#75), mobile-first pass on all screens
+(#76–#79), bounded sync retry (#35).
 
 ## Later — not scheduled
 

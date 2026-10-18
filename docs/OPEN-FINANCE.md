@@ -43,6 +43,25 @@ Persist sync run start and completion time, requested range or cursor, outcome, 
 
 Retry only transient network, throttling, or provider availability failures. Use bounded exponential backoff with jitter and respect provider retry hints. Consent, authentication, permission, and validation errors require user or operator action. Repeated sync requests must be safe.
 
+### Retry policy (BP-035, `src/integrations/open-finance/retry.ts`)
+
+| Failure                                          | Retried?                     | Final state shown in Conexões                                |
+| ------------------------------------------------ | ---------------------------- | ------------------------------------------------------------ |
+| 408, 425, 5xx (except 501/505), timeout, network | yes                          | `transient_error`: try again later                           |
+| 429                                              | yes, honouring `Retry-After` | `transient_error`: wait a few minutes                        |
+| 401, 403                                         | no                           | `auth_error` (connection `LOGIN_ERROR`): reconnect in Pluggy |
+| other 4xx, 501, 505                              | no                           | `permanent_error`: retrying will not help                    |
+| no status, not network (our code/DB)             | no                           | `permanent_error`: internal error, see server log            |
+
+- Each Pluggy request (token POST or one GET page) is retried on its own: at most 3 attempts,
+  30 s total budget per request. Delay is `Retry-After` when sent, else full-jitter backoff
+  (1 s, 2 s, capped at 10 s). A `Retry-After` above 10 s or the remaining budget stops the
+  retry instead of blocking the function.
+- Pages already drained stay collected, and every write is an idempotent upsert by provider
+  id, so a retried page never duplicates rows. The token request is not retried inside a GET
+  retry (no multiplied attempts).
+- Logs record only the endpoint, status and delay — never a cursor URL, header or payload.
+
 The first product interaction is user-triggered sync. A daily background schedule may be added later with rate limits, stale-connection handling, monitoring, and user-visible freshness expectations. Initial history should target January of the current year when the provider supports it; confirm actual provider limits before promising this behavior.
 
 ## Security and privacy

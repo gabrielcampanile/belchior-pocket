@@ -24,6 +24,7 @@ import {
   type ClassifyContext,
 } from "./adapter";
 import { applyRule, ruleMatches, sortRules, type CategorizationRule } from "@/domain/rules";
+import { errorStatus, isRetryable } from "./retry";
 import type { PluggyTransaction } from "./pluggy.types";
 import type {
   AccountFetcher,
@@ -236,37 +237,45 @@ export function summarizeSyncRun(
 }
 
 /**
- * Classify a thrown provider error into a sanitized sync status. Never surfaces the raw
- * error text to the summary (tokens/payloads must not land in sync_runs.error).
+ * Classify a thrown provider error into a sanitized sync status, AFTER withRetry gave up.
+ * The message is the final state shown in Conexões, so it says what to do next. It never
+ * carries the raw error text (tokens/payloads must not land in sync_runs.error).
  */
 export function classifySyncError(err: unknown): {
   status: Exclude<SyncStatus, "running" | "success">;
   error: string;
 } {
-  const status = Number(
-    (err as { status?: number; statusCode?: number })?.status ??
-      (err as { statusCode?: number })?.statusCode ??
-      0,
-  );
+  const status = errorStatus(err) ?? 0;
   if (status === 401 || status === 403) {
-    return { status: "auth_error", error: "Provider authentication failed." };
+    return {
+      status: "auth_error",
+      error: "O acesso ao banco expirou. Reconecte a instituição no Pluggy e sincronize de novo.",
+    };
   }
-  if (status === 429 || (status >= 500 && status <= 599)) {
-    return { status: "transient_error", error: "Transient provider error; retry later." };
+  if (status === 429) {
+    return {
+      status: "transient_error",
+      error: "Limite de requisições do Pluggy. Espere alguns minutos e sincronize de novo.",
+    };
+  }
+  if (isRetryable(err)) {
+    return {
+      status: "transient_error",
+      error:
+        status >= 500
+          ? "Pluggy ou o banco instável; tentamos de novo e não deu. Tente mais tarde."
+          : "Sem resposta do Pluggy (rede ou tempo esgotado). Tente de novo.",
+    };
   }
   if (status === 0) {
-    // No HTTP status: either the network/timeout (transient) or our own code/database
-    // failing. Reporting the latter as a provider outage hides real bugs.
-    const name = (err as { name?: string })?.name;
-    if (name === "TimeoutError" || name === "AbortError" || err instanceof TypeError) {
-      return {
-        status: "transient_error",
-        error: "Provider unreachable or timed out; retry later.",
-      };
-    }
-    return { status: "permanent_error", error: "Internal sync error; see the server log." };
+    // No HTTP status and not a network failure: our own code/database. Reporting it as a
+    // provider outage would hide a real bug.
+    return { status: "permanent_error", error: "Erro interno na sincronização; veja o log." };
   }
-  return { status: "permanent_error", error: "Permanent provider error." };
+  return {
+    status: "permanent_error",
+    error: `O Pluggy recusou a requisição (${status}). Repetir não resolve; confira a conexão.`,
+  };
 }
 
 /**
