@@ -58,6 +58,7 @@ import {
   type TransactionRow,
 } from "@/hooks/useTransactions";
 import { formatCents } from "@/lib/format";
+import { useHideValues } from "@/lib/privacy";
 import { currentMonthKey, monthLabel, shiftMonth } from "@/lib/months";
 import { cn } from "@/lib/utils";
 
@@ -75,6 +76,7 @@ const bottomSheet =
 
 function TransacoesPage() {
   const thisMonth = currentMonthKey();
+  useHideValues();
   const isMobile = useIsMobile();
   const sheetSide = isMobile ? "bottom" : "right";
   const [month, setMonth] = useState(thisMonth);

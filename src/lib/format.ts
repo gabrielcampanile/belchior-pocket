@@ -10,6 +10,7 @@ import {
   type CurrencyCode,
   type Money,
 } from "@/domain/currency";
+import { valuesHidden } from "@/lib/privacy";
 
 const LOCALE = "pt-BR";
 
@@ -37,7 +38,19 @@ function formatter(currency: CurrencyCode, compact: boolean): Intl.NumberFormat 
   return f;
 }
 
+/** O que aparece no lugar dos dígitos quando os valores estão escondidos. */
+export const HIDDEN_VALUE = "••••";
+
+/** "R$ ••••" / "₿ ••••": mantém a moeda, esconde os dígitos (tamanho fixo, não vaza a ordem de grandeza). */
+export function maskedMoney(currency: CurrencyCode = DEFAULT_CURRENCY): string {
+  const zero = formatter(currency, true)
+    .format(0)
+    .replace(/[\d.,]+/, HIDDEN_VALUE);
+  return CURRENCIES[currency].crypto ? `${CURRENCIES[currency].shortLabel} ${zero}` : zero;
+}
+
 function format(minor: number, currency: CurrencyCode, compact: boolean): string {
+  if (valuesHidden()) return maskedMoney(currency);
   const text = formatter(currency, compact).format((minor ?? 0) / minorUnitFactor(currency));
   return CURRENCIES[currency].crypto ? `${CURRENCIES[currency].shortLabel} ${text}` : text;
 }

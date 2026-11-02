@@ -1,11 +1,20 @@
 import { useEffect, type ReactNode } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { ArrowLeftRight, BarChart3, LayoutDashboard, Link2, LogOut } from "lucide-react";
+import {
+  ArrowLeftRight,
+  BarChart3,
+  Eye,
+  EyeOff,
+  LayoutDashboard,
+  Link2,
+  LogOut,
+} from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/useSession";
 import { useAutoSync } from "@/hooks/useOpenFinanceSync";
 import { cn } from "@/lib/utils";
+import { toggleValuesHidden, useHideValues } from "@/lib/privacy";
 import { Button } from "@/components/ui/button";
 import { CurrencySelect } from "@/components/finance/CurrencySelect";
 
@@ -70,6 +79,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       <header className="sticky top-0 z-20 flex items-center gap-2 border-b border-border bg-background/90 px-4 pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))] backdrop-blur lg:hidden">
         <BrandMark compact />
         <div className="ml-auto flex items-center gap-1">
+          <HideValuesButton />
           <CurrencySelect />
           <Button
             variant="ghost"
@@ -83,7 +93,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <div className="hidden lg:ml-60 lg:flex lg:justify-end lg:px-10 lg:pt-6">
+      <div className="hidden lg:ml-60 lg:flex lg:items-center lg:justify-end lg:gap-1 lg:px-10 lg:pt-6">
+        <HideValuesButton />
         <CurrencySelect />
       </div>
 
@@ -121,6 +132,26 @@ export function AppLayout({ children }: { children: ReactNode }) {
         })}
       </nav>
     </div>
+  );
+}
+
+/** O olho do app do banco: esconde todos os valores do app, e a escolha fica salva no aparelho. */
+function HideValuesButton() {
+  const hidden = useHideValues();
+  const label = hidden ? "Mostrar valores" : "Esconder valores";
+  const Icon = hidden ? EyeOff : Eye;
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="h-11 w-11 text-muted-foreground"
+      onClick={toggleValuesHidden}
+      aria-label={label}
+      aria-pressed={hidden}
+      title={label}
+    >
+      <Icon className="h-5 w-5" aria-hidden="true" />
+    </Button>
   );
 }
 

@@ -27,6 +27,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useCashflowTransactions, useCategories } from "@/hooks/useCashflow";
 import { useCurrency } from "@/hooks/useCurrency";
 import { formatCents, formatCentsShort, formatPercent } from "@/lib/format";
+import { useHideValues, valuesHidden } from "@/lib/privacy";
 import { currentMonthKey, lastMonths, monthLabel, monthLabelShort } from "@/lib/months";
 import { cn } from "@/lib/utils";
 
@@ -68,6 +69,7 @@ function presetMonths(preset: Preset, end: string): string[] {
 function RelatoriosPage() {
   const end = currentMonthKey();
   const isMobile = useIsMobile();
+  const hidden = useHideValues();
   const [preset, setPreset] = useState<Preset>("6");
   const [shareKind, setShareKind] = useState<"expense" | "income">("expense");
   const [focusCategory, setFocusCategory] = useState("");
@@ -104,7 +106,7 @@ function RelatoriosPage() {
   const short = (cents: number) => formatCentsShort(cents, displayCurrency);
   // Totals strip: "R$ 141 mil" on a phone (three columns), the exact value from sm up.
   const strip = (cents: number) =>
-    isMobile
+    isMobile && !hidden
       ? new Intl.NumberFormat("pt-BR", {
           style: "currency",
           currency: displayCurrency,
@@ -347,6 +349,7 @@ function capitalize(text: string): string {
 
 /** Axis ticks without currency noise: 12k, 1,2M. The tooltip carries the exact value. */
 function compactAxis(value: number): string {
+  if (valuesHidden()) return "";
   return new Intl.NumberFormat("pt-BR", { notation: "compact", maximumFractionDigits: 1 }).format(
     value,
   );
