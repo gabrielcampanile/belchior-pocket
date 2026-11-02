@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { format } from "date-fns";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronRight, SlidersHorizontal } from "lucide-react";
+import { ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { CategoryBudgetEditor } from "@/components/finance/CategoryBudgetEditor";
 import { CategoryDonut } from "@/components/finance/CategoryDonut";
@@ -20,7 +20,8 @@ import { useCashflowTransactions, useCategories } from "@/hooks/useCashflow";
 import { useCurrency } from "@/hooks/useCurrency";
 import { formatCents, formatCentsShort, formatPercent } from "@/lib/format";
 import { useHideValues } from "@/lib/privacy";
-import { currentMonthKey, monthLabel } from "@/lib/months";
+import { currentMonthKey, monthLabel, shiftMonth } from "@/lib/months";
+import { monthFromSearch, monthToSearch, validateMonthSearch } from "@/lib/monthSearch";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
@@ -34,6 +35,7 @@ export const Route = createFileRoute("/")({
     ],
   }),
   component: CurrentMonthPage,
+  validateSearch: validateMonthSearch,
 });
 
 const STATUS_BAR: Record<BudgetStatus, string> = {
@@ -51,7 +53,12 @@ const STATUS_TEXT: Record<BudgetStatus, string> = {
 };
 
 function CurrentMonthPage() {
-  const month = currentMonthKey();
+  const { mes } = Route.useSearch();
+  const navigate = Route.useNavigate();
+  const thisMonth = currentMonthKey();
+  const month = monthFromSearch(mes);
+  const isCurrent = month === thisMonth;
+  const goTo = (next: string) => navigate({ search: monthToSearch(next), replace: true });
   // Local date (not UTC): at 21h in Brazil the UTC date is already tomorrow.
   const today = format(new Date(), "yyyy-MM-dd");
   const [editing, setEditing] = useState(false);
@@ -87,8 +94,12 @@ function CurrentMonthPage() {
   return (
     <AppLayout>
       <PageHeader
-        title="Mês atual"
-        description={`${capitalize(monthLabel(month))} · dia ${day} de ${daysInMonth}`}
+        title={isCurrent ? "Mês atual" : capitalize(monthLabel(month))}
+        description={
+          isCurrent
+            ? `${capitalize(monthLabel(month))} · dia ${day} de ${daysInMonth}`
+            : "Mês fechado"
+        }
         action={
           <Button variant="outline" onClick={() => setEditing(true)} className="h-10">
             <SlidersHorizontal className="mr-2 h-4 w-4" aria-hidden="true" />
@@ -96,6 +107,41 @@ function CurrentMonthPage() {
           </Button>
         }
       />
+
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex min-w-0 items-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-11 w-11"
+            onClick={() => goTo(shiftMonth(month, -1))}
+            aria-label="Mês anterior"
+          >
+            <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+          </Button>
+          <p
+            className="min-w-0 truncate text-center text-sm font-medium capitalize sm:min-w-44"
+            aria-live="polite"
+          >
+            {monthLabel(month)}
+          </p>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-11 w-11"
+            onClick={() => goTo(shiftMonth(month, 1))}
+            disabled={isCurrent}
+            aria-label="Próximo mês"
+          >
+            <ChevronRight className="h-5 w-5" aria-hidden="true" />
+          </Button>
+        </div>
+        {!isCurrent ? (
+          <Button variant="ghost" className="h-11 shrink-0" onClick={() => goTo(thisMonth)}>
+            Voltar ao mês atual
+          </Button>
+        ) : null}
+      </div>
 
       {error ? (
         <EmptyState
@@ -155,7 +201,7 @@ function CurrentMonthPage() {
       <Panel className="space-y-4">
         <div className="flex items-baseline justify-between gap-3">
           <h2 className="text-lg font-semibold tracking-tight">Orçamento</h2>
-          {budget.totalBudgetCents != null ? (
+          {budget.totalBudgetCents != null && isCurrent ? (
             <p className="text-xs text-muted-foreground">
               ritmo de hoje: {formatPercent(elapsed, 0)}
             </p>
@@ -210,8 +256,10 @@ function CurrentMonthPage() {
               </details>
             ) : null}
             <p className="text-[11px] text-muted-foreground">
-              O traço na barra marca onde o gasto estaria hoje se fosse distribuído igualmente pelo
-              mês. Valores em R$.
+              {isCurrent
+                ? "O traço na barra marca onde o gasto estaria hoje se fosse distribuído igualmente pelo mês. "
+                : "Comparado com o orçamento definido hoje para cada categoria. "}
+              Valores em R$.
             </p>
           </>
         )}
@@ -264,7 +312,7 @@ function CurrentMonthPage() {
           <CategoryShareList rows={shareRows} currency={displayCurrency} />
         </div>
         <Button asChild variant="ghost" className="h-11 w-full justify-between">
-          <Link to="/transacoes">
+          <Link to="/transacoes" search={monthToSearch(month)}>
             Ver transações do mês
             <ChevronRight className="h-4 w-4" aria-hidden="true" />
           </Link>

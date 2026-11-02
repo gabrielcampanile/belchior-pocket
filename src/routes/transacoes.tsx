@@ -60,11 +60,13 @@ import {
 import { formatCents } from "@/lib/format";
 import { useHideValues } from "@/lib/privacy";
 import { currentMonthKey, monthLabel, shiftMonth } from "@/lib/months";
+import { monthFromSearch, validateMonthSearch } from "@/lib/monthSearch";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/transacoes")({
   head: () => ({ meta: [{ title: "Transações · Belchior" }] }),
   component: TransacoesPage,
+  validateSearch: validateMonthSearch,
 });
 
 const selectClass =
@@ -76,10 +78,12 @@ const bottomSheet =
 
 function TransacoesPage() {
   const thisMonth = currentMonthKey();
+  // Vem do "Ver transações do mês": abre no mês que estava aberto em Mês atual.
+  const { mes } = Route.useSearch();
   useHideValues();
   const isMobile = useIsMobile();
   const sheetSide = isMobile ? "bottom" : "right";
-  const [month, setMonth] = useState(thisMonth);
+  const [month, setMonth] = useState(() => monthFromSearch(mes));
   const [yearView, setYearView] = useState(false);
   const [filters, setFilters] = useState<TransactionFilters>(DEFAULT_FILTERS);
   const [filtersOpen, setFiltersOpen] = useState(false);
