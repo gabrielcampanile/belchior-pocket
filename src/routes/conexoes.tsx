@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import { toCurrencyCode } from "@/domain/currency";
 import { formatCents } from "@/lib/format";
+import { useHideValues } from "@/lib/privacy";
 import { OPEN_FINANCE_QUERY_KEY, useSyncNow } from "@/hooks/useOpenFinanceSync";
 
 export const Route = createFileRoute("/conexoes")({
@@ -76,6 +77,7 @@ function formatRelative(iso: string | null): string {
 }
 
 function ConexoesPage() {
+  useHideValues();
   const { data, isLoading, error } = useConnections();
   const syncNow = useSyncNow();
 

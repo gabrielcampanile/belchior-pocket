@@ -19,6 +19,7 @@ import { createConverter } from "@/domain/exchange";
 import { useCashflowTransactions, useCategories } from "@/hooks/useCashflow";
 import { useCurrency } from "@/hooks/useCurrency";
 import { formatCents, formatCentsShort, formatPercent } from "@/lib/format";
+import { useHideValues } from "@/lib/privacy";
 import { currentMonthKey, monthLabel } from "@/lib/months";
 import { cn } from "@/lib/utils";
 
@@ -55,6 +56,7 @@ function CurrentMonthPage() {
   const today = format(new Date(), "yyyy-MM-dd");
   const [editing, setEditing] = useState(false);
   const [shareKind, setShareKind] = useState<"expense" | "income">("expense");
+  useHideValues();
   const { displayCurrency, convert, rates } = useCurrency();
   const categoriesQuery = useCategories();
   const transactionsQuery = useCashflowTransactions(month);
